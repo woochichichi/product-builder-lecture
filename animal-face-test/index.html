@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Face Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Are you a dog or a cat person?</h1>
+    <p>Let's find out which animal you look like!</p>
+    <div id="webcam-container"></div>
+    <div id="label-container"></div>
+    <button id="start-btn">Start</button>
+    <button id="predict-btn" style="display:none;">Predict</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

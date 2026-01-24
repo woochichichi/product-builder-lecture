@@ -1,0 +1,43 @@
+
+body {
+    font-family: sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+#webcam-container {
+    margin: 20px auto;
+    width: 300px;
+    height: 300px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#label-container {
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
