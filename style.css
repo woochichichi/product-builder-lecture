@@ -78,30 +78,7 @@ h1 {
   font-weight: 600;
 }
 
-.numbers-container {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
-  flex-wrap: wrap;
-}
-
-.number {
-  background-color: var(--primary-color);
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px var(--glow-color);
-  animation: popIn 0.5s ease-out forwards;
-}
-
-#generator-btn {
+#recommend-btn {
   background-color: var(--primary-color);
   color: white;
   border: none;
@@ -112,12 +89,30 @@ h1 {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px var(--glow-color);
-  margin-top: 2rem; /* Add some space above the form */
+  margin-top: 2rem;
 }
 
-#generator-btn:hover {
+#recommend-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px var(--glow-color);
+}
+
+#menu-result {
+    margin-top: 2rem;
+    padding: 2rem;
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+}
+
+#menu-result h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+#menu-result p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
 }
 
 .contact-form-section {
