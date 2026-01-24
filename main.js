@@ -37,7 +37,7 @@ function generateLottoNumbers() {
 
 function updateToggleButtonText() {
   const isDarkMode = document.body.classList.contains('dark-mode');
-  themeToggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+  themeToggleBtn.textContent = isDarkMode ? '라이트 모드' : '다크 모드';
 }
 
 // Check for saved theme preference

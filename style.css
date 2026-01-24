@@ -47,10 +47,15 @@ body {
   transition: background-color 0.3s;
 }
 
-#theme-toggle-btn {
+.top-right-buttons {
   position: absolute;
   top: 1rem;
   right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.top-right-btn {
   background: none;
   border: 1px solid var(--text-color);
   color: var(--text-color);
@@ -58,9 +63,11 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 
-#theme-toggle-btn:hover {
+.top-right-btn:hover {
   background-color: var(--text-color);
   color: var(--container-bg);
 }
@@ -111,23 +118,6 @@ h1 {
 #generator-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px var(--glow-color);
-}
-
-.feature-link-btn {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px var(--glow-color);
-    display: inline-block;
-}
-
-.feature-link-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px var(--glow-color);
 }
 
 .contact-form-section {

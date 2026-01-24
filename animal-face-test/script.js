@@ -20,7 +20,7 @@ imageUpload.addEventListener("change", (event) => {
     }
 });
 
-analyzeBtn.addEventListener("click", predict);
+analyzeBtn.addEventListener("click", () => predict());
 
 async function init() {
     const modelURL = URL + "model.json";
@@ -30,17 +30,45 @@ async function init() {
     maxPredictions = model.getTotalClasses();
 
     labelContainer = document.getElementById("label-container");
+    labelContainer.innerHTML = ''; // Clear previous results
     for (let i = 0; i < maxPredictions; i++) {
-        labelContainer.appendChild(document.createElement("div"));
+        const resultBar = document.createElement("div");
+        resultBar.classList.add("result-bar");
+
+        const resultLabel = document.createElement("div");
+        resultLabel.classList.add("result-label");
+        
+        const progressBarContainer = document.createElement("div");
+        progressBarContainer.classList.add("progress-bar-container");
+
+        const progressBar = document.createElement("div");
+        progressBar.classList.add("progress-bar");
+
+        progressBarContainer.appendChild(progressBar);
+        resultBar.appendChild(resultLabel);
+        resultBar.appendChild(progressBarContainer);
+        labelContainer.appendChild(resultBar);
     }
 }
 
 async function predict() {
     const prediction = await model.predict(imagePreview);
     for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
+        const probability = prediction[i].probability;
+        const className = prediction[i].className;
+        const progressBar = labelContainer.childNodes[i].querySelector('.progress-bar');
+        const resultLabel = labelContainer.childNodes[i].querySelector('.result-label');
+        
+        let translatedName = className;
+        if (className === "Dog") {
+            translatedName = "강아지상";
+        } else if (className === "Cat") {
+            translatedName = "고양이상";
+        }
+
+        resultLabel.innerHTML = translatedName;
+        progressBar.style.width = Math.round(probability * 100) + "%";
+        progressBar.innerHTML = Math.round(probability * 100) + "%";
     }
 }
 

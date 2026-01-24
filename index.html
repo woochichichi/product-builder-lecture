@@ -1,34 +1,32 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lotto Number Generator</title>
+  <title>로또 번호 생성기</title>
   <link href='/style.css' rel='stylesheet'>
 </head>
 <body>
   <div class="container">
-    <button id="theme-toggle-btn">Toggle Theme</button>
-    <h1>Lotto Number Generator</h1>
+    <div class="top-right-buttons">
+      <a href="/animal-face-test/index.html" class="feature-link-btn top-right-btn">동물상 테스트</a>
+      <button id="theme-toggle-btn" class="top-right-btn">테마 변경</button>
+    </div>
+    <h1>로또 번호 생성기</h1>
     <div class="numbers-container"></div>
-    <button id="generator-btn">Generate Numbers</button>
+    <button id="generator-btn">번호 생성</button>
 
     <div class="contact-form-section">
-      <h2>Contact Us</h2>
+      <h2>제휴 문의</h2>
       <form action="https://formspree.io/f/mnjplqda" method="POST">
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="message" placeholder="Your Message" required></textarea>
-        <button type="submit">Send Inquiry</button>
+        <input type="email" name="email" placeholder="이메일 주소" required>
+        <textarea name="message" placeholder="문의 내용" required></textarea>
+        <button type="submit">문의하기</button>
       </form>
     </div>
 
     <div id="disqus_thread" style="margin-top: 2rem;"></div>
-
-    <div class="extra-features-section" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--input-border);">
-        <h2>Check out our other features!</h2>
-        <a href="/animal-face-test/index.html" class="feature-link-btn">Animal Face Test</a>
-    </div>
   </div>
   <script defer type="text/javascript" src="/main.js"></script>
   <script>
