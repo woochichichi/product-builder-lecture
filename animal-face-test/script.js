@@ -1,28 +1,34 @@
 
 const URL = "https://teachablemachine.withgoogle.com/models/tv_f0xvlL/";
 
-let model, webcam, labelContainer, maxPredictions;
+let model, labelContainer, maxPredictions;
 
-const startBtn = document.getElementById("start-btn");
-const predictBtn = document.getElementById("predict-btn");
+const imageUpload = document.getElementById("image-upload");
+const imagePreview = document.getElementById("image-preview");
+const analyzeBtn = document.getElementById("analyze-btn");
 
-startBtn.addEventListener("click", init);
-predictBtn.addEventListener("click", predict);
+imageUpload.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = "block";
+            analyzeBtn.style.display = "inline-block";
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+analyzeBtn.addEventListener("click", predict);
 
 async function init() {
-    startBtn.style.display = "none";
-    predictBtn.style.display = "inline-block";
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
 
     model = await tmImage.load(modelURL, metadataURL);
     maxPredictions = model.getTotalClasses();
 
-    const flip = true; 
-    webcam = new tmImage.Webcam(300, 300, flip); 
-    await webcam.setup(); 
-    await webcam.play();
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
     labelContainer = document.getElementById("label-container");
     for (let i = 0; i < maxPredictions; i++) {
         labelContainer.appendChild(document.createElement("div"));
@@ -30,10 +36,12 @@ async function init() {
 }
 
 async function predict() {
-    const prediction = await model.predict(webcam.canvas);
+    const prediction = await model.predict(imagePreview);
     for (let i = 0; i < maxPredictions; i++) {
         const classPrediction =
             prediction[i].className + ": " + prediction[i].probability.toFixed(2);
         labelContainer.childNodes[i].innerHTML = classPrediction;
     }
 }
+
+init();
