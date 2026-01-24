@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - 문의하기</title>
+    <link rel="stylesheet" href="global.css">
+    <style>
+        /* Page-specific styles for contact form */
+        .contact-form-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .contact-form-section input,
+        .contact-form-section textarea {
+            padding: 0.8rem;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .contact-form-section input:focus,
+        .contact-form-section textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        .contact-form-section textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .contact-form-section button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--glow-color);
+        }
+        .contact-form-section button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--glow-color);
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">재미있는 사이트</a>
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/animal-face-test/index.html">동물상 테스트</a>
+        </nav>
+        <button id="theme-toggle-btn">테마 변경</button>
+    </header>
+
+    <div class="container">
+        <h1>문의하기</h1>
+        <p>궁금한 점이나 제휴 관련 문의는 아래 양식을 통해 보내주세요.</p>
+        <div class="contact-form-section">
+          <form action="https://formspree.io/f/mnjplqda" method="POST">
+            <input type="email" name="email" placeholder="이메일 주소" required>
+            <textarea name="message" placeholder="문의 내용" required></textarea>
+            <button type="submit">보내기</button>
+          </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+    <script>
+        // Simple theme toggle for pages without main.js
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            themeToggleBtn.textContent = isDarkMode ? '라이트 모드' : '다크 모드';
+        });
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        themeToggleBtn.textContent = document.body.classList.contains('dark-mode') ? '라이트 모드' : '다크 모드';
+    </script>
+</body>
+</html>

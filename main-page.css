@@ -1,0 +1,45 @@
+
+/* main-page.css */
+
+h1 {
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+#recommend-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px var(--glow-color);
+  margin-top: 2rem;
+}
+
+#recommend-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px var(--glow-color);
+}
+
+#menu-result {
+    margin-top: 2rem;
+    padding: 2rem;
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+}
+
+#menu-result h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+#menu-result p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}

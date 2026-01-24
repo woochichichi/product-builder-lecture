@@ -5,12 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>동물상 테스트</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../global.css">
+    <link rel="stylesheet" href="animal-test.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
      crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="main-container">
+    <header class="header">
+        <a href="/" class="logo">재미있는 사이트</a>
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/animal-face-test/index.html">동물상 테스트</a>
+        </nav>
+        <button id="theme-toggle-btn">테마 변경</button>
+    </header>
+
+    <div class="container">
         <h1>동물상 테스트</h1>
         <p>사진을 업로드하여 당신이 강아지상인지 고양이상인지 확인해보세요!</p>
         
@@ -26,6 +36,14 @@
         <div id="label-container"></div>
         <button id="analyze-btn" style="display:none;">결과 확인</button>
     </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>

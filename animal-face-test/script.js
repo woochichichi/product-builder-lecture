@@ -72,4 +72,17 @@ async function predict() {
     }
 }
 
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    themeToggleBtn.textContent = isDarkMode ? '라이트 모드' : '다크 모드';
+});
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+}
+themeToggleBtn.textContent = document.body.classList.contains('dark-mode') ? '라이트 모드' : '다크 모드';
+
 init();
