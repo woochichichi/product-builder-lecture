@@ -44,15 +44,16 @@ const menuItems = [
     }
 ];
 
-recommendBtn.addEventListener('click', () => {
+function recommendMenu() {
     const randomIndex = Math.floor(Math.random() * menuItems.length);
     const selectedMenu = menuItems[randomIndex];
 
     menuName.textContent = selectedMenu.name;
     menuImage.src = selectedMenu.image;
     menuMessage.textContent = selectedMenu.message;
-    menuResult.style.display = 'block';
-});
+}
+
+recommendBtn.addEventListener('click', recommendMenu);
 
 themeToggleBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
@@ -72,3 +73,6 @@ if (savedTheme === 'dark') {
   document.body.classList.add('dark-mode');
 }
 updateToggleButtonText();
+
+// Initial recommendation
+recommendMenu();

@@ -13,8 +13,6 @@ imageUpload.addEventListener("change", (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             imagePreview.src = e.target.result;
-            imagePreview.style.display = "block";
-            analyzeBtn.style.display = "inline-block";
         };
         reader.readAsDataURL(file);
     }
@@ -49,6 +47,8 @@ async function init() {
         resultBar.appendChild(progressBarContainer);
         labelContainer.appendChild(resultBar);
     }
+    imagePreview.crossOrigin = "anonymous";
+    predict();
 }
 
 async function predict() {
