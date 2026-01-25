@@ -130,3 +130,28 @@ body {
   margin: 2rem auto;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+  .header .nav-links {
+    margin-top: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .container {
+    width: 90%;
+    padding: 1.5rem;
+  }
+  .footer {
+    padding: 1rem;
+  }
+  .footer-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found - 페이지를 찾을 수 없습니다</title>
+    <link rel="stylesheet" href="/global.css">
+    <style>
+        .container {
+            text-align: center;
+        }
+        .container h1 {
+            font-size: 5rem;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="https://via.placeholder.com/150x50" alt="재미있는 사이트 로고">
+        </a>
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/animal-face-test/index.html">동물상 테스트</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+        </nav>
+        <button id="theme-toggle-btn">테마 변경</button>
+    </header>
+
+    <div class="container">
+        <h1>404</h1>
+        <h2>페이지를 찾을 수 없습니다.</h2>
+        <p>요청하신 페이지가 존재하지 않거나, 주소가 변경되었을 수 있습니다.</p>
+        <a href="/" class="btn">홈으로 돌아가기</a>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/about.html">About</a>
+            <a href="/contact.html">Contact</a>
+            <a href="/privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+    <script>
+        // Simple theme toggle for pages without main.js
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            themeToggleBtn.textContent = isDarkMode ? '라이트 모드' : '다크 모드';
+        });
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        themeToggleBtn.textContent = document.body.classList.contains('dark-mode') ? '라이트 모드' : '다크 모드';
+    </script>
+</body>
+</html>
