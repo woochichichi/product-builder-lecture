@@ -6,6 +6,10 @@ const menuName = document.getElementById('menu-name');
 const menuImage = document.getElementById('menu-image');
 const menuMessage = document.getElementById('menu-message');
 
+const shareFacebookBtn = document.getElementById('share-facebook');
+const shareTwitterBtn = document.getElementById('share-twitter');
+const shareLinkedInBtn = document.getElementById('share-linkedin');
+
 const menuItems = [
     {
         name: '치킨',
@@ -66,6 +70,33 @@ function updateToggleButtonText() {
   const isDarkMode = document.body.classList.contains('dark-mode');
   themeToggleBtn.textContent = isDarkMode ? '라이트 모드' : '다크 모드';
 }
+
+function sharePage(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    let shareUrl = '';
+
+    switch (platform) {
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+            break;
+        case 'linkedin':
+            shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`;
+            break;
+        default:
+            console.error('Unknown share platform:', platform);
+            return;
+    }
+
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+}
+
+shareFacebookBtn.addEventListener('click', () => sharePage('facebook'));
+shareTwitterBtn.addEventListener('click', () => sharePage('twitter'));
+shareLinkedInBtn.addEventListener('click', () => sharePage('linkedin'));
 
 // Check for saved theme preference
 const savedTheme = localStorage.getItem('theme');
