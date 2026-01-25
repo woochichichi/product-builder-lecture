@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://product-builder-lecture-9aa.pages.dev/sitemap.xml
+Sitemap: https://musinsa.cloud/sitemap.xml
