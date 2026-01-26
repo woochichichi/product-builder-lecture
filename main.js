@@ -57,8 +57,15 @@ async function recommendMenu() {
 
     try {
         const response = await fetch('https://foodish-api.com/api');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
-        menuImage.src = data.image;
+        if (data && data.image) {
+            menuImage.src = data.image;
+        } else {
+            throw new Error('Image URL not found in API response');
+        }
     } catch (error) {
         console.error('Error fetching image from Foodish API:', error);
         // Fallback or placeholder image if API fails
