@@ -127,5 +127,6 @@ h1 {
     background-color: var(--input-border); /* Light gray background */
     margin: 1rem auto; /* Center the image horizontally */
     display: block; /* Ensure margin auto works */
+    max-width: 100%;
 }
 

@@ -140,7 +140,7 @@ async function recommendMenu() {
     const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}&per_page=20`;
 
     try {
-        menuImage.src = 'https://via.placeholder.com/300x200?text=이미지+로딩중...';
+        menuImage.src = 'https://via.placeholder.com/400x400?text=이미지+로딩중...';
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -165,7 +165,7 @@ async function recommendMenu() {
     } catch (error) {
         console.error('Error fetching image from Unsplash API:', error);
         // Fallback or placeholder image if API fails
-        menuImage.src = 'https://via.placeholder.com/300x200?text=이미지+불러오기+실패'; 
+        menuImage.src = 'https://via.placeholder.com/400x400?text=이미지+불러오기+실패'; 
     }
 }
 
