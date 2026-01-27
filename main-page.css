@@ -120,13 +120,12 @@ h1 {
 
 
 #menu-image {
-    width: 100%;
-    max-height: 350px;
-    height: auto;
-    object-fit: contain;
+    width: 400px; /* Fixed width */
+    height: 400px; /* Fixed height */
+    object-fit: cover; /* Fill the area, cropping if necessary */
     border-radius: 10px;
     background-color: var(--input-border); /* Light gray background */
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin: 1rem auto; /* Center the image horizontally */
+    display: block; /* Ensure margin auto works */
 }
 
