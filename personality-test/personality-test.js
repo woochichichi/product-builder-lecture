@@ -317,17 +317,21 @@ function copyLink() {
     });
 }
 
-// Wait for start button click
-const startButton = document.getElementById('start-test-btn');
-const testIntro = document.querySelector('.test-intro');
-const testInfo = document.querySelector('.test-info');
+// Wait for DOM to be ready and start button click
+document.addEventListener('DOMContentLoaded', function() {
+    const startButton = document.getElementById('start-test-btn');
+    const testIntro = document.querySelector('.test-intro');
+    const testInfo = document.querySelector('.test-info');
 
-startButton.addEventListener('click', function() {
-    // Hide intro sections
-    testIntro.style.display = 'none';
-    testInfo.style.display = 'none';
+    if (startButton) {
+        startButton.addEventListener('click', function() {
+            // Hide intro sections
+            testIntro.style.display = 'none';
+            testInfo.style.display = 'none';
 
-    // Show and start quiz
-    quizContainer.style.display = 'block';
-    renderQuiz();
+            // Show and start quiz
+            quizContainer.style.display = 'block';
+            renderQuiz();
+        });
+    }
 });
