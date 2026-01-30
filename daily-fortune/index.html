@@ -196,9 +196,9 @@
             font-weight: 600;
             transition: all 0.3s;
         }
-        .share-btn.twitter { background: #1DA1F2; color: white; }
-        .share-btn.facebook { background: #4267B2; color: white; }
-        .share-btn.copy { background: var(--input-bg); border: 1px solid var(--input-border); }
+        .share-btn.kakao { background: #FEE500; color: #000; }
+        .share-btn.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .share-btn.tiktok { background: #000; color: white; }
         .fortune-info {
             margin-top: 3rem;
             padding: 1.5rem;
@@ -310,9 +310,9 @@
             <div class="share-section">
                 <p>오늘의 운세를 친구와 공유하세요!</p>
                 <div class="share-buttons">
-                    <button onclick="shareTwitter()" class="share-btn twitter">Twitter</button>
-                    <button onclick="shareFacebook()" class="share-btn facebook">Facebook</button>
-                    <button onclick="copyLink()" class="share-btn copy">링크 복사</button>
+                    <button onclick="shareKakao()" class="share-btn kakao">카카오톡</button>
+                    <button onclick="shareInstagram()" class="share-btn instagram">인스타그램</button>
+                    <button onclick="shareTiktok()" class="share-btn tiktok">틱톡</button>
                 </div>
             </div>
         </div>
@@ -461,18 +461,29 @@
             document.getElementById('fortune-result').style.display = 'none';
         }
 
-        function shareTwitter() {
-            const text = '오늘의 운세를 확인해보세요!';
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        function shareKakao() {
+            copyLink();
+            alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
         }
 
-        function shareFacebook() {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        function shareInstagram() {
+            copyLink();
+            alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
+        }
+
+        function shareTiktok() {
+            copyLink();
+            alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
         }
 
         function copyLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert('링크가 복사되었습니다!');
+            navigator.clipboard.writeText(window.location.href).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = window.location.href;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
             });
         }
 

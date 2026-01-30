@@ -176,10 +176,10 @@
       font-weight: 600;
       transition: all 0.3s;
     }
-    .share-button.facebook { background: #4267B2; color: white; }
-    .share-button.twitter { background: #1DA1F2; color: white; }
-    .share-button.linkedin { background: #0077B5; color: white; }
-    .share-button:hover { transform: translateY(-2px); }
+    .share-button.kakao { background: #FEE500; color: #000; }
+    .share-button.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+    .share-button.tiktok { background: #000; color: white; }
+    .share-button:hover { transform: translateY(-2px); opacity: 0.9; }
     @media (max-width: 768px) {
       .hero-section h1 { font-size: 1.8rem; }
       .hero-section p { font-size: 1rem; }
@@ -260,9 +260,9 @@
     <div class="social-share">
       <h2>친구에게 공유하기</h2>
       <div class="share-buttons">
-        <button id="share-facebook" class="share-button facebook">Facebook</button>
-        <button id="share-twitter" class="share-button twitter">Twitter</button>
-        <button id="share-linkedin" class="share-button linkedin">LinkedIn</button>
+        <button id="share-kakao" class="share-button kakao">카카오톡</button>
+        <button id="share-instagram" class="share-button instagram">인스타그램</button>
+        <button id="share-tiktok" class="share-button tiktok">틱톡</button>
       </div>
     </div>
   </main>
@@ -275,20 +275,54 @@
     </div>
   </footer>
 
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js" crossorigin="anonymous"></script>
   <script>
-    // Share buttons
-    const shareUrl = encodeURIComponent(window.location.href);
-    const shareText = encodeURIComponent('다양한 심리 테스트를 무료로 즐겨보세요!');
+    // Kakao SDK 초기화
+    Kakao.init('YOUR_KAKAO_APP_KEY'); // 실제 카카오 앱 키로 교체 필요
 
-    document.getElementById('share-facebook').addEventListener('click', () => {
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank');
+    const shareUrl = window.location.href;
+    const shareText = '마음테스트 - 다양한 심리 테스트를 무료로 즐겨보세요!';
+
+    // 카카오톡 공유
+    document.getElementById('share-kakao').addEventListener('click', () => {
+      if (Kakao.isInitialized()) {
+        Kakao.Share.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: '마음테스트',
+            description: '나를 알아가는 심리 테스트! 성격, 색깔 심리, 운세를 무료로 확인하세요.',
+            imageUrl: 'https://via.placeholder.com/300x200.png?text=마음테스트',
+            link: { mobileWebUrl: shareUrl, webUrl: shareUrl }
+          },
+          buttons: [{ title: '테스트 하러가기', link: { mobileWebUrl: shareUrl, webUrl: shareUrl } }]
+        });
+      } else {
+        copyToClipboard();
+      }
     });
-    document.getElementById('share-twitter').addEventListener('click', () => {
-      window.open(`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`, '_blank');
+
+    // 인스타그램 (링크 복사 후 안내)
+    document.getElementById('share-instagram').addEventListener('click', () => {
+      copyToClipboard();
+      alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
     });
-    document.getElementById('share-linkedin').addEventListener('click', () => {
-      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`, '_blank');
+
+    // 틱톡 (링크 복사 후 안내)
+    document.getElementById('share-tiktok').addEventListener('click', () => {
+      copyToClipboard();
+      alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
     });
+
+    function copyToClipboard() {
+      navigator.clipboard.writeText(shareUrl).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = shareUrl;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      });
+    }
   </script>
 </body>
 </html>

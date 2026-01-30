@@ -228,9 +228,9 @@
             font-weight: 600;
             transition: all 0.3s;
         }
-        .share-btn.twitter { background: #1DA1F2; color: white; }
-        .share-btn.facebook { background: #4267B2; color: white; }
-        .share-btn.copy { background: var(--input-bg); border: 1px solid var(--input-border); }
+        .share-btn.kakao { background: #FEE500; color: #000; }
+        .share-btn.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .share-btn.tiktok { background: #000; color: white; }
         .color-info-section {
             margin-top: 3rem;
             text-align: left;
@@ -365,9 +365,9 @@
             <div class="share-section">
                 <p>결과를 친구들과 공유해보세요!</p>
                 <div class="share-buttons">
-                    <button onclick="shareTwitter()" class="share-btn twitter">Twitter</button>
-                    <button onclick="shareFacebook()" class="share-btn facebook">Facebook</button>
-                    <button onclick="copyLink()" class="share-btn copy">링크 복사</button>
+                    <button onclick="shareKakao()" class="share-btn kakao">카카오톡</button>
+                    <button onclick="shareInstagram()" class="share-btn instagram">인스타그램</button>
+                    <button onclick="shareTiktok()" class="share-btn tiktok">틱톡</button>
                 </div>
             </div>
         </div>
@@ -585,18 +585,29 @@
             document.getElementById('result-container').style.display = 'none';
         }
 
-        function shareTwitter() {
-            const text = `나의 색깔 심리 테스트 결과: "${selectedColors[0]}" 유형! 당신도 테스트해보세요.`;
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        function shareKakao() {
+            copyLink();
+            alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
         }
 
-        function shareFacebook() {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        function shareInstagram() {
+            copyLink();
+            alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
+        }
+
+        function shareTiktok() {
+            copyLink();
+            alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
         }
 
         function copyLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert('링크가 복사되었습니다!');
+            navigator.clipboard.writeText(window.location.href).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = window.location.href;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
             });
         }
 

@@ -272,9 +272,9 @@ function showResult() {
             <div class="share-result">
                 <p>결과를 친구들과 공유해보세요!</p>
                 <div class="share-buttons">
-                    <button onclick="shareToTwitter()" class="share-btn twitter">Twitter</button>
-                    <button onclick="shareToFacebook()" class="share-btn facebook">Facebook</button>
-                    <button onclick="copyLink()" class="share-btn copy">링크 복사</button>
+                    <button onclick="shareToKakao()" class="share-btn kakao">카카오톡</button>
+                    <button onclick="shareToInstagram()" class="share-btn instagram">인스타그램</button>
+                    <button onclick="shareToTiktok()" class="share-btn tiktok">틱톡</button>
                 </div>
             </div>
         `;
@@ -291,20 +291,42 @@ function resetQuiz() {
     renderQuiz();
 }
 
-function shareToTwitter() {
-    const text = `나의 성격 테스트 결과를 확인해보세요! 🎯`;
-    const url = window.location.href;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+function shareToKakao() {
+    if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+        Kakao.Share.sendDefault({
+            objectType: 'feed',
+            content: {
+                title: '성격 테스트 결과',
+                description: '나의 성격 유형을 확인해보세요!',
+                imageUrl: 'https://via.placeholder.com/300x200.png?text=성격테스트',
+                link: { mobileWebUrl: window.location.href, webUrl: window.location.href }
+            },
+            buttons: [{ title: '테스트 하러가기', link: { mobileWebUrl: window.location.href, webUrl: window.location.href } }]
+        });
+    } else {
+        copyLink();
+        alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
+    }
 }
 
-function shareToFacebook() {
-    const url = window.location.href;
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+function shareToInstagram() {
+    copyLink();
+    alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
+}
+
+function shareToTiktok() {
+    copyLink();
+    alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
 }
 
 function copyLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-        alert('링크가 복사되었습니다!');
+    navigator.clipboard.writeText(window.location.href).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = window.location.href;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
     });
 }
 
