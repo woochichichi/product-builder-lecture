@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 운세 - 무료 운세 보기 | 연애운, 금전운, 건강운</title>
+    <meta name="description" content="매일 새롭게 업데이트되는 무료 오늘의 운세! 총운, 연애운, 금전운, 건강운, 행운의 숫자와 색상까지 확인하세요. 오늘 하루를 알차게 시작하세요.">
+    <meta name="keywords" content="오늘의 운세, 무료 운세, 연애운, 금전운, 건강운, 매일 운세, 일일 운세">
+    <meta property="og:title" content="오늘의 운세 - 무료 운세 보기" />
+    <meta property="og:description" content="매일 새롭게 업데이트되는 무료 오늘의 운세! 총운, 연애운, 금전운, 건강운을 확인하세요." />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=오늘의+운세" />
+    <meta property="og:url" content="https://musinsa.cloud/daily-fortune/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="오늘의 운세 - 무료 운세 보기" />
+    <meta name="twitter:description" content="매일 새롭게 업데이트되는 무료 오늘의 운세! 총운, 연애운, 금전운, 건강운을 확인하세요." />
+    <link rel="canonical" href="https://musinsa.cloud/daily-fortune/" />
+    <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../global.css"></noscript>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://musinsa.cloud/daily-fortune/"
+      },
+      "headline": "오늘의 운세 - 무료 운세 보기",
+      "description": "매일 새롭게 업데이트되는 무료 오늘의 운세! 총운, 연애운, 금전운, 건강운을 확인하세요.",
+      "author": {
+        "@type": "Organization",
+        "name": "마음테스트"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "마음테스트"
+      },
+      "datePublished": "2026-01-30",
+      "dateModified": "2026-01-30"
+    }
+    </script>
+    <style>
+        .fortune-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .date-display {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        .fortune-intro {
+            text-align: left;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        .fortune-intro h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .fortune-intro p {
+            line-height: 1.7;
+        }
+        .fortune-button {
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--primary-color), #7eb8f5);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 2rem 0;
+        }
+        .fortune-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(90, 158, 228, 0.4);
+        }
+        .fortune-result {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .fortune-card {
+            background: var(--input-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .fortune-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+        .fortune-card .icon {
+            font-size: 1.5rem;
+        }
+        .fortune-card p {
+            line-height: 1.8;
+        }
+        .fortune-rating {
+            display: flex;
+            gap: 0.3rem;
+            margin-top: 0.5rem;
+        }
+        .star {
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+        .star.empty {
+            color: var(--input-border);
+        }
+        .lucky-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .lucky-item {
+            background: var(--input-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .lucky-item .icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .lucky-item .label {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        .lucky-item .value {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 0.3rem;
+        }
+        .overall-fortune {
+            background: linear-gradient(135deg, var(--primary-color), #7eb8f5);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .overall-fortune h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        .overall-fortune p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .retry-btn {
+            padding: 0.8rem 2rem;
+            background: var(--input-bg);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        .retry-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        .share-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--input-border);
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .share-btn {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .share-btn.twitter { background: #1DA1F2; color: white; }
+        .share-btn.facebook { background: #4267B2; color: white; }
+        .share-btn.copy { background: var(--input-bg); border: 1px solid var(--input-border); }
+        .fortune-info {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            text-align: left;
+        }
+        .fortune-info h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .fortune-info ul {
+            padding-left: 1.5rem;
+            line-height: 2;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .lucky-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo" style="font-size: 1.4rem; font-weight: 700; color: var(--primary-color); text-decoration: none;">
+            마음테스트
+        </a>
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+        </nav>
+        <button id="theme-toggle-btn">테마 변경</button>
+    </header>
+
+    <div class="container fortune-container">
+        <h1>오늘의 운세</h1>
+        <div class="date-display" id="today-date"></div>
+
+        <div class="fortune-intro">
+            <h2>운세 보는 방법</h2>
+            <p>마음을 편안히 하고 아래 버튼을 눌러주세요. 오늘 하루의 총운, 연애운, 금전운, 건강운과 함께 행운의 숫자, 색상, 방향을 알려드립니다. 매일 새로운 운세가 제공되니 하루를 시작하기 전에 확인해보세요!</p>
+        </div>
+
+        <div id="fortune-start">
+            <button class="fortune-button" onclick="showFortune()">오늘의 운세 보기</button>
+        </div>
+
+        <div class="fortune-result" id="fortune-result">
+            <div class="overall-fortune">
+                <h3>오늘의 총운</h3>
+                <p id="overall-text"></p>
+                <div class="fortune-rating" id="overall-rating"></div>
+            </div>
+
+            <div class="lucky-items">
+                <div class="lucky-item">
+                    <span class="icon">🔢</span>
+                    <span class="label">행운의 숫자</span>
+                    <div class="value" id="lucky-number"></div>
+                </div>
+                <div class="lucky-item">
+                    <span class="icon">🎨</span>
+                    <span class="label">행운의 색상</span>
+                    <div class="value" id="lucky-color"></div>
+                </div>
+                <div class="lucky-item">
+                    <span class="icon">🧭</span>
+                    <span class="label">행운의 방향</span>
+                    <div class="value" id="lucky-direction"></div>
+                </div>
+            </div>
+
+            <div class="fortune-card">
+                <h3><span class="icon">💕</span> 연애운</h3>
+                <p id="love-fortune"></p>
+                <div class="fortune-rating" id="love-rating"></div>
+            </div>
+
+            <div class="fortune-card">
+                <h3><span class="icon">💰</span> 금전운</h3>
+                <p id="money-fortune"></p>
+                <div class="fortune-rating" id="money-rating"></div>
+            </div>
+
+            <div class="fortune-card">
+                <h3><span class="icon">💪</span> 건강운</h3>
+                <p id="health-fortune"></p>
+                <div class="fortune-rating" id="health-rating"></div>
+            </div>
+
+            <div class="fortune-card">
+                <h3><span class="icon">💼</span> 직장/학업운</h3>
+                <p id="work-fortune"></p>
+                <div class="fortune-rating" id="work-rating"></div>
+            </div>
+
+            <div class="fortune-card">
+                <h3><span class="icon">💡</span> 오늘의 조언</h3>
+                <p id="advice-text"></p>
+            </div>
+
+            <button class="retry-btn" onclick="resetFortune()">다시 보기</button>
+
+            <div class="share-section">
+                <p>오늘의 운세를 친구와 공유하세요!</p>
+                <div class="share-buttons">
+                    <button onclick="shareTwitter()" class="share-btn twitter">Twitter</button>
+                    <button onclick="shareFacebook()" class="share-btn facebook">Facebook</button>
+                    <button onclick="copyLink()" class="share-btn copy">링크 복사</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="fortune-info">
+            <h2>운세에 대하여</h2>
+            <p>운세는 하루를 시작하는 작은 가이드입니다. 좋은 운세는 자신감을, 주의가 필요한 운세는 신중함을 갖게 해줍니다. 다만 운세는 참고용이며, 실제 하루는 여러분의 노력과 선택에 따라 달라질 수 있습니다.</p>
+            <h3 style="margin-top: 1rem; color: var(--primary-color);">운세 활용 팁</h3>
+            <ul>
+                <li>아침에 확인하여 하루를 계획하는 데 참고하세요</li>
+                <li>행운의 색상을 착용해보세요</li>
+                <li>행운의 방향으로 외출해보세요</li>
+                <li>조언을 마음에 새기고 긍정적인 하루를 보내세요</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        // 오늘 날짜 표시
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+        document.getElementById('today-date').textContent = today.toLocaleDateString('ko-KR', options);
+
+        // 운세 데이터
+        const fortunes = {
+            overall: [
+                "오늘은 새로운 시작에 좋은 날입니다. 평소 미루던 일을 시작해보세요. 예상치 못한 좋은 소식이 찾아올 수 있습니다.",
+                "차분하게 하루를 보내기 좋은 날입니다. 서두르지 말고 한 걸음씩 나아가면 좋은 결과가 있을 것입니다.",
+                "에너지가 넘치는 하루가 될 것입니다! 적극적으로 행동하면 좋은 기회를 잡을 수 있습니다.",
+                "주변 사람들과의 관계에서 따뜻함을 느낄 수 있는 날입니다. 감사의 마음을 표현해보세요.",
+                "창의적인 아이디어가 떠오르는 날입니다. 새로운 시도를 두려워하지 마세요.",
+                "안정과 평화를 느낄 수 있는 하루입니다. 자신을 위한 휴식 시간을 가져보세요.",
+                "도전적인 상황이 생길 수 있지만, 이를 통해 성장할 수 있습니다. 긍정적인 마음가짐이 중요합니다.",
+                "행운이 함께하는 날입니다! 평소 원하던 일이 이루어질 수 있으니 적극적으로 움직여보세요."
+            ],
+            love: [
+                "소중한 사람과의 대화가 마음을 따뜻하게 해줄 것입니다. 진심을 담아 마음을 표현해보세요.",
+                "새로운 만남의 기회가 있을 수 있습니다. 열린 마음으로 주변을 둘러보세요.",
+                "연인과 함께하는 시간이 특별해지는 날입니다. 작은 이벤트를 계획해보세요.",
+                "오해가 풀리고 관계가 더욱 깊어질 수 있는 날입니다. 솔직한 대화를 나눠보세요.",
+                "혼자만의 시간도 소중합니다. 자신을 사랑하는 시간을 가져보세요.",
+                "과거의 인연이 다시 연결될 수 있습니다. 열린 마음으로 받아들여 보세요.",
+                "연애에 있어 조급해하지 마세요. 좋은 인연은 때가 되면 자연스럽게 찾아옵니다.",
+                "로맨틱한 순간이 찾아올 수 있는 날입니다. 분위기 있는 장소를 방문해보세요."
+            ],
+            money: [
+                "재정적으로 안정적인 하루입니다. 저축에 대해 생각해보기 좋은 시기입니다.",
+                "예상치 못한 수입이 생길 수 있습니다. 기회가 오면 놓치지 마세요.",
+                "지출을 조금 줄이고 계획적인 소비가 필요한 날입니다.",
+                "투자에 대해 신중하게 생각해보세요. 전문가의 조언을 구하는 것도 좋습니다.",
+                "작은 행운이 찾아올 수 있는 날입니다. 소소한 기쁨을 누려보세요.",
+                "금전적인 문제가 해결의 실마리를 찾는 날입니다. 긍정적으로 생각하세요.",
+                "새로운 수입원에 대해 고민해보기 좋은 시기입니다. 부업을 고려해보세요.",
+                "큰 구매는 조금 미루고 신중하게 결정하세요. 더 좋은 기회가 올 수 있습니다."
+            ],
+            health: [
+                "활력이 넘치는 하루입니다! 가벼운 운동으로 에너지를 유지하세요.",
+                "충분한 수분 섭취가 필요합니다. 물을 자주 마시세요.",
+                "피로가 쌓일 수 있으니 충분한 휴식을 취하세요.",
+                "야외 활동이 기분 전환에 좋은 날입니다. 산책을 즐겨보세요.",
+                "균형 잡힌 식사가 중요한 날입니다. 영양가 있는 음식을 섭취하세요.",
+                "스트레스 관리에 신경 쓰세요. 명상이나 요가가 도움이 됩니다.",
+                "수면의 질이 중요한 날입니다. 일찍 잠자리에 들어보세요.",
+                "면역력 관리에 신경 쓰세요. 비타민 섭취를 권장합니다."
+            ],
+            work: [
+                "업무에서 좋은 성과를 낼 수 있는 날입니다. 집중해서 일해보세요.",
+                "동료들과의 협력이 중요한 날입니다. 팀워크를 발휘하세요.",
+                "새로운 프로젝트를 시작하기 좋은 시기입니다.",
+                "상사에게 좋은 인상을 줄 수 있는 기회가 있습니다.",
+                "학습에 대한 열정이 높아지는 날입니다. 새로운 것을 배워보세요.",
+                "창의적인 아이디어가 인정받을 수 있습니다. 적극적으로 제안해보세요.",
+                "꼼꼼한 검토가 필요한 날입니다. 실수하지 않도록 주의하세요.",
+                "커리어에 대해 진지하게 고민해보기 좋은 시기입니다."
+            ],
+            advice: [
+                "오늘 하루, 작은 것에도 감사하는 마음을 가져보세요. 행복은 가까운 곳에 있습니다.",
+                "완벽하지 않아도 괜찮습니다. 최선을 다하는 자신을 칭찬해주세요.",
+                "때로는 멈추는 것도 전진입니다. 쉬어가도 괜찮아요.",
+                "오늘 웃을 일을 찾아보세요. 웃음은 최고의 약입니다.",
+                "누군가에게 친절을 베풀어보세요. 그 따뜻함이 돌아올 것입니다.",
+                "긍정적인 생각이 긍정적인 결과를 만듭니다. 좋은 생각을 하세요.",
+                "도전을 두려워하지 마세요. 실패도 값진 경험입니다.",
+                "지금 이 순간에 집중하세요. 현재가 가장 소중한 선물입니다."
+            ]
+        };
+
+        const luckyNumbers = ['3', '7', '8', '12', '21', '27', '33', '42', '56', '77'];
+        const luckyColors = ['빨강', '파랑', '노랑', '초록', '보라', '분홍', '주황', '하늘색', '금색', '은색'];
+        const luckyDirections = ['동쪽', '서쪽', '남쪽', '북쪽', '동남쪽', '서북쪽', '동북쪽', '서남쪽'];
+
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function getRandomRating() {
+            return Math.floor(Math.random() * 3) + 3; // 3-5 stars
+        }
+
+        function renderStars(rating, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('span');
+                star.className = i < rating ? 'star' : 'star empty';
+                star.textContent = '★';
+                container.appendChild(star);
+            }
+        }
+
+        function showFortune() {
+            document.getElementById('fortune-start').style.display = 'none';
+            document.getElementById('fortune-result').style.display = 'block';
+
+            // Set fortune texts
+            document.getElementById('overall-text').textContent = getRandomItem(fortunes.overall);
+            document.getElementById('love-fortune').textContent = getRandomItem(fortunes.love);
+            document.getElementById('money-fortune').textContent = getRandomItem(fortunes.money);
+            document.getElementById('health-fortune').textContent = getRandomItem(fortunes.health);
+            document.getElementById('work-fortune').textContent = getRandomItem(fortunes.work);
+            document.getElementById('advice-text').textContent = getRandomItem(fortunes.advice);
+
+            // Set lucky items
+            document.getElementById('lucky-number').textContent = getRandomItem(luckyNumbers);
+            document.getElementById('lucky-color').textContent = getRandomItem(luckyColors);
+            document.getElementById('lucky-direction').textContent = getRandomItem(luckyDirections);
+
+            // Set ratings
+            renderStars(getRandomRating(), 'overall-rating');
+            renderStars(getRandomRating(), 'love-rating');
+            renderStars(getRandomRating(), 'money-rating');
+            renderStars(getRandomRating(), 'health-rating');
+            renderStars(getRandomRating(), 'work-rating');
+        }
+
+        function resetFortune() {
+            document.getElementById('fortune-start').style.display = 'block';
+            document.getElementById('fortune-result').style.display = 'none';
+        }
+
+        function shareTwitter() {
+            const text = '오늘의 운세를 확인해보세요!';
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function shareFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('링크가 복사되었습니다!');
+            });
+        }
+
+        // Theme toggle
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            themeToggleBtn.textContent = isDarkMode ? '라이트 모드' : '다크 모드';
+        });
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        themeToggleBtn.textContent = document.body.classList.contains('dark-mode') ? '라이트 모드' : '다크 모드';
+    </script>
+</body>
+</html>

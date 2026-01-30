@@ -4,69 +4,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - 재미있는 사이트</title>
-    <meta name="description" content="재미있는 사이트에 궁금한 점이나 제휴 관련 문의가 있으신가요? 언제든지 편하게 문의해주세요.">
-    <meta property="og:title" content="Contact Us - 재미있는 사이트" />
-    <meta property="og:description" content="재미있는 사이트에 궁금한 점이나 제휴 관련 문의가 있으신가요? 언제든지 편하게 문의해주세요." />
+    <title>문의하기 - 마음테스트 | Contact Us</title>
+    <meta name="description" content="마음테스트에 궁금한 점, 제안사항, 제휴 문의가 있으신가요? 아이디어 제안, 버그 리포트, 협업 제안 등 무엇이든 편하게 문의해주세요. 빠른 시간 내에 답변 드리겠습니다.">
+    <meta name="keywords" content="문의, 연락처, 제휴, 아이디어 제안, 피드백">
+    <meta property="og:title" content="문의하기 - 마음테스트" />
+    <meta property="og:description" content="마음테스트에 궁금한 점이나 제안사항이 있으신가요? 편하게 문의해주세요." />
     <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=재미있는+사이트" />
     <meta property="og:url" content="https://musinsa.cloud/contact.html" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Contact Us - 재미있는 사이트" />
-    <meta name="twitter:description" content="재미있는 사이트에 궁금한 점이나 제휴 관련 문의가 있으신가요? 언제든지 편하게 문의해주세요." />
+    <meta name="twitter:title" content="문의하기 - 마음테스트" />
+    <meta name="twitter:description" content="마음테스트에 궁금한 점이나 제안사항이 있으신가요? 편하게 문의해주세요." />
     <meta name="twitter:image" content="https://via.placeholder.com/1200x630.png?text=재미있는+사이트" />
     <link rel="canonical" href="https://musinsa.cloud/contact.html" />
     <link rel="preload" href="global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="global.css"></noscript>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Article",
+      "@type": "ContactPage",
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://musinsa.cloud/contact.html"
       },
-      "headline": "Contact Us - 재미있는 사이트",
-      "description": "재미있는 사이트에 궁금한 점이나 제휴 관련 문의가 있으신가요? 언제든지 편하게 문의해주세요.",
-      "image": "https://via.placeholder.com/150x50",
-      "author": {
-        "@type": "Organization",
-        "name": "재미있는 사이트"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "재미있는 사이트",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://via.placeholder.com/150x50"
-        }
-      },
-      "datePublished": "2026-01-25",
-      "dateModified": "2026-01-25"
+      "name": "문의하기 - 마음테스트",
+      "description": "마음테스트에 궁금한 점이나 제안사항이 있으신가요? 편하게 문의해주세요."
     }
     </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "url": "https://musinsa.cloud/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://musinsa.cloud/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFQLBFRP7Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QFQLBFRP7Q');
     </script>
     <style>
-        /* Page-specific styles for contact form */
+        .contact-container {
+            max-width: 800px;
+        }
+        .contact-intro {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+        .contact-intro p {
+            line-height: 1.8;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .contact-form-section {
+            text-align: left;
+        }
+        .contact-form-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
         .contact-form-section form {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            margin-top: 2rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
         }
         .contact-form-section input,
-        .contact-form-section textarea {
+        .contact-form-section textarea,
+        .contact-form-section select {
             padding: 0.8rem;
             border: 1px solid var(--input-border);
             border-radius: 8px;
@@ -77,13 +92,14 @@
             transition: border-color 0.3s, background-color 0.3s;
         }
         .contact-form-section input:focus,
-        .contact-form-section textarea:focus {
+        .contact-form-section textarea:focus,
+        .contact-form-section select:focus {
             border-color: var(--primary-color);
             outline: none;
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
         }
         .contact-form-section textarea {
-            min-height: 120px;
+            min-height: 150px;
             resize: vertical;
         }
         .contact-form-section button {
@@ -102,50 +118,206 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 25px var(--glow-color);
         }
+        .contact-info-section {
+            text-align: left;
+        }
+        .contact-info-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .info-card {
+            background: var(--input-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .info-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .info-card .icon {
+            font-size: 1.3rem;
+        }
+        .info-card p {
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        .faq-section {
+            margin-top: 3rem;
+            text-align: left;
+        }
+        .faq-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .faq-item {
+            background: var(--input-bg);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        .faq-question:hover {
+            background: var(--container-bg);
+        }
+        .faq-answer {
+            padding: 0 1.5rem 1rem;
+            line-height: 1.7;
+            display: none;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        .faq-item.active .faq-question .arrow {
+            transform: rotate(180deg);
+        }
+        .arrow {
+            transition: transform 0.3s;
+        }
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QFQLBFRP7Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-QFQLBFRP7Q');
-</script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
-     crossorigin="anonymous"></script>
-    <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "v6teuzj0e4");
-</script>
 </head>
 <body>
     <header class="header">
-        <a href="/" class="logo">
-            <img src="https://via.placeholder.com/150x50" alt="재미있는 사이트 로고">
+        <a href="/" class="logo" style="font-size: 1.4rem; font-weight: 700; color: var(--primary-color); text-decoration: none;">
+            마음테스트
         </a>
-        
-            <nav class="nav-links">
-                <a href="/">홈</a>
-                <a href="/animal-face-test/index.html">동물상 테스트</a>
-                <a href="/personality-test/personality-test.html">성격 테스트</a>
-            </nav>
-        
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+        </nav>
         <button id="theme-toggle-btn">테마 변경</button>
     </header>
 
-    <div class="container">
+    <div class="container contact-container">
         <h1>문의하기</h1>
-        <p>궁금한 점이나 제휴 관련 문의는 아래 양식을 통해 보내주세요.</p>
-        <div class="contact-form-section">
-          <form action="https://formspree.io/f/mnjplqda" method="POST">
-            <input type="email" name="email" placeholder="이메일 주소" required>
-            <textarea name="message" placeholder="문의 내용" required></textarea>
-            <button type="submit">보내기</button>
-          </form>
+
+        <div class="contact-intro">
+            <p>마음테스트를 이용해 주셔서 감사합니다! 궁금한 점, 제안사항, 버그 리포트, 제휴 문의 등 무엇이든 편하게 문의해주세요. 여러분의 소중한 의견이 더 나은 서비스를 만드는 데 큰 도움이 됩니다.</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-form-section">
+                <h2>문의 양식</h2>
+                <form action="https://formspree.io/f/mnjplqda" method="POST">
+                    <div class="form-group">
+                        <label for="name">이름</label>
+                        <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="email" id="email" name="email" placeholder="답변 받으실 이메일 주소" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">문의 유형</label>
+                        <select id="category" name="category" required>
+                            <option value="">문의 유형을 선택해주세요</option>
+                            <option value="general">일반 문의</option>
+                            <option value="suggestion">아이디어 제안</option>
+                            <option value="bug">버그 리포트</option>
+                            <option value="partnership">제휴/협업 문의</option>
+                            <option value="other">기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">문의 내용</label>
+                        <textarea id="message" name="message" placeholder="문의하실 내용을 상세히 적어주세요" required></textarea>
+                    </div>
+                    <button type="submit">문의 보내기</button>
+                </form>
+            </div>
+
+            <div class="contact-info-section">
+                <h2>안내 사항</h2>
+                <div class="info-card">
+                    <h3><span class="icon">⏰</span> 응답 시간</h3>
+                    <p>문의해 주시면 영업일 기준 1-2일 이내에 답변 드리도록 노력하겠습니다. 주말 및 공휴일에는 답변이 지연될 수 있습니다.</p>
+                </div>
+                <div class="info-card">
+                    <h3><span class="icon">💡</span> 아이디어 제안</h3>
+                    <p>새로운 테스트 아이디어나 기능 제안은 언제나 환영합니다! 좋은 아이디어는 검토 후 실제 서비스에 반영됩니다.</p>
+                </div>
+                <div class="info-card">
+                    <h3><span class="icon">🐛</span> 버그 리포트</h3>
+                    <p>오류나 문제를 발견하셨다면 알려주세요. 발생 상황과 사용하신 브라우저 정보를 함께 알려주시면 더욱 빠른 해결이 가능합니다.</p>
+                </div>
+                <div class="info-card">
+                    <h3><span class="icon">🤝</span> 제휴 문의</h3>
+                    <p>광고, 콘텐츠 제휴, 기술 협력 등 다양한 형태의 파트너십에 열려 있습니다. 자세한 제안 내용을 보내주세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>자주 묻는 질문 (FAQ)</h2>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>테스트 결과가 이상하게 나와요</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>테스트 결과는 재미를 위한 것으로, 과학적인 정확도를 보장하지 않습니다. 특히 동물상 테스트는 정면 사진, 밝은 조명, 표정 없는 상태에서 가장 정확한 결과가 나옵니다. 여러 번 시도해보시고 다양한 결과를 즐겨주세요!</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>업로드한 사진은 어떻게 처리되나요?</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>업로드하신 사진은 서버에 저장되지 않습니다. 모든 이미지 분석은 브라우저 내에서 처리되며, 분석이 완료된 후 자동으로 삭제됩니다. 개인정보 보호에 대한 자세한 내용은 Privacy Policy를 참고해주세요.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>새로운 테스트는 언제 추가되나요?</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>저희는 정기적으로 새로운 테스트를 추가하고 있습니다. MBTI 궁합 테스트, IQ 테스트 등이 준비 중입니다. 원하시는 테스트가 있다면 제안해주세요!</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>광고를 제거할 수 있나요?</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>현재는 광고 제거 옵션을 제공하고 있지 않습니다. 광고 수익은 무료 서비스 유지와 새로운 콘텐츠 개발에 사용됩니다. 양해 부탁드립니다.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>모바일에서도 이용 가능한가요?</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>네, 모든 기능은 모바일 브라우저에서도 이용 가능합니다. 반응형 디자인으로 제작되어 다양한 화면 크기에서 최적의 경험을 제공합니다.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -157,7 +329,11 @@
         </div>
     </footer>
     <script>
-        // Simple theme toggle for pages without main.js
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            faqItem.classList.toggle('active');
+        }
+
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         themeToggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');

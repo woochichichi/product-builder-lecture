@@ -1,0 +1,624 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>색깔 심리 테스트 - 좋아하는 색으로 알아보는 나의 심리</title>
+    <meta name="description" content="색깔로 알아보는 숨겨진 나의 심리! 좋아하는 색상을 선택하면 당신의 성격, 감정 상태, 숨겨진 욕구를 분석해드립니다. 무료 색깔 심리 테스트를 지금 시작하세요.">
+    <meta name="keywords" content="색깔 심리 테스트, 컬러 테스트, 심리 분석, 색상 성격, 무료 심리 테스트">
+    <meta property="og:title" content="색깔 심리 테스트 - 좋아하는 색으로 알아보는 나의 심리" />
+    <meta property="og:description" content="색깔로 알아보는 숨겨진 나의 심리! 좋아하는 색상을 선택하면 당신의 성격, 감정 상태를 분석해드립니다." />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=색깔+심리+테스트" />
+    <meta property="og:url" content="https://musinsa.cloud/color-test/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="색깔 심리 테스트 - 좋아하는 색으로 알아보는 나의 심리" />
+    <meta name="twitter:description" content="색깔로 알아보는 숨겨진 나의 심리! 좋아하는 색상을 선택하면 성격을 분석해드립니다." />
+    <link rel="canonical" href="https://musinsa.cloud/color-test/" />
+    <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../global.css"></noscript>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://musinsa.cloud/color-test/"
+      },
+      "headline": "색깔 심리 테스트 - 좋아하는 색으로 알아보는 나의 심리",
+      "description": "색깔로 알아보는 숨겨진 나의 심리! 좋아하는 색상을 선택하면 성격을 분석해드립니다.",
+      "author": {
+        "@type": "Organization",
+        "name": "마음테스트"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "마음테스트"
+      },
+      "datePublished": "2026-01-30",
+      "dateModified": "2026-01-30"
+    }
+    </script>
+    <style>
+        .color-intro {
+            text-align: left;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        .color-intro h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .color-intro p {
+            line-height: 1.7;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .step.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        .step.completed {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+        .question-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .color-option {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .color-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .color-option.selected {
+            border-color: var(--text-color);
+            transform: scale(1.08);
+        }
+        .color-option .color-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.5rem;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .result-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .result-header {
+            padding: 2rem;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        .result-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .result-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .analysis-section {
+            background: var(--input-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .analysis-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .analysis-section p {
+            line-height: 1.8;
+        }
+        .trait-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .trait-tag {
+            padding: 0.5rem 1rem;
+            background: var(--container-bg);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--input-border);
+        }
+        .color-meaning {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .meaning-card {
+            padding: 1rem;
+            background: var(--input-bg);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .meaning-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .meaning-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+        .retry-btn {
+            padding: 1rem 2.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 158, 228, 0.4);
+        }
+        .share-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--input-border);
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .share-btn {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .share-btn.twitter { background: #1DA1F2; color: white; }
+        .share-btn.facebook { background: #4267B2; color: white; }
+        .share-btn.copy { background: var(--input-bg); border: 1px solid var(--input-border); }
+        .color-info-section {
+            margin-top: 3rem;
+            text-align: left;
+        }
+        .color-info-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .color-psychology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .color-psychology-card {
+            padding: 1rem;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+        .color-psychology-card h4 {
+            margin-bottom: 0.5rem;
+        }
+        .color-psychology-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .color-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .color-meaning {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo" style="font-size: 1.4rem; font-weight: 700; color: var(--primary-color); text-decoration: none;">
+            마음테스트
+        </a>
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+        </nav>
+        <button id="theme-toggle-btn">테마 변경</button>
+    </header>
+
+    <div class="container">
+        <h1>색깔 심리 테스트</h1>
+        <p>좋아하는 색깔로 알아보는 당신의 숨겨진 심리</p>
+
+        <div class="color-intro">
+            <h2>테스트 소개</h2>
+            <p>색채 심리학에 따르면, 사람들이 선호하는 색상은 그들의 성격, 감정 상태, 무의식적 욕구를 반영합니다. 이 테스트에서는 3단계에 걸쳐 색상을 선택하고, 그 결과를 바탕으로 당신의 심리를 분석해드립니다.</p>
+            <ul style="margin-top: 1rem; padding-left: 1.5rem; line-height: 2;">
+                <li><strong>1단계:</strong> 가장 끌리는 색상 선택</li>
+                <li><strong>2단계:</strong> 현재 기분을 나타내는 색상 선택</li>
+                <li><strong>3단계:</strong> 피하고 싶은 색상 선택</li>
+            </ul>
+        </div>
+
+        <div id="test-container">
+            <div class="step-indicator">
+                <div class="step active" id="step1">1</div>
+                <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
+            </div>
+
+            <div id="question1" class="question-container">
+                <h3 class="question-title">Q1. 가장 끌리는 색상을 선택하세요</h3>
+                <p style="margin-bottom: 1.5rem; opacity: 0.8;">직감적으로 가장 마음에 드는 색을 선택해주세요.</p>
+                <div class="color-grid" id="colors1"></div>
+            </div>
+
+            <div id="question2" class="question-container" style="display: none;">
+                <h3 class="question-title">Q2. 현재 기분을 표현하는 색상을 선택하세요</h3>
+                <p style="margin-bottom: 1.5rem; opacity: 0.8;">지금 이 순간의 감정과 가장 어울리는 색을 선택해주세요.</p>
+                <div class="color-grid" id="colors2"></div>
+            </div>
+
+            <div id="question3" class="question-container" style="display: none;">
+                <h3 class="question-title">Q3. 피하고 싶은 색상을 선택하세요</h3>
+                <p style="margin-bottom: 1.5rem; opacity: 0.8;">왠지 모르게 거부감이 드는 색을 선택해주세요.</p>
+                <div class="color-grid" id="colors3"></div>
+            </div>
+        </div>
+
+        <div class="result-container" id="result-container">
+            <div class="result-header" id="result-header">
+                <h2 id="result-title"></h2>
+                <p id="result-subtitle"></p>
+            </div>
+
+            <div class="analysis-section">
+                <h3>당신의 성격 분석</h3>
+                <p id="personality-analysis"></p>
+                <div class="trait-tags" id="trait-tags"></div>
+            </div>
+
+            <div class="analysis-section">
+                <h3>현재 감정 상태</h3>
+                <p id="emotion-analysis"></p>
+            </div>
+
+            <div class="analysis-section">
+                <h3>숨겨진 욕구</h3>
+                <p id="desire-analysis"></p>
+            </div>
+
+            <div class="color-meaning">
+                <div class="meaning-card">
+                    <div class="icon">💡</div>
+                    <h4>추천 활동</h4>
+                    <p id="recommended-activity"></p>
+                </div>
+                <div class="meaning-card">
+                    <div class="icon">🎯</div>
+                    <h4>주의할 점</h4>
+                    <p id="caution-point"></p>
+                </div>
+            </div>
+
+            <button class="retry-btn" onclick="resetTest()">다시 테스트하기</button>
+
+            <div class="share-section">
+                <p>결과를 친구들과 공유해보세요!</p>
+                <div class="share-buttons">
+                    <button onclick="shareTwitter()" class="share-btn twitter">Twitter</button>
+                    <button onclick="shareFacebook()" class="share-btn facebook">Facebook</button>
+                    <button onclick="copyLink()" class="share-btn copy">링크 복사</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-info-section">
+            <h2>색채 심리학이란?</h2>
+            <p>색채 심리학은 색상이 인간의 행동, 감정, 결정에 미치는 영향을 연구하는 학문입니다. 각 색상은 고유한 심리적 의미와 에너지를 가지고 있으며, 우리가 무의식적으로 선택하는 색상은 내면의 상태를 반영합니다.</p>
+
+            <div class="color-psychology-grid">
+                <div class="color-psychology-card" style="background: #e74c3c;">
+                    <h4>빨강</h4>
+                    <p>열정, 에너지, 행동력</p>
+                </div>
+                <div class="color-psychology-card" style="background: #f39c12;">
+                    <h4>주황</h4>
+                    <p>창의성, 모험심, 사교성</p>
+                </div>
+                <div class="color-psychology-card" style="background: #f1c40f; color: #333;">
+                    <h4>노랑</h4>
+                    <p>낙관, 희망, 지성</p>
+                </div>
+                <div class="color-psychology-card" style="background: #2ecc71;">
+                    <h4>초록</h4>
+                    <p>조화, 안정, 성장</p>
+                </div>
+                <div class="color-psychology-card" style="background: #3498db;">
+                    <h4>파랑</h4>
+                    <p>신뢰, 평화, 지혜</p>
+                </div>
+                <div class="color-psychology-card" style="background: #9b59b6;">
+                    <h4>보라</h4>
+                    <p>창조성, 신비, 고귀함</p>
+                </div>
+                <div class="color-psychology-card" style="background: #e91e63;">
+                    <h4>분홍</h4>
+                    <p>사랑, 부드러움, 로맨스</p>
+                </div>
+                <div class="color-psychology-card" style="background: #34495e;">
+                    <h4>검정</h4>
+                    <p>권위, 세련됨, 독립성</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        const colors = [
+            { name: '빨강', hex: '#e74c3c', textColor: 'white' },
+            { name: '주황', hex: '#f39c12', textColor: 'white' },
+            { name: '노랑', hex: '#f1c40f', textColor: '#333' },
+            { name: '초록', hex: '#2ecc71', textColor: 'white' },
+            { name: '파랑', hex: '#3498db', textColor: 'white' },
+            { name: '보라', hex: '#9b59b6', textColor: 'white' },
+            { name: '분홍', hex: '#e91e63', textColor: 'white' },
+            { name: '검정', hex: '#34495e', textColor: 'white' }
+        ];
+
+        const colorMeanings = {
+            '빨강': {
+                personality: '당신은 열정적이고 에너지가 넘치는 사람입니다. 직접적이고 솔직한 성격으로, 목표를 향해 강하게 나아가는 추진력이 있습니다. 리더십이 강하며 도전을 두려워하지 않습니다.',
+                traits: ['열정적', '적극적', '리더십', '도전적', '자신감'],
+                emotion: '현재 에너지가 넘치고 무언가를 성취하고 싶은 욕구가 강합니다.',
+                desire: '인정받고 싶고, 자신의 능력을 발휘하고 싶은 욕구가 있습니다.',
+                activity: '운동이나 새로운 프로젝트 시작',
+                caution: '조급함을 경계하고 인내심을 기르세요'
+            },
+            '주황': {
+                personality: '당신은 밝고 사교적인 성격의 소유자입니다. 창의적이고 모험을 즐기며, 새로운 경험에 열려 있습니다. 낙관적인 태도로 주변 사람들에게 긍정적인 에너지를 줍니다.',
+                traits: ['사교적', '창의적', '낙관적', '모험심', '유쾌함'],
+                emotion: '즐겁고 활기찬 기분이며, 새로운 것을 시도하고 싶어합니다.',
+                desire: '자유롭게 자신을 표현하고 즐거움을 추구하고 싶습니다.',
+                activity: '친구들과의 만남이나 창작 활동',
+                caution: '산만해지지 않도록 집중력을 유지하세요'
+            },
+            '노랑': {
+                personality: '당신은 지적이고 호기심이 많은 사람입니다. 밝은 성격으로 주변을 환하게 만들며, 새로운 아이디어와 지식을 탐구하는 것을 좋아합니다. 긍정적인 에너지로 희망을 전파합니다.',
+                traits: ['지적', '호기심', '낙관적', '창의적', '밝음'],
+                emotion: '희망적이고 새로운 가능성에 대한 기대감이 있습니다.',
+                desire: '새로운 것을 배우고 성장하고 싶은 욕구가 있습니다.',
+                activity: '학습, 독서, 새로운 취미 탐구',
+                caution: '너무 많은 것을 한번에 시도하지 마세요'
+            },
+            '초록': {
+                personality: '당신은 균형 잡힌 성격의 소유자입니다. 평화와 조화를 중시하며, 자연을 사랑합니다. 신뢰할 수 있고 안정적인 사람으로, 주변 사람들에게 편안함을 줍니다.',
+                traits: ['안정적', '균형감', '신뢰감', '자연친화적', '평화로움'],
+                emotion: '마음의 평화를 찾고 있으며, 안정을 원합니다.',
+                desire: '조화로운 환경에서 성장하고 싶은 욕구가 있습니다.',
+                activity: '자연 속 산책, 명상, 정원 가꾸기',
+                caution: '변화를 두려워하지 말고 새로운 도전도 해보세요'
+            },
+            '파랑': {
+                personality: '당신은 차분하고 이성적인 사람입니다. 깊은 사고력과 통찰력을 가지고 있으며, 신뢰할 수 있는 사람입니다. 진실을 추구하고 정직함을 중요시합니다.',
+                traits: ['이성적', '신뢰감', '차분함', '정직함', '지혜로움'],
+                emotion: '평온하고 안정적인 상태이며, 깊은 생각에 잠겨 있습니다.',
+                desire: '진정한 이해와 깊은 관계를 원합니다.',
+                activity: '명상, 심층 대화, 독서',
+                caution: '감정 표현도 중요합니다. 마음을 열어보세요'
+            },
+            '보라': {
+                personality: '당신은 창의적이고 독특한 감각의 소유자입니다. 예술적 감수성이 뛰어나고, 영적인 것에 관심이 많습니다. 독립적이고 자신만의 세계를 가지고 있습니다.',
+                traits: ['창의적', '예술적', '독특함', '신비로움', '직관적'],
+                emotion: '영감을 받고 있으며, 자기 표현에 대한 욕구가 있습니다.',
+                desire: '자신의 독창성을 인정받고 싶습니다.',
+                activity: '예술 활동, 명상, 창작',
+                caution: '현실과의 균형을 잃지 마세요'
+            },
+            '분홍': {
+                personality: '당신은 따뜻하고 사랑이 넘치는 사람입니다. 부드럽고 섬세한 감성을 가지고 있으며, 다른 사람을 배려하는 마음이 깊습니다. 로맨틱하고 사랑을 중요시합니다.',
+                traits: ['따뜻함', '섬세함', '로맨틱', '배려심', '부드러움'],
+                emotion: '사랑과 애정을 느끼고 있으며, 연결감을 원합니다.',
+                desire: '사랑받고 사랑을 주고 싶은 욕구가 있습니다.',
+                activity: '소중한 사람과의 시간, 자기 돌봄',
+                caution: '자신의 감정도 소중히 여기세요'
+            },
+            '검정': {
+                personality: '당신은 독립적이고 강한 개성의 소유자입니다. 세련되고 권위 있는 이미지를 가지고 있으며, 자신만의 기준과 원칙이 있습니다. 깊이 있는 사고를 즐깁니다.',
+                traits: ['독립적', '세련됨', '강인함', '신비로움', '권위'],
+                emotion: '자신만의 공간과 시간이 필요합니다.',
+                desire: '자율성과 독립성을 유지하고 싶습니다.',
+                activity: '혼자만의 시간, 깊은 사색',
+                caution: '타인에게 마음을 열어보세요'
+            }
+        };
+
+        let selectedColors = [];
+        let currentStep = 1;
+
+        function renderColors(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            colors.forEach(color => {
+                const div = document.createElement('div');
+                div.className = 'color-option';
+                div.style.backgroundColor = color.hex;
+                div.innerHTML = `<span class="color-name" style="color: ${color.textColor}">${color.name}</span>`;
+                div.onclick = () => selectColor(color.name, containerId);
+                container.appendChild(div);
+            });
+        }
+
+        function selectColor(colorName, containerId) {
+            selectedColors.push(colorName);
+
+            // Update step indicators
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep}`).classList.add('completed');
+
+            if (currentStep < 3) {
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                document.getElementById(`question${currentStep - 1}`).style.display = 'none';
+                document.getElementById(`question${currentStep}`).style.display = 'block';
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('test-container').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+
+            const mainColor = selectedColors[0];
+            const moodColor = selectedColors[1];
+            const avoidColor = selectedColors[2];
+            const colorData = colorMeanings[mainColor];
+
+            // Set header color
+            const headerColor = colors.find(c => c.name === mainColor);
+            document.getElementById('result-header').style.background = `linear-gradient(135deg, ${headerColor.hex}, ${headerColor.hex}99)`;
+            document.getElementById('result-title').textContent = `당신은 "${mainColor}" 유형입니다`;
+            document.getElementById('result-subtitle').textContent = colorData.traits.slice(0, 3).join(' · ');
+
+            // Set analysis
+            document.getElementById('personality-analysis').textContent = colorData.personality;
+
+            const traitsContainer = document.getElementById('trait-tags');
+            traitsContainer.innerHTML = '';
+            colorData.traits.forEach(trait => {
+                const tag = document.createElement('span');
+                tag.className = 'trait-tag';
+                tag.textContent = trait;
+                traitsContainer.appendChild(tag);
+            });
+
+            document.getElementById('emotion-analysis').textContent = colorData.emotion + ` 현재 "${moodColor}" 색상을 선택하신 것으로 보아, ${colorMeanings[moodColor].emotion.toLowerCase()}`;
+            document.getElementById('desire-analysis').textContent = colorData.desire + ` "${avoidColor}" 색상을 피하고 싶어하는 것은 ${colorMeanings[avoidColor].traits[0]} 특성에 대한 거부감일 수 있습니다.`;
+            document.getElementById('recommended-activity').textContent = colorData.activity;
+            document.getElementById('caution-point').textContent = colorData.caution;
+        }
+
+        function resetTest() {
+            selectedColors = [];
+            currentStep = 1;
+
+            // Reset step indicators
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index === 0) step.classList.add('active');
+            });
+
+            // Reset questions
+            document.querySelectorAll('.question-container').forEach((q, index) => {
+                q.style.display = index === 0 ? 'block' : 'none';
+            });
+
+            document.getElementById('test-container').style.display = 'block';
+            document.getElementById('result-container').style.display = 'none';
+        }
+
+        function shareTwitter() {
+            const text = `나의 색깔 심리 테스트 결과: "${selectedColors[0]}" 유형! 당신도 테스트해보세요.`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function shareFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('링크가 복사되었습니다!');
+            });
+        }
+
+        // Initialize
+        renderColors('colors1');
+        renderColors('colors2');
+        renderColors('colors3');
+
+        // Theme toggle
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            themeToggleBtn.textContent = isDarkMode ? '라이트 모드' : '다크 모드';
+        });
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        themeToggleBtn.textContent = document.body.classList.contains('dark-mode') ? '라이트 모드' : '다크 모드';
+    </script>
+</body>
+</html>
