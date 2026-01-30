@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타로 카드 - 오늘의 타로 운세 보기 | 무료 타로 점</title>
+    <meta name="description" content="무료 타로 카드 점으로 오늘의 운세를 확인하세요. 3장의 카드를 선택하여 과거, 현재, 미래의 메시지를 받아보세요. 매일 새로운 타로 리딩!">
+    <meta name="keywords" content="타로 카드, 무료 타로, 타로 점, 오늘의 타로, 타로 운세, 타로 리딩">
+    <meta property="og:title" content="타로 카드 - 오늘의 타로 운세 보기" />
+    <meta property="og:description" content="무료 타로 카드 점으로 오늘의 운세를 확인하세요. 3장의 카드로 과거, 현재, 미래의 메시지를 받아보세요." />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=타로+카드" />
+    <meta property="og:url" content="https://musinsa.cloud/tarot/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="타로 카드 - 오늘의 타로 운세 보기" />
+    <meta name="twitter:description" content="무료 타로 카드 점으로 오늘의 운세를 확인하세요." />
+    <link rel="canonical" href="https://musinsa.cloud/tarot/" />
+    <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../global.css"></noscript>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://musinsa.cloud/tarot/"
+      },
+      "headline": "타로 카드 - 오늘의 타로 운세 보기",
+      "description": "무료 타로 카드 점으로 오늘의 운세를 확인하세요.",
+      "author": {
+        "@type": "Organization",
+        "name": "마음테스트"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "마음테스트"
+      },
+      "datePublished": "2026-01-30",
+      "dateModified": "2026-01-30"
+    }
+    </script>
+    <style>
+        .tarot-intro {
+            text-align: left;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #9b59b6;
+        }
+        .tarot-intro h2 {
+            color: #9b59b6;
+            margin-bottom: 0.5rem;
+        }
+        .tarot-intro p {
+            line-height: 1.7;
+        }
+        .start-button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 2rem auto 0;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+        }
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(155, 89, 182, 0.4);
+        }
+        .card-selection {
+            display: none;
+            text-align: center;
+        }
+        .card-selection h2 {
+            color: #9b59b6;
+            margin-bottom: 1rem;
+        }
+        .card-selection p {
+            margin-bottom: 2rem;
+            color: #666;
+        }
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .tarot-card {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(135deg, #2c3e50, #4a5568);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .tarot-card::before {
+            content: '✧';
+            color: rgba(255,255,255,0.3);
+            font-size: 3rem;
+        }
+        .tarot-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(155, 89, 182, 0.4);
+        }
+        .tarot-card.selected {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            transform: translateY(-10px);
+        }
+        .tarot-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .tarot-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .selected-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .selected-slot {
+            text-align: center;
+        }
+        .selected-slot .slot {
+            width: 70px;
+            height: 100px;
+            border: 3px dashed #9b59b6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            background: rgba(155, 89, 182, 0.1);
+        }
+        .selected-slot .slot.filled {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: none;
+            color: white;
+        }
+        .selected-slot label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+        }
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+        .result-container h2 {
+            color: #9b59b6;
+            margin-bottom: 2rem;
+        }
+        .reading-cards {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .reading-card {
+            background: var(--container-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            width: 280px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            text-align: center;
+        }
+        .reading-card .card-position {
+            font-size: 0.9rem;
+            color: #9b59b6;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .reading-card .card-emoji {
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+        .reading-card .card-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        .reading-card .card-meaning {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #666;
+        }
+        .overall-message {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 4px solid #9b59b6;
+        }
+        .overall-message h3 {
+            color: #9b59b6;
+            margin-bottom: 1rem;
+        }
+        .overall-message p {
+            line-height: 1.8;
+        }
+        .retry-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        .retry-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
+        }
+        .share-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--input-border);
+        }
+        .share-section p {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .share-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .share-btn.kakao { background: #FEE500; color: #000; }
+        .share-btn.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .share-btn.tiktok { background: #000; color: white; }
+        .share-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .card-info {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--input-border);
+        }
+        .card-info h2 {
+            color: #9b59b6;
+            margin-bottom: 1.5rem;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        .card-preview {
+            background: var(--input-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .card-preview .emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .card-preview .name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .tarot-card {
+                width: 60px;
+                height: 90px;
+            }
+            .reading-card {
+                width: 100%;
+            }
+            .selected-cards {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+            <a href="/tarot/">타로</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>타로 카드 리딩</h1>
+        <p>3장의 카드로 알아보는 오늘의 메시지</p>
+
+        <div class="tarot-intro" id="intro-section">
+            <h2>타로 카드란?</h2>
+            <p>타로 카드는 수백 년의 역사를 가진 점술 도구입니다. 78장의 카드 각각에는 고유한 상징과 의미가 담겨 있으며, 선택한 카드를 통해 현재 상황에 대한 통찰과 조언을 얻을 수 있습니다.</p>
+            <ul>
+                <li><strong>과거:</strong> 현재 상황에 영향을 미친 과거의 에너지</li>
+                <li><strong>현재:</strong> 지금 당신이 처한 상황과 에너지</li>
+                <li><strong>미래:</strong> 앞으로 펼쳐질 가능성과 조언</li>
+            </ul>
+            <p>마음을 편안하게 하고, 궁금한 것을 떠올리며 카드를 선택해보세요. 직감을 믿고 끌리는 카드를 골라주세요.</p>
+            <button id="start-btn" class="start-button">타로 시작하기</button>
+        </div>
+
+        <div class="card-selection" id="selection-section">
+            <h2>카드를 선택하세요</h2>
+            <p>마음을 집중하고 끌리는 카드 3장을 순서대로 선택해주세요</p>
+
+            <div class="selected-cards">
+                <div class="selected-slot">
+                    <div class="slot" id="slot-1">?</div>
+                    <label>과거</label>
+                </div>
+                <div class="selected-slot">
+                    <div class="slot" id="slot-2">?</div>
+                    <label>현재</label>
+                </div>
+                <div class="selected-slot">
+                    <div class="slot" id="slot-3">?</div>
+                    <label>미래</label>
+                </div>
+            </div>
+
+            <div class="cards-container" id="cards-container">
+                <!-- Cards will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="result-container" id="result-section">
+            <!-- Results will be shown here -->
+        </div>
+
+        <div class="card-info" id="card-info">
+            <h2>주요 타로 카드 소개</h2>
+            <div class="card-grid">
+                <div class="card-preview">
+                    <div class="emoji">🌟</div>
+                    <div class="name">별</div>
+                </div>
+                <div class="card-preview">
+                    <div class="emoji">🌙</div>
+                    <div class="name">달</div>
+                </div>
+                <div class="card-preview">
+                    <div class="emoji">☀️</div>
+                    <div class="name">태양</div>
+                </div>
+                <div class="card-preview">
+                    <div class="emoji">👑</div>
+                    <div class="name">황제</div>
+                </div>
+                <div class="card-preview">
+                    <div class="emoji">💕</div>
+                    <div class="name">연인</div>
+                </div>
+                <div class="card-preview">
+                    <div class="emoji">⚖️</div>
+                    <div class="name">정의</div>
+                </div>
+                <div class="card-preview">
+                    <div class="emoji">🎡</div>
+                    <div class="name">운명의 수레바퀴</div>
+                </div>
+                <div class="card-preview">
+                    <div class="emoji">💪</div>
+                    <div class="name">힘</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        const tarotCards = [
+            { name: "바보", emoji: "🃏", meaning: "새로운 시작, 순수함, 모험" },
+            { name: "마법사", emoji: "🎩", meaning: "창의력, 의지력, 능력의 발휘" },
+            { name: "여사제", emoji: "🔮", meaning: "직감, 내면의 지혜, 신비" },
+            { name: "여황제", emoji: "👸", meaning: "풍요, 모성, 창조력" },
+            { name: "황제", emoji: "👑", meaning: "권위, 리더십, 안정" },
+            { name: "교황", emoji: "📿", meaning: "전통, 가르침, 영적 지도" },
+            { name: "연인", emoji: "💕", meaning: "사랑, 조화, 선택" },
+            { name: "전차", emoji: "🏎️", meaning: "승리, 의지, 전진" },
+            { name: "힘", emoji: "💪", meaning: "용기, 인내, 내면의 힘" },
+            { name: "은둔자", emoji: "🏔️", meaning: "성찰, 내면 탐구, 지혜" },
+            { name: "운명의 수레바퀴", emoji: "🎡", meaning: "변화, 순환, 행운" },
+            { name: "정의", emoji: "⚖️", meaning: "공정, 진실, 균형" },
+            { name: "매달린 사람", emoji: "🙃", meaning: "희생, 새로운 관점, 기다림" },
+            { name: "죽음", emoji: "🦋", meaning: "변화, 끝과 시작, 변환" },
+            { name: "절제", emoji: "🌊", meaning: "균형, 조화, 인내" },
+            { name: "악마", emoji: "⛓️", meaning: "유혹, 집착, 물질주의" },
+            { name: "탑", emoji: "🗼", meaning: "갑작스러운 변화, 해방, 깨달음" },
+            { name: "별", emoji: "🌟", meaning: "희망, 영감, 평화" },
+            { name: "달", emoji: "🌙", meaning: "직감, 환상, 무의식" },
+            { name: "태양", emoji: "☀️", meaning: "기쁨, 성공, 활력" },
+            { name: "심판", emoji: "📯", meaning: "부활, 갱신, 결단" },
+            { name: "세계", emoji: "🌍", meaning: "완성, 성취, 통합" }
+        ];
+
+        const positionMeanings = {
+            past: {
+                title: "과거",
+                description: "이 카드는 현재 상황에 영향을 미친 과거의 에너지를 나타냅니다."
+            },
+            present: {
+                title: "현재",
+                description: "이 카드는 지금 당신이 처한 상황과 주변의 에너지를 보여줍니다."
+            },
+            future: {
+                title: "미래",
+                description: "이 카드는 앞으로 펼쳐질 가능성과 조언을 담고 있습니다."
+            }
+        };
+
+        const overallMessages = [
+            "지금은 변화의 시기입니다. 두려워하지 말고 새로운 가능성을 받아들이세요. 당신의 직감을 믿으면 올바른 길을 찾을 수 있습니다.",
+            "내면의 목소리에 귀 기울이세요. 당신은 이미 답을 알고 있습니다. 조용히 자신과 대화하는 시간을 가져보세요.",
+            "긍정적인 에너지가 당신을 감싸고 있습니다. 자신감을 가지고 앞으로 나아가세요. 좋은 일들이 기다리고 있습니다.",
+            "인내가 필요한 시기입니다. 서두르지 말고 차분하게 상황을 지켜보세요. 때가 되면 모든 것이 제자리를 찾을 것입니다.",
+            "새로운 만남이나 기회가 다가오고 있습니다. 마음을 열고 받아들일 준비를 하세요.",
+            "과거의 경험에서 배운 교훈을 현재에 적용할 때입니다. 같은 실수를 반복하지 않도록 주의하세요.",
+            "창의적인 에너지가 높아지고 있습니다. 새로운 프로젝트나 취미를 시작하기 좋은 시기입니다.",
+            "관계에서 솔직한 대화가 필요합니다. 마음에 담아둔 것들을 표현해보세요."
+        ];
+
+        let selectedCards = [];
+        let cardOrder = [];
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function initCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+            cardOrder = shuffleArray([...Array(tarotCards.length).keys()]);
+
+            for (let i = 0; i < 12; i++) {
+                const card = document.createElement('div');
+                card.className = 'tarot-card';
+                card.dataset.index = cardOrder[i];
+                card.addEventListener('click', selectCard);
+                container.appendChild(card);
+            }
+        }
+
+        function selectCard(e) {
+            if (selectedCards.length >= 3) return;
+
+            const card = e.target;
+            if (card.classList.contains('selected') || card.classList.contains('disabled')) return;
+
+            card.classList.add('selected');
+            const cardIndex = parseInt(card.dataset.index);
+            selectedCards.push(cardIndex);
+
+            const slotNum = selectedCards.length;
+            const slot = document.getElementById(`slot-${slotNum}`);
+            slot.textContent = tarotCards[cardIndex].emoji;
+            slot.classList.add('filled');
+
+            if (selectedCards.length >= 3) {
+                document.querySelectorAll('.tarot-card:not(.selected)').forEach(c => {
+                    c.classList.add('disabled');
+                });
+                setTimeout(showResults, 1000);
+            }
+        }
+
+        function showResults() {
+            document.getElementById('selection-section').style.display = 'none';
+            document.getElementById('card-info').style.display = 'none';
+
+            const resultSection = document.getElementById('result-section');
+            resultSection.style.display = 'block';
+
+            const positions = ['past', 'present', 'future'];
+            const positionLabels = ['과거', '현재', '미래'];
+
+            let cardsHTML = '<h2>당신의 타로 리딩 결과</h2><div class="reading-cards">';
+
+            selectedCards.forEach((cardIndex, i) => {
+                const card = tarotCards[cardIndex];
+                cardsHTML += `
+                    <div class="reading-card">
+                        <div class="card-position">${positionLabels[i]}</div>
+                        <div class="card-emoji">${card.emoji}</div>
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-meaning">${card.meaning}</div>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #888;">
+                            ${positionMeanings[positions[i]].description}
+                        </p>
+                    </div>
+                `;
+            });
+
+            cardsHTML += '</div>';
+
+            const randomMessage = overallMessages[Math.floor(Math.random() * overallMessages.length)];
+            cardsHTML += `
+                <div class="overall-message">
+                    <h3>오늘의 종합 메시지</h3>
+                    <p>${randomMessage}</p>
+                </div>
+                <button class="retry-button" onclick="resetReading()">다시 뽑기</button>
+                <div class="share-section">
+                    <p>결과를 친구들과 공유해보세요!</p>
+                    <div class="share-buttons">
+                        <button onclick="shareToKakao()" class="share-btn kakao">카카오톡</button>
+                        <button onclick="shareToInstagram()" class="share-btn instagram">인스타그램</button>
+                        <button onclick="shareToTiktok()" class="share-btn tiktok">틱톡</button>
+                    </div>
+                </div>
+            `;
+
+            resultSection.innerHTML = cardsHTML;
+        }
+
+        function resetReading() {
+            selectedCards = [];
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('selection-section').style.display = 'block';
+            document.getElementById('card-info').style.display = 'block';
+
+            for (let i = 1; i <= 3; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                slot.textContent = '?';
+                slot.classList.remove('filled');
+            }
+
+            initCards();
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = window.location.href;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            });
+        }
+
+        function shareToKakao() {
+            copyLink();
+            alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
+        }
+
+        function shareToInstagram() {
+            copyLink();
+            alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
+        }
+
+        function shareToTiktok() {
+            copyLink();
+            alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
+        }
+
+        // Initialize
+        document.getElementById('start-btn').addEventListener('click', function() {
+            document.getElementById('intro-section').style.display = 'none';
+            document.getElementById('selection-section').style.display = 'block';
+            initCards();
+        });
+    </script>
+</body>
+</html>
