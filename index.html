@@ -275,54 +275,34 @@
     </div>
   </footer>
 
-  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js" crossorigin="anonymous"></script>
   <script>
-    // Kakao SDK 초기화
-    Kakao.init('YOUR_KAKAO_APP_KEY'); // 실제 카카오 앱 키로 교체 필요
-
     const shareUrl = window.location.href;
-    const shareText = '마음테스트 - 다양한 심리 테스트를 무료로 즐겨보세요!';
 
-    // 카카오톡 공유
-    document.getElementById('share-kakao').addEventListener('click', () => {
-      if (Kakao.isInitialized()) {
-        Kakao.Share.sendDefault({
-          objectType: 'feed',
-          content: {
-            title: '마음테스트',
-            description: '나를 알아가는 심리 테스트! 성격, 색깔 심리, 운세를 무료로 확인하세요.',
-            imageUrl: 'https://via.placeholder.com/300x200.png?text=마음테스트',
-            link: { mobileWebUrl: shareUrl, webUrl: shareUrl }
-          },
-          buttons: [{ title: '테스트 하러가기', link: { mobileWebUrl: shareUrl, webUrl: shareUrl } }]
-        });
-      } else {
-        copyToClipboard();
-      }
-    });
-
-    // 인스타그램 (링크 복사 후 안내)
-    document.getElementById('share-instagram').addEventListener('click', () => {
-      copyToClipboard();
-      alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
-    });
-
-    // 틱톡 (링크 복사 후 안내)
-    document.getElementById('share-tiktok').addEventListener('click', () => {
-      copyToClipboard();
-      alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
-    });
-
-    function copyToClipboard() {
-      navigator.clipboard.writeText(shareUrl).catch(() => {
+    function copyToClipboard(message) {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert(message);
+      }).catch(() => {
         const textarea = document.createElement('textarea');
         textarea.value = shareUrl;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
+        alert(message);
       });
     }
+
+    document.getElementById('share-kakao').addEventListener('click', () => {
+      copyToClipboard('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
+    });
+
+    document.getElementById('share-instagram').addEventListener('click', () => {
+      copyToClipboard('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
+    });
+
+    document.getElementById('share-tiktok').addEventListener('click', () => {
+      copyToClipboard('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
+    });
   </script>
 </body>
 </html>

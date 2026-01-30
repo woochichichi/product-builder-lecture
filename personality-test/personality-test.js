@@ -292,21 +292,8 @@ function resetQuiz() {
 }
 
 function shareToKakao() {
-    if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
-        Kakao.Share.sendDefault({
-            objectType: 'feed',
-            content: {
-                title: '성격 테스트 결과',
-                description: '나의 성격 유형을 확인해보세요!',
-                imageUrl: 'https://via.placeholder.com/300x200.png?text=성격테스트',
-                link: { mobileWebUrl: window.location.href, webUrl: window.location.href }
-            },
-            buttons: [{ title: '테스트 하러가기', link: { mobileWebUrl: window.location.href, webUrl: window.location.href } }]
-        });
-    } else {
-        copyLink();
-        alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
-    }
+    copyLink();
+    alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
 }
 
 function shareToInstagram() {
