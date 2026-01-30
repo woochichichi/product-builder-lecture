@@ -14,15 +14,6 @@
   --input-border: #e0e0e0;
 }
 
-body.dark-mode {
-  --background-color: #1c2128;
-  --container-bg: #2d333b;
-  --text-color: #cdd9e5;
-  --shadow-color: rgba(0, 0, 0, 0.3);
-  --glow-color: rgba(90, 158, 228, 0.3);
-  --input-bg: #22272e;
-  --input-border: #444c56;
-}
 
 body {
   font-family: 'Noto Sans KR', sans-serif;
