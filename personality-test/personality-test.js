@@ -317,8 +317,8 @@ function copyLink() {
     });
 }
 
-// Wait for DOM to be ready and start button click
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize start button
+function initStartButton() {
     const startButton = document.getElementById('start-test-btn');
     const testIntro = document.querySelector('.test-intro');
     const testInfo = document.querySelector('.test-info');
@@ -334,4 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
             renderQuiz();
         });
     }
-});
+}
+
+// Run immediately since script is at bottom of body
+initStartButton();
