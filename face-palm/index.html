@@ -1,0 +1,722 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 관상/손금 분석 - 무료 관상 보기 | 손금 풀이</title>
+    <meta name="description" content="AI가 분석하는 관상과 손금! 얼굴 특징과 손금 라인을 선택하면 당신의 성격, 운세, 미래를 분석해드립니다. 무료 AI 관상 손금 분석을 지금 시작하세요.">
+    <meta name="keywords" content="관상, 손금, AI 관상, 얼굴 분석, 손금 풀이, 무료 관상, 인상 분석">
+    <meta property="og:title" content="AI 관상/손금 분석 - 무료 관상 보기" />
+    <meta property="og:description" content="AI가 분석하는 관상과 손금! 얼굴 특징과 손금을 선택하여 운세를 확인하세요." />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=AI+관상+손금" />
+    <meta property="og:url" content="https://musinsa.cloud/face-palm/" />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://musinsa.cloud/face-palm/" />
+    <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../global.css"></noscript>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+    <style>
+        .analysis-intro {
+            text-align: left;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #3498db;
+        }
+        .analysis-intro h2 {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+        .analysis-intro p {
+            line-height: 1.7;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 2rem;
+            border-radius: 30px;
+            overflow: hidden;
+            background: var(--input-bg);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--text-color);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .feature-section {
+            margin-bottom: 2rem;
+        }
+        .feature-section h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        .feature-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+        .feature-option {
+            padding: 1rem;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            background: var(--container-bg);
+        }
+        .feature-option:hover {
+            border-color: #3498db;
+            transform: translateY(-3px);
+        }
+        .feature-option.selected {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+        .feature-option .emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .feature-option .label {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .palm-line-section {
+            margin-bottom: 2rem;
+        }
+        .palm-diagram {
+            width: 200px;
+            height: 250px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            border-radius: 40% 40% 20% 20%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .palm-diagram::before {
+            content: '🖐️';
+            font-size: 5rem;
+        }
+        .line-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .line-option {
+            padding: 1.2rem;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--container-bg);
+        }
+        .line-option:hover {
+            border-color: #3498db;
+        }
+        .line-option.selected {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+        .line-option h4 {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .line-option p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .line-types {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .line-type {
+            padding: 0.4rem 0.8rem;
+            background: var(--input-bg);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .line-type:hover {
+            border-color: #3498db;
+        }
+        .line-type.selected {
+            background: #3498db;
+            color: white;
+        }
+        .analyze-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+        }
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+        .result-section {
+            display: none;
+        }
+        .result-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        .result-header h2 {
+            margin-bottom: 0.5rem;
+        }
+        .result-header .type-emoji {
+            font-size: 4rem;
+            margin: 1rem 0;
+        }
+        .result-header .type-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .analysis-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .analysis-card {
+            background: var(--container-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+        .analysis-card h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .analysis-card p {
+            line-height: 1.7;
+        }
+        .trait-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .trait-tag {
+            padding: 0.4rem 0.8rem;
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .fortune-section {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 4px solid #3498db;
+        }
+        .fortune-section h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        .retry-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .share-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .share-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .share-btn.kakao { background: #FEE500; color: #000; }
+        .share-btn.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .share-btn.tiktok { background: #000; color: white; }
+        @media (max-width: 600px) {
+            .feature-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .line-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+            <a href="/tarot/">타로</a>
+            <a href="/ziwei/">자미두수</a>
+            <a href="/face-palm/">AI 관상</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 800px;">
+        <h1>AI 관상/손금 분석</h1>
+        <p>얼굴 특징과 손금으로 알아보는 나의 운명</p>
+
+        <div class="analysis-intro">
+            <h2>AI 분석이란?</h2>
+            <p>수천 년간 전해온 동양의 관상학과 손금학을 AI 알고리즘으로 분석합니다. 얼굴의 특징과 손금의 형태를 선택하면, 당신의 성격, 재물운, 연애운, 건강운을 종합적으로 분석해드립니다.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">※ 재미로 즐기는 콘텐츠입니다. 실제 운명과 무관할 수 있습니다.</p>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab-btn active" data-tab="face">👤 관상 분석</button>
+            <button class="tab-btn" data-tab="palm">🖐️ 손금 분석</button>
+        </div>
+
+        <!-- Face Reading Tab -->
+        <div class="tab-content active" id="face-tab">
+            <div class="feature-section">
+                <h3>이마 모양</h3>
+                <div class="feature-options" data-feature="forehead">
+                    <div class="feature-option" data-value="wide">
+                        <div class="emoji">🟦</div>
+                        <div class="label">넓고 높은 이마</div>
+                    </div>
+                    <div class="feature-option" data-value="narrow">
+                        <div class="emoji">🔷</div>
+                        <div class="label">좁은 이마</div>
+                    </div>
+                    <div class="feature-option" data-value="round">
+                        <div class="emoji">⚪</div>
+                        <div class="label">둥근 이마</div>
+                    </div>
+                    <div class="feature-option" data-value="flat">
+                        <div class="emoji">➖</div>
+                        <div class="label">평평한 이마</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-section">
+                <h3>눈 모양</h3>
+                <div class="feature-options" data-feature="eyes">
+                    <div class="feature-option" data-value="big">
+                        <div class="emoji">👁️</div>
+                        <div class="label">크고 둥근 눈</div>
+                    </div>
+                    <div class="feature-option" data-value="long">
+                        <div class="emoji">👀</div>
+                        <div class="label">길고 날카로운 눈</div>
+                    </div>
+                    <div class="feature-option" data-value="small">
+                        <div class="emoji">🔘</div>
+                        <div class="label">작고 깊은 눈</div>
+                    </div>
+                    <div class="feature-option" data-value="curved">
+                        <div class="emoji">🌙</div>
+                        <div class="label">초승달 눈</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-section">
+                <h3>코 모양</h3>
+                <div class="feature-options" data-feature="nose">
+                    <div class="feature-option" data-value="high">
+                        <div class="emoji">🔺</div>
+                        <div class="label">오똑한 코</div>
+                    </div>
+                    <div class="feature-option" data-value="wide">
+                        <div class="emoji">🔷</div>
+                        <div class="label">넓은 콧볼</div>
+                    </div>
+                    <div class="feature-option" data-value="small">
+                        <div class="emoji">▫️</div>
+                        <div class="label">작고 낮은 코</div>
+                    </div>
+                    <div class="feature-option" data-value="long">
+                        <div class="emoji">📍</div>
+                        <div class="label">길고 곧은 코</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-section">
+                <h3>입 모양</h3>
+                <div class="feature-options" data-feature="mouth">
+                    <div class="feature-option" data-value="big">
+                        <div class="emoji">😀</div>
+                        <div class="label">큰 입</div>
+                    </div>
+                    <div class="feature-option" data-value="small">
+                        <div class="emoji">😊</div>
+                        <div class="label">작은 입</div>
+                    </div>
+                    <div class="feature-option" data-value="thick">
+                        <div class="emoji">👄</div>
+                        <div class="label">두꺼운 입술</div>
+                    </div>
+                    <div class="feature-option" data-value="thin">
+                        <div class="emoji">➖</div>
+                        <div class="label">얇은 입술</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="analyze-btn" id="face-analyze">관상 분석하기</button>
+        </div>
+
+        <!-- Palm Reading Tab -->
+        <div class="tab-content" id="palm-tab">
+            <div class="palm-diagram"></div>
+
+            <div class="palm-line-section">
+                <div class="line-options">
+                    <div class="line-option" data-line="life">
+                        <h4>생명선</h4>
+                        <p>건강, 활력, 생명력을 나타냅니다</p>
+                        <div class="line-types">
+                            <span class="line-type" data-value="long">길고 뚜렷</span>
+                            <span class="line-type" data-value="short">짧음</span>
+                            <span class="line-type" data-value="curved">곡선형</span>
+                        </div>
+                    </div>
+                    <div class="line-option" data-line="head">
+                        <h4>두뇌선</h4>
+                        <p>지성, 사고방식을 나타냅니다</p>
+                        <div class="line-types">
+                            <span class="line-type" data-value="straight">직선형</span>
+                            <span class="line-type" data-value="curved">곡선형</span>
+                            <span class="line-type" data-value="long">길게 뻗음</span>
+                        </div>
+                    </div>
+                    <div class="line-option" data-line="heart">
+                        <h4>감정선</h4>
+                        <p>사랑, 감정 표현을 나타냅니다</p>
+                        <div class="line-types">
+                            <span class="line-type" data-value="deep">깊고 선명</span>
+                            <span class="line-type" data-value="light">연함</span>
+                            <span class="line-type" data-value="branch">가지 있음</span>
+                        </div>
+                    </div>
+                    <div class="line-option" data-line="fate">
+                        <h4>운명선</h4>
+                        <p>직업운, 인생 방향을 나타냅니다</p>
+                        <div class="line-types">
+                            <span class="line-type" data-value="clear">뚜렷함</span>
+                            <span class="line-type" data-value="faint">희미함</span>
+                            <span class="line-type" data-value="none">없음</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="analyze-btn" id="palm-analyze">손금 분석하기</button>
+        </div>
+
+        <div class="result-section" id="result-section">
+            <!-- Results injected here -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        const faceResults = {
+            forehead: {
+                wide: { trait: "지도자형", desc: "넓은 시야와 큰 포부를 가졌습니다. 리더십이 뛰어나며 큰 일을 도모할 운명입니다." },
+                narrow: { trait: "집중형", desc: "한 분야에 깊이 파고드는 집중력이 있습니다. 전문가로 성공할 가능성이 높습니다." },
+                round: { trait: "창의형", desc: "둥근 이마는 창의력과 예술적 감각을 나타냅니다. 독창적인 아이디어로 성공합니다." },
+                flat: { trait: "현실형", desc: "실용적이고 현실적인 사고를 합니다. 착실하게 목표를 이루어 나갑니다." }
+            },
+            eyes: {
+                big: { trait: "감성적", desc: "큰 눈은 풍부한 감수성을 나타냅니다. 사람들과 쉽게 교감하며 인기가 많습니다." },
+                long: { trait: "통찰형", desc: "날카로운 눈은 뛰어난 관찰력을 의미합니다. 본질을 꿰뚫어 보는 능력이 있습니다." },
+                small: { trait: "신중형", desc: "깊은 눈은 깊은 사고와 신중함을 나타냅니다. 중요한 결정을 잘 내립니다." },
+                curved: { trait: "사교형", desc: "초승달 눈은 따뜻한 인상을 줍니다. 사람들에게 호감을 사며 인맥이 넓습니다." }
+            },
+            nose: {
+                high: { trait: "자존심형", desc: "오똑한 코는 높은 자존심과 야망을 나타냅니다. 큰 성공을 거둘 상입니다." },
+                wide: { trait: "재물형", desc: "넓은 콧볼은 재물운을 상징합니다. 돈을 모으고 관리하는 능력이 뛰어납니다." },
+                small: { trait: "섬세형", desc: "섬세하고 꼼꼼한 성격입니다. 디테일을 놓치지 않는 능력이 있습니다." },
+                long: { trait: "귀족형", desc: "곧은 코는 고귀한 품성을 나타냅니다. 품위 있게 성공을 거둡니다." }
+            },
+            mouth: {
+                big: { trait: "활동형", desc: "큰 입은 활발하고 사교적인 성격을 나타냅니다. 말을 통해 성공합니다." },
+                small: { trait: "절제형", desc: "작은 입은 신중한 언행을 나타냅니다. 말보다 행동으로 보여줍니다." },
+                thick: { trait: "열정형", desc: "두꺼운 입술은 풍부한 감정과 열정을 의미합니다. 사랑운이 좋습니다." },
+                thin: { trait: "이성형", desc: "얇은 입술은 이성적이고 논리적인 성격을 나타냅니다. 판단력이 뛰어납니다." }
+            }
+        };
+
+        const palmResults = {
+            life: {
+                long: { desc: "풍부한 생명력과 건강한 체질입니다. 장수하며 활력 넘치는 삶을 살게 됩니다." },
+                short: { desc: "짧지만 굵게 사는 타입입니다. 질보다 양을 추구하지 않으며 알찬 인생을 삽니다." },
+                curved: { desc: "유연한 적응력을 가졌습니다. 환경 변화에 잘 대처하며 건강을 유지합니다." }
+            },
+            head: {
+                straight: { desc: "논리적이고 분석적인 사고를 합니다. 이공계열이나 비즈니스에서 두각을 나타냅니다." },
+                curved: { desc: "창의적이고 예술적인 사고를 합니다. 문화 예술 분야에서 성공할 가능성이 높습니다." },
+                long: { desc: "깊은 사고력과 지혜를 가졌습니다. 학문이나 연구 분야에서 성과를 거둡니다." }
+            },
+            heart: {
+                deep: { desc: "깊고 진실된 사랑을 합니다. 한 번 마음을 주면 끝까지 가는 타입입니다." },
+                light: { desc: "가볍고 자유로운 연애를 즐깁니다. 다양한 만남을 통해 인생을 풍요롭게 합니다." },
+                branch: { desc: "여러 인연과 얽힐 운명입니다. 복잡하지만 풍성한 감정생활을 합니다." }
+            },
+            fate: {
+                clear: { desc: "뚜렷한 목표와 방향이 있습니다. 계획대로 인생을 개척해 나갑니다." },
+                faint: { desc: "유연하게 기회를 잡는 타입입니다. 정해진 길보다 자신만의 길을 만들어갑니다." },
+                none: { desc: "자유로운 영혼입니다. 틀에 박힌 삶보다 자유롭게 살아가는 것이 맞습니다." }
+            }
+        };
+
+        let faceSelections = {};
+        let palmSelections = {};
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+            });
+        });
+
+        // Face feature selection
+        document.querySelectorAll('.feature-options').forEach(container => {
+            container.querySelectorAll('.feature-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const feature = this.parentElement.dataset.feature;
+                    this.parentElement.querySelectorAll('.feature-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    faceSelections[feature] = this.dataset.value;
+                });
+            });
+        });
+
+        // Palm line selection
+        document.querySelectorAll('.line-type').forEach(type => {
+            type.addEventListener('click', function() {
+                const line = this.parentElement.parentElement.dataset.line;
+                this.parentElement.querySelectorAll('.line-type').forEach(t => t.classList.remove('selected'));
+                this.classList.add('selected');
+                palmSelections[line] = this.dataset.value;
+            });
+        });
+
+        // Face analysis
+        document.getElementById('face-analyze').addEventListener('click', function() {
+            if (Object.keys(faceSelections).length < 4) {
+                alert('모든 얼굴 특징을 선택해주세요.');
+                return;
+            }
+            showFaceResult();
+        });
+
+        // Palm analysis
+        document.getElementById('palm-analyze').addEventListener('click', function() {
+            if (Object.keys(palmSelections).length < 4) {
+                alert('모든 손금 라인을 선택해주세요.');
+                return;
+            }
+            showPalmResult();
+        });
+
+        function showFaceResult() {
+            const traits = [];
+            let html = '';
+
+            for (const [feature, value] of Object.entries(faceSelections)) {
+                const result = faceResults[feature][value];
+                traits.push(result.trait);
+            }
+
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.querySelector('.tab-container').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+
+            const fortuneScore = Math.floor(Math.random() * 30) + 70;
+
+            document.getElementById('result-section').innerHTML = `
+                <div class="result-header">
+                    <h2>관상 분석 결과</h2>
+                    <div class="type-emoji">👤</div>
+                    <div class="type-name">${traits[0]} + ${traits[1]}</div>
+                </div>
+
+                <div class="analysis-cards">
+                    ${Object.entries(faceSelections).map(([feature, value]) => {
+                        const result = faceResults[feature][value];
+                        const labels = {forehead: '이마', eyes: '눈', nose: '코', mouth: '입'};
+                        return `
+                            <div class="analysis-card">
+                                <h3>📍 ${labels[feature]} 분석</h3>
+                                <p>${result.desc}</p>
+                                <div class="trait-tags">
+                                    <span class="trait-tag">${result.trait}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="fortune-section">
+                    <h3>종합 운세</h3>
+                    <p>당신의 관상은 <strong>${traits.join(', ')}</strong>의 특징을 가지고 있습니다.</p>
+                    <p style="margin-top: 1rem;">전체적으로 ${fortuneScore}점의 좋은 관상입니다. ${fortuneScore > 80 ? '특히 사회적 성공과 재물운이 강하게 나타납니다.' : '꾸준한 노력으로 좋은 결과를 만들어 갈 수 있습니다.'} 대인관계에서 신뢰를 쌓아가면 더 큰 행운이 따를 것입니다.</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="retry-btn" onclick="resetAnalysis()">다시 분석하기</button>
+                </div>
+
+                <div class="share-section">
+                    <p>결과를 친구들과 공유해보세요!</p>
+                    <div class="share-buttons">
+                        <button onclick="shareToKakao()" class="share-btn kakao">카카오톡</button>
+                        <button onclick="shareToInstagram()" class="share-btn instagram">인스타그램</button>
+                        <button onclick="shareToTiktok()" class="share-btn tiktok">틱톡</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showPalmResult() {
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.querySelector('.tab-container').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+
+            const fortuneScore = Math.floor(Math.random() * 30) + 70;
+
+            document.getElementById('result-section').innerHTML = `
+                <div class="result-header">
+                    <h2>손금 분석 결과</h2>
+                    <div class="type-emoji">🖐️</div>
+                    <div class="type-name">종합 손금 리딩</div>
+                </div>
+
+                <div class="analysis-cards">
+                    ${Object.entries(palmSelections).map(([line, value]) => {
+                        const result = palmResults[line][value];
+                        const labels = {life: '생명선', head: '두뇌선', heart: '감정선', fate: '운명선'};
+                        const emojis = {life: '💚', head: '🧠', heart: '❤️', fate: '⭐'};
+                        return `
+                            <div class="analysis-card">
+                                <h3>${emojis[line]} ${labels[line]}</h3>
+                                <p>${result.desc}</p>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="fortune-section">
+                    <h3>종합 운세</h3>
+                    <p>당신의 손금 종합 점수는 <strong>${fortuneScore}점</strong>입니다.</p>
+                    <p style="margin-top: 1rem;">${palmSelections.life === 'long' ? '건강운이 매우 좋아 활기찬 삶을 살게 됩니다. ' : ''}${palmSelections.heart === 'deep' ? '진실된 사랑을 나눌 인연이 가까이 있습니다. ' : ''}${palmSelections.fate === 'clear' ? '직업적으로 큰 성공을 거둘 운명입니다.' : '자유로운 인생을 살아가게 됩니다.'}</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="retry-btn" onclick="resetAnalysis()">다시 분석하기</button>
+                </div>
+
+                <div class="share-section">
+                    <p>결과를 친구들과 공유해보세요!</p>
+                    <div class="share-buttons">
+                        <button onclick="shareToKakao()" class="share-btn kakao">카카오톡</button>
+                        <button onclick="shareToInstagram()" class="share-btn instagram">인스타그램</button>
+                        <button onclick="shareToTiktok()" class="share-btn tiktok">틱톡</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function resetAnalysis() {
+            faceSelections = {};
+            palmSelections = {};
+            document.querySelectorAll('.feature-option, .line-type').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = '');
+            document.querySelector('.tab-container').style.display = 'flex';
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('face-tab').classList.add('active');
+            document.getElementById('palm-tab').classList.remove('active');
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.querySelectorAll('.tab-btn')[1].classList.remove('active');
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = window.location.href;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            });
+        }
+
+        function shareToKakao() { copyLink(); alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.'); }
+        function shareToInstagram() { copyLink(); alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.'); }
+        function shareToTiktok() { copyLink(); alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.'); }
+    </script>
+</body>
+</html>

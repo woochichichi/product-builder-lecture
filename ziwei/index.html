@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자미두수 - 무료 자미두수 운세 보기 | 사주 운명 분석</title>
+    <meta name="description" content="자미두수로 알아보는 나의 운명과 성격! 생년월일시를 입력하면 자미두수 명반을 통해 당신의 운세, 성격, 재물운, 연애운을 분석해드립니다.">
+    <meta name="keywords" content="자미두수, 사주, 운세, 명리학, 무료 사주, 운명 분석, 자미두수 명반">
+    <meta property="og:title" content="자미두수 - 무료 자미두수 운세 보기" />
+    <meta property="og:description" content="자미두수로 알아보는 나의 운명과 성격! 생년월일시를 입력하여 운세를 확인하세요." />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=자미두수" />
+    <meta property="og:url" content="https://musinsa.cloud/ziwei/" />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://musinsa.cloud/ziwei/" />
+    <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../global.css"></noscript>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+    <style>
+        .ziwei-intro {
+            text-align: left;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #e74c3c;
+        }
+        .ziwei-intro h2 {
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+        }
+        .ziwei-intro p, .ziwei-intro li {
+            line-height: 1.7;
+        }
+        .input-form {
+            background: var(--container-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .form-row select, .form-row input {
+            flex: 1;
+            min-width: 80px;
+            padding: 0.8rem;
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .form-row select:focus, .form-row input:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+        .gender-select {
+            display: flex;
+            gap: 1rem;
+        }
+        .gender-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            background: var(--input-bg);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .gender-btn.selected {
+            border-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+        }
+        .result-section {
+            display: none;
+            margin-top: 2rem;
+        }
+        .result-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        .result-header h2 {
+            margin-bottom: 0.5rem;
+        }
+        .result-header .main-star {
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+        .result-header .star-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .palace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .palace-card {
+            background: var(--container-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+        .palace-card h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .palace-card .star-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            background: var(--input-bg);
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .palace-card p {
+            line-height: 1.7;
+            color: var(--text-color);
+        }
+        .fortune-bars {
+            margin: 2rem 0;
+        }
+        .fortune-bar {
+            margin-bottom: 1rem;
+        }
+        .fortune-bar label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+        .bar-container {
+            height: 10px;
+            background: var(--input-bg);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+        .overall-reading {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 4px solid #e74c3c;
+        }
+        .overall-reading h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        .retry-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+        }
+        .share-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .share-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .share-btn.kakao { background: #FEE500; color: #000; }
+        .share-btn.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .share-btn.tiktok { background: #000; color: white; }
+        .star-info-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--input-border);
+        }
+        .star-info-section h2 {
+            color: #e74c3c;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .star-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+        .star-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--input-bg);
+            border-radius: 10px;
+        }
+        .star-item .emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .star-item .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+            <a href="/tarot/">타로</a>
+            <a href="/ziwei/">자미두수</a>
+            <a href="/face-palm/">AI 관상</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 800px;">
+        <h1>자미두수 운세</h1>
+        <p>동양 최고의 명리학으로 알아보는 나의 운명</p>
+
+        <div class="ziwei-intro">
+            <h2>자미두수란?</h2>
+            <p>자미두수(紫微斗數)는 약 1000년 전 중국 송나라 시대에 시작된 동양의 대표적인 명리학입니다. '자미'는 북극성을 의미하며, 하늘의 별자리 배치를 통해 인간의 운명을 해석합니다.</p>
+            <ul>
+                <li><strong>명궁:</strong> 성격과 외적 특성</li>
+                <li><strong>재백궁:</strong> 재물운과 경제적 능력</li>
+                <li><strong>관록궁:</strong> 직업운과 사회적 성취</li>
+                <li><strong>부처궁:</strong> 배우자운과 결혼생활</li>
+            </ul>
+            <p>생년월일시를 입력하면 당신만의 자미두수 명반을 분석해드립니다.</p>
+        </div>
+
+        <div class="input-form" id="input-form">
+            <div class="form-group">
+                <label>생년월일</label>
+                <div class="form-row">
+                    <select id="year">
+                        <option value="">년도</option>
+                    </select>
+                    <select id="month">
+                        <option value="">월</option>
+                    </select>
+                    <select id="day">
+                        <option value="">일</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>태어난 시간 (모르면 '모름' 선택)</label>
+                <div class="form-row">
+                    <select id="hour">
+                        <option value="-1">모름</option>
+                        <option value="0">자시 (23:00-01:00)</option>
+                        <option value="1">축시 (01:00-03:00)</option>
+                        <option value="2">인시 (03:00-05:00)</option>
+                        <option value="3">묘시 (05:00-07:00)</option>
+                        <option value="4">진시 (07:00-09:00)</option>
+                        <option value="5">사시 (09:00-11:00)</option>
+                        <option value="6">오시 (11:00-13:00)</option>
+                        <option value="7">미시 (13:00-15:00)</option>
+                        <option value="8">신시 (15:00-17:00)</option>
+                        <option value="9">유시 (17:00-19:00)</option>
+                        <option value="10">술시 (19:00-21:00)</option>
+                        <option value="11">해시 (21:00-23:00)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>성별</label>
+                <div class="gender-select">
+                    <button type="button" class="gender-btn" data-gender="male">남성</button>
+                    <button type="button" class="gender-btn" data-gender="female">여성</button>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="analyze-btn">자미두수 분석하기</button>
+        </div>
+
+        <div class="result-section" id="result-section">
+            <!-- Results will be injected here -->
+        </div>
+
+        <div class="star-info-section" id="star-info">
+            <h2>자미두수 주요 별</h2>
+            <div class="star-grid">
+                <div class="star-item">
+                    <div class="emoji">👑</div>
+                    <div class="name">자미성</div>
+                </div>
+                <div class="star-item">
+                    <div class="emoji">🌟</div>
+                    <div class="name">천기성</div>
+                </div>
+                <div class="star-item">
+                    <div class="emoji">☀️</div>
+                    <div class="name">태양성</div>
+                </div>
+                <div class="star-item">
+                    <div class="emoji">💰</div>
+                    <div class="name">무곡성</div>
+                </div>
+                <div class="star-item">
+                    <div class="emoji">🌙</div>
+                    <div class="name">태음성</div>
+                </div>
+                <div class="star-item">
+                    <div class="emoji">💕</div>
+                    <div class="name">탐랑성</div>
+                </div>
+                <div class="star-item">
+                    <div class="emoji">⚔️</div>
+                    <div class="name">칠살성</div>
+                </div>
+                <div class="star-item">
+                    <div class="emoji">🔥</div>
+                    <div class="name">파군성</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        // Main stars data
+        const mainStars = [
+            { name: "자미성", emoji: "👑", trait: "리더십, 존귀, 권위", desc: "타고난 리더십과 카리스마를 가졌습니다. 주변 사람들의 존경을 받으며, 높은 위치에 오를 운명입니다." },
+            { name: "천기성", emoji: "🌟", trait: "지혜, 계획, 전략", desc: "뛰어난 지혜와 분석력을 가졌습니다. 전략적 사고로 어떤 상황에서도 최선의 방법을 찾아냅니다." },
+            { name: "태양성", emoji: "☀️", trait: "명예, 활력, 봉사", desc: "밝고 긍정적인 에너지의 소유자입니다. 타인을 돕는 것에서 기쁨을 느끼며 사회적 명예를 얻습니다." },
+            { name: "무곡성", emoji: "💰", trait: "재물, 실용, 성실", desc: "재물을 모으는 능력이 탁월합니다. 성실하고 실용적인 성격으로 경제적 안정을 이룹니다." },
+            { name: "천동성", emoji: "🎭", trait: "예술, 감성, 복록", desc: "풍부한 감성과 예술적 재능을 가졌습니다. 복이 많아 어려움 속에서도 귀인이 나타납니다." },
+            { name: "염정성", emoji: "🔥", trait: "열정, 추진력, 정의", desc: "불같은 열정과 강한 추진력의 소유자입니다. 정의감이 강하고 목표를 향해 직진합니다." },
+            { name: "천부성", emoji: "🏦", trait: "재고, 관리, 안정", desc: "재물을 관리하고 지키는 능력이 뛰어납니다. 안정적인 삶을 추구하며 착실히 자산을 늘립니다." },
+            { name: "태음성", emoji: "🌙", trait: "지혜, 모성, 부동산", desc: "부드러운 지혜와 포용력을 가졌습니다. 부동산과 관련된 재물운이 좋습니다." },
+            { name: "탐랑성", emoji: "💕", trait: "매력, 욕망, 다재다능", desc: "뛰어난 매력과 다재다능한 재주를 가졌습니다. 여러 분야에서 성공할 가능성이 높습니다." },
+            { name: "거문성", emoji: "📚", trait: "학문, 언변, 논쟁", desc: "뛰어난 언변과 학문적 능력을 가졌습니다. 연구, 교육, 법률 분야에서 두각을 나타냅니다." },
+            { name: "천상성", emoji: "📜", trait: "문서, 계약, 인장", desc: "문서와 계약 관련 일에 능합니다. 공직이나 행정 분야에서 능력을 발휘합니다." },
+            { name: "천량성", emoji: "⚖️", trait: "음덕, 장수, 보호", desc: "타인을 보호하고 돕는 성향이 강합니다. 음덕을 쌓아 장수하며 존경받습니다." },
+            { name: "칠살성", emoji: "⚔️", trait: "개척, 용감, 독립", desc: "용감하고 개척정신이 강합니다. 독립적인 성격으로 새로운 분야를 개척해 나갑니다." },
+            { name: "파군성", emoji: "💥", trait: "변혁, 파괴, 재건", desc: "기존 질서를 깨고 새것을 만드는 능력이 있습니다. 파란만장하지만 결국 성공합니다." }
+        ];
+
+        const palaces = [
+            { name: "명궁", icon: "👤", desc: "성격, 외모, 기본 성향" },
+            { name: "재백궁", icon: "💰", desc: "재물운, 경제적 능력" },
+            { name: "관록궁", icon: "💼", desc: "직업운, 사회적 성취" },
+            { name: "부처궁", icon: "💑", desc: "배우자운, 결혼생활" }
+        ];
+
+        const readings = {
+            wealth: ["매우 좋음", "좋음", "보통", "노력 필요"],
+            career: ["승승장구", "안정적 발전", "변화 속 기회", "신중한 전환기"],
+            love: ["운명적 만남", "사랑 가득", "새로운 인연", "자기 성장의 시기"],
+            health: ["건강 양호", "관리 필요", "휴식 권장", "운동 필수"]
+        };
+
+        let selectedGender = null;
+
+        // Initialize form
+        function initForm() {
+            const yearSelect = document.getElementById('year');
+            const monthSelect = document.getElementById('month');
+            const daySelect = document.getElementById('day');
+
+            const currentYear = new Date().getFullYear();
+            for (let y = currentYear; y >= 1940; y--) {
+                yearSelect.innerHTML += `<option value="${y}">${y}년</option>`;
+            }
+
+            for (let m = 1; m <= 12; m++) {
+                monthSelect.innerHTML += `<option value="${m}">${m}월</option>`;
+            }
+
+            for (let d = 1; d <= 31; d++) {
+                daySelect.innerHTML += `<option value="${d}">${d}일</option>`;
+            }
+        }
+
+        // Gender selection
+        document.querySelectorAll('.gender-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedGender = this.dataset.gender;
+            });
+        });
+
+        // Analyze
+        document.getElementById('analyze-btn').addEventListener('click', function() {
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            const day = document.getElementById('day').value;
+
+            if (!year || !month || !day || !selectedGender) {
+                alert('모든 정보를 입력해주세요.');
+                return;
+            }
+
+            generateResult(year, month, day);
+        });
+
+        function generateResult(year, month, day) {
+            // Generate pseudo-random but consistent results based on input
+            const seed = parseInt(year) + parseInt(month) * 31 + parseInt(day);
+
+            const mainStarIndex = seed % mainStars.length;
+            const mainStar = mainStars[mainStarIndex];
+
+            const wealthScore = 60 + (seed % 40);
+            const careerScore = 55 + ((seed * 3) % 45);
+            const loveScore = 50 + ((seed * 7) % 50);
+            const healthScore = 65 + ((seed * 11) % 35);
+
+            const palaceStars = palaces.map((palace, i) => ({
+                ...palace,
+                star: mainStars[(seed + i * 5) % mainStars.length]
+            }));
+
+            document.getElementById('input-form').style.display = 'none';
+            document.getElementById('star-info').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+
+            document.getElementById('result-section').innerHTML = `
+                <div class="result-header">
+                    <h2>자미두수 분석 결과</h2>
+                    <div class="main-star">${mainStar.emoji}</div>
+                    <div class="star-name">${mainStar.name} 주성</div>
+                    <p style="margin-top: 0.5rem; opacity: 0.9;">${mainStar.trait}</p>
+                </div>
+
+                <div class="palace-grid">
+                    ${palaceStars.map(p => `
+                        <div class="palace-card">
+                            <h3>${p.icon} ${p.name}</h3>
+                            <span class="star-info">${p.star.emoji} ${p.star.name}</span>
+                            <p>${p.star.desc}</p>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="fortune-bars">
+                    <h3 style="margin-bottom: 1.5rem; color: #e74c3c;">운세 지수</h3>
+                    <div class="fortune-bar">
+                        <label><span>💰 재물운</span><span>${wealthScore}%</span></label>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: ${wealthScore}%"></div>
+                        </div>
+                    </div>
+                    <div class="fortune-bar">
+                        <label><span>💼 직업운</span><span>${careerScore}%</span></label>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: ${careerScore}%"></div>
+                        </div>
+                    </div>
+                    <div class="fortune-bar">
+                        <label><span>💕 연애운</span><span>${loveScore}%</span></label>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: ${loveScore}%"></div>
+                        </div>
+                    </div>
+                    <div class="fortune-bar">
+                        <label><span>💪 건강운</span><span>${healthScore}%</span></label>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: ${healthScore}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overall-reading">
+                    <h3>종합 해석</h3>
+                    <p>${mainStar.desc}</p>
+                    <p style="margin-top: 1rem;">올해는 ${careerScore > 70 ? '직업적으로 큰 성장이 있을' : '내실을 다지는'} 시기입니다. ${wealthScore > 75 ? '재물운이 좋아 투자에 유리하며' : '절약과 저축에 집중하면'} 안정적인 미래를 만들 수 있습니다. ${loveScore > 70 ? '인연이 가까이 있으니 주변을 살펴보세요.' : '자기 발전에 집중하면 좋은 인연이 따라옵니다.'}</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="retry-btn" onclick="resetForm()">다시 분석하기</button>
+                </div>
+
+                <div class="share-section">
+                    <p>결과를 친구들과 공유해보세요!</p>
+                    <div class="share-buttons">
+                        <button onclick="shareToKakao()" class="share-btn kakao">카카오톡</button>
+                        <button onclick="shareToInstagram()" class="share-btn instagram">인스타그램</button>
+                        <button onclick="shareToTiktok()" class="share-btn tiktok">틱톡</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function resetForm() {
+            document.getElementById('input-form').style.display = 'block';
+            document.getElementById('star-info').style.display = 'block';
+            document.getElementById('result-section').style.display = 'none';
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = window.location.href;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            });
+        }
+
+        function shareToKakao() { copyLink(); alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.'); }
+        function shareToInstagram() { copyLink(); alert('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.'); }
+        function shareToTiktok() { copyLink(); alert('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.'); }
+
+        initForm();
+    </script>
+</body>
+</html>
