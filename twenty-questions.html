@@ -304,25 +304,25 @@
             <div class="difficulty-section">
                 <h3>🎯 난이도 선택</h3>
                 <div class="difficulty-options">
-                    <div class="difficulty-option selected" data-difficulty="easy" onclick="selectDifficulty('easy')" title="10번 질문 | 초보자 추천">
+                    <div class="difficulty-option selected" data-difficulty="easy" onclick="selectDifficulty('easy')" title="일상 단어 | 20문 · 힌트3">
                         <div class="diff-icon">🌱</div>
                         <div class="diff-name diff-easy">쉬움</div>
-                        <div class="diff-desc">10번</div>
+                        <div class="diff-desc">20문</div>
                     </div>
-                    <div class="difficulty-option" data-difficulty="normal" onclick="selectDifficulty('normal')" title="15번 질문 | 적당한 도전">
+                    <div class="difficulty-option" data-difficulty="normal" onclick="selectDifficulty('normal')" title="동물/자연 | 15문 · 힌트2">
                         <div class="diff-icon">🎯</div>
                         <div class="diff-name diff-normal">보통</div>
-                        <div class="diff-desc">15번</div>
+                        <div class="diff-desc">15문</div>
                     </div>
-                    <div class="difficulty-option" data-difficulty="hard" onclick="selectDifficulty('hard')" title="20번 질문 | 어려운 도전">
+                    <div class="difficulty-option" data-difficulty="hard" onclick="selectDifficulty('hard')" title="유명인/장소 | 12문 · 힌트1">
                         <div class="diff-icon">🔥</div>
                         <div class="diff-name diff-hard">어려움</div>
-                        <div class="diff-desc">20번</div>
+                        <div class="diff-desc">12문</div>
                     </div>
-                    <div class="difficulty-option" data-difficulty="expert" onclick="selectDifficulty('expert')" title="25번 질문 | 극한 도전">
+                    <div class="difficulty-option" data-difficulty="expert" onclick="selectDifficulty('expert')" title="추상 개념 | 10문 · 힌트없음">
                         <div class="diff-icon">💀</div>
                         <div class="diff-name diff-expert">전문가</div>
-                        <div class="diff-desc">25번</div>
+                        <div class="diff-desc">10문</div>
                     </div>
                 </div>
             </div>
@@ -1064,10 +1064,10 @@
         }
 
         const DIFF = {
-            easy: { max: 20, name: '쉬움', cls: 'easy', icon: '🌱', desc: '일상 단어' },
-            normal: { max: 20, name: '보통', cls: 'normal', icon: '🎯', desc: '동물/자연' },
-            hard: { max: 20, name: '어려움', cls: 'hard', icon: '🔥', desc: '유명인/장소' },
-            expert: { max: 20, name: '전문가', cls: 'expert', icon: '💀', desc: '추상 개념' }
+            easy: { max: 20, hints: 3, name: '쉬움', cls: 'easy', icon: '🌱', desc: '20문 · 힌트3' },
+            normal: { max: 15, hints: 2, name: '보통', cls: 'normal', icon: '🎯', desc: '15문 · 힌트2' },
+            hard: { max: 12, hints: 1, name: '어려움', cls: 'hard', icon: '🔥', desc: '12문 · 힌트1' },
+            expert: { max: 10, hints: 0, name: '전문가', cls: 'expert', icon: '💀', desc: '10문 · 힌트없음' }
         };
 
         const ACHIEVEMENTS = [
@@ -1440,12 +1440,17 @@
 
         // 힌트 기능
         let hintCount = 0;
-        const MAX_HINTS = 3;
 
         async function getHint() {
             if (isAsking || gameOver) return;
-            if (hintCount >= MAX_HINTS) {
-                addMsg(`💡 힌트를 모두 사용했습니다! (${MAX_HINTS}회 제한)`, 'system');
+            const maxHints = DIFF[difficulty].hints;
+
+            if (maxHints === 0) {
+                addMsg(`💡 전문가 모드에서는 힌트를 사용할 수 없습니다!`, 'system');
+                return;
+            }
+            if (hintCount >= maxHints) {
+                addMsg(`💡 힌트를 모두 사용했습니다! (${maxHints}회 제한)`, 'system');
                 return;
             }
             if (qCount >= maxQ - 1) {
@@ -1460,7 +1465,7 @@
             qCount += 1; // 힌트는 질문 1회 소모
             updateQ();
 
-            addMsg(`💡 힌트 요청 (${hintCount}/${MAX_HINTS})`, 'user');
+            addMsg(`💡 힌트 요청 (${hintCount}/${maxHints})`, 'user');
             showTyping();
 
             try {
