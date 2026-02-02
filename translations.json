@@ -1,0 +1,155 @@
+{
+  "ko": {
+    "site_title": "마음테스트 - 무료 심리 테스트 모음",
+    "site_description": "다양한 심리 테스트로 숨겨진 나의 성격, 심리, 운세를 발견해보세요",
+
+    "nav_home": "홈",
+    "nav_personality": "성격 테스트",
+    "nav_mbti": "MBTI",
+    "nav_enneagram": "애니어그램",
+    "nav_color": "색깔 심리",
+    "nav_fortune": "오늘의 운세",
+    "nav_tarot": "타로",
+    "nav_ziwei": "자미두수",
+    "nav_face": "AI 관상",
+    "nav_about": "About",
+    "nav_contact": "Contact",
+    "nav_privacy": "Privacy Policy",
+    "nav_terms": "Terms of Service",
+    "nav_sitemap": "Sitemap",
+
+    "main_heading": "나를 알아가는 심리 테스트",
+    "main_description": "다양한 심리 테스트로 숨겨진 나의 성격, 심리, 운세를 발견해보세요. 모든 테스트는 무료이며, 결과를 친구들과 공유할 수 있어요!",
+
+    "section_popular": "인기 심리 테스트",
+    "section_start": "지금 바로 테스트를 시작해보세요",
+
+    "test_personality_title": "성격 유형 테스트",
+    "test_personality_desc": "12가지 심층 질문으로 알아보는 나의 성격 유형. 지휘관, 몽상가, 탐험가 등 8가지 유형 중 나는 어디에 속할까요?",
+    "test_personality_info": "12문항 / 3-5분",
+
+    "test_mbti_title": "MBTI 테스트",
+    "test_mbti_desc": "16가지 성격유형 중 나는 어떤 유형? INTJ, ENFP, ISTJ 등 나의 MBTI를 무료로 알아보세요.",
+    "test_mbti_info": "12문항 / 3-5분",
+
+    "test_enneagram_title": "애니어그램 테스트",
+    "test_enneagram_desc": "9가지 핵심 성격유형과 날개까지! MBTI 다음으로 인기 있는 자기계발 성격 테스트입니다.",
+    "test_enneagram_info": "18문항 / 5-7분",
+
+    "test_color_title": "색깔 심리 테스트",
+    "test_color_desc": "좋아하는 색깔로 알아보는 숨겨진 심리! 색상 선택을 통해 당신의 내면과 성격의 비밀을 발견해보세요.",
+    "test_color_info": "3단계 / 2-3분",
+
+    "test_fortune_title": "오늘의 운세",
+    "test_fortune_desc": "매일 새롭게 업데이트되는 오늘의 운세! 연애운, 금전운, 건강운, 직장운과 행운의 아이템을 확인하세요.",
+    "test_fortune_info": "매일 업데이트",
+
+    "test_tarot_title": "타로 카드",
+    "test_tarot_desc": "3장의 타로 카드로 알아보는 과거, 현재, 미래의 메시지. 직감을 믿고 끌리는 카드를 선택해보세요.",
+    "test_tarot_info": "3장 선택 / 2-3분",
+
+    "test_ziwei_title": "자미두수",
+    "test_ziwei_desc": "동양 최고의 명리학 자미두수로 알아보는 나의 운명. 생년월일시를 입력하여 명반을 분석해보세요.",
+    "test_ziwei_info": "생년월일 입력 / 3-5분",
+
+    "test_face_title": "AI 관상/손금",
+    "test_face_desc": "AI가 분석하는 관상과 손금! 얼굴 특징과 손금 라인을 선택하면 운세를 분석해드립니다.",
+    "test_face_info": "특징 선택 / 3-5분",
+
+    "feature_heading": "마음테스트의 특징",
+    "feature_free_title": "100% 무료",
+    "feature_free_desc": "모든 테스트를 무료로 무제한 이용하세요",
+    "feature_privacy_title": "개인정보 보호",
+    "feature_privacy_desc": "데이터 저장 없이 브라우저에서 바로 결과 확인",
+    "feature_mobile_title": "모바일 최적화",
+    "feature_mobile_desc": "어디서든 편하게 테스트를 즐기세요",
+
+    "share_heading": "친구에게 공유하기",
+    "share_kakao": "카카오톡",
+    "share_instagram": "인스타그램",
+    "share_tiktok": "틱톡",
+
+    "footer_copyright": "© 2024 마음테스트. All rights reserved.",
+    "footer_disclaimer": "본 테스트 결과는 참고용이며 전문적인 상담을 대체하지 않습니다.",
+
+    "lang_switch": "EN",
+    "lang_name": "한국어"
+  },
+
+  "en": {
+    "site_title": "Mind Test - Free Psychological Tests",
+    "site_description": "Discover your hidden personality, psychology, and fortune through various psychological tests",
+
+    "nav_home": "Home",
+    "nav_personality": "Personality Test",
+    "nav_mbti": "MBTI",
+    "nav_enneagram": "Enneagram",
+    "nav_color": "Color Psychology",
+    "nav_fortune": "Daily Fortune",
+    "nav_tarot": "Tarot",
+    "nav_ziwei": "Ziwei Doushu",
+    "nav_face": "AI Face Reading",
+    "nav_about": "About",
+    "nav_contact": "Contact",
+    "nav_privacy": "Privacy Policy",
+    "nav_terms": "Terms of Service",
+    "nav_sitemap": "Sitemap",
+
+    "main_heading": "Discover Yourself Through Psychological Tests",
+    "main_description": "Explore your hidden personality, psychology, and fortune through various psychological tests. All tests are free and you can share results with friends!",
+
+    "section_popular": "Popular Psychological Tests",
+    "section_start": "Start your test now",
+
+    "test_personality_title": "Personality Type Test",
+    "test_personality_desc": "Discover your personality type through 12 in-depth questions. Which of the 8 types are you - Commander, Dreamer, Explorer, or others?",
+    "test_personality_info": "12 questions / 3-5 min",
+
+    "test_mbti_title": "MBTI Test",
+    "test_mbti_desc": "Which of the 16 personality types are you? Discover your MBTI type - INTJ, ENFP, ISTJ and more - for free!",
+    "test_mbti_info": "12 questions / 3-5 min",
+
+    "test_enneagram_title": "Enneagram Test",
+    "test_enneagram_desc": "9 core personality types plus wings! The most popular self-development personality test after MBTI.",
+    "test_enneagram_info": "18 questions / 5-7 min",
+
+    "test_color_title": "Color Psychology Test",
+    "test_color_desc": "Discover your hidden psychology through your favorite colors! Uncover the secrets of your inner self and personality through color choices.",
+    "test_color_info": "3 steps / 2-3 min",
+
+    "test_fortune_title": "Daily Fortune",
+    "test_fortune_desc": "Daily updated fortune! Check your love, money, health, and career fortune along with your lucky items.",
+    "test_fortune_info": "Updated daily",
+
+    "test_tarot_title": "Tarot Cards",
+    "test_tarot_desc": "Messages about past, present, and future through 3 tarot cards. Trust your intuition and choose the cards that draw you in.",
+    "test_tarot_info": "Choose 3 cards / 2-3 min",
+
+    "test_ziwei_title": "Ziwei Doushu",
+    "test_ziwei_desc": "Discover your destiny through Ziwei Doushu, the supreme Eastern astrology. Enter your birth date and time to analyze your destiny chart.",
+    "test_ziwei_info": "Birth date input / 3-5 min",
+
+    "test_face_title": "AI Face & Palm Reading",
+    "test_face_desc": "Face and palm reading analyzed by AI! Select your facial features and palm lines to get your fortune analyzed.",
+    "test_face_info": "Feature selection / 3-5 min",
+
+    "feature_heading": "Features of Mind Test",
+    "feature_free_title": "100% Free",
+    "feature_free_desc": "Use all tests for free without limits",
+    "feature_privacy_title": "Privacy Protection",
+    "feature_privacy_desc": "Results processed in browser without data storage",
+    "feature_mobile_title": "Mobile Optimized",
+    "feature_mobile_desc": "Enjoy tests anywhere, anytime",
+
+    "share_heading": "Share with Friends",
+    "share_kakao": "KakaoTalk",
+    "share_instagram": "Instagram",
+    "share_tiktok": "TikTok",
+
+    "footer_copyright": "© 2024 Mind Test. All rights reserved.",
+    "footer_disclaimer": "Test results are for reference only and do not replace professional counseling.",
+
+    "lang_switch": "한국어",
+    "lang_name": "English"
+  }
+}

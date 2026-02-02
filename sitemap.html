@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사이트맵 - 마음테스트</title>
+    <meta name="description" content="마음테스트의 모든 페이지를 한눈에 확인하세요. 심리 테스트, 운세, 타로 등 다양한 콘텐츠를 찾아보세요.">
+    <meta property="og:title" content="사이트맵 - 마음테스트" />
+    <meta property="og:description" content="마음테스트의 모든 페이지를 한눈에 확인하세요." />
+    <meta property="og:url" content="https://musinsa.cloud/sitemap.html" />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://musinsa.cloud/sitemap.html" />
+    <link rel="preload" href="global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="global.css"></noscript>
+    <style>
+        .sitemap-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .sitemap-container h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        .sitemap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .sitemap-card {
+            background: var(--container-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        .sitemap-card h2 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--input-bg);
+        }
+        .sitemap-card h2 .icon {
+            font-size: 1.4rem;
+        }
+        .sitemap-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sitemap-card li {
+            margin: 0.5rem 0;
+        }
+        .sitemap-card a {
+            display: block;
+            padding: 0.7rem 1rem;
+            background: var(--input-bg);
+            border-radius: 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .sitemap-card a:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+        }
+        @media (max-width: 768px) {
+            .sitemap-container h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFQLBFRP7Q"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QFQLBFRP7Q');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+            <a href="/tarot/">타로</a>
+            <a href="/ziwei/">자미두수</a>
+            <a href="/face-palm/">AI 관상</a>
+        </nav>
+    </header>
+
+    <main class="sitemap-container">
+        <h1>사이트맵</h1>
+
+        <div class="sitemap-grid">
+            <div class="sitemap-card">
+                <h2><span class="icon">🏠</span> 메인</h2>
+                <ul>
+                    <li><a href="/">홈</a></li>
+                </ul>
+            </div>
+
+            <div class="sitemap-card">
+                <h2><span class="icon">🧪</span> 심리 테스트</h2>
+                <ul>
+                    <li><a href="/mbti/">MBTI 성격유형 테스트</a></li>
+                    <li><a href="/enneagram/">애니어그램 테스트</a></li>
+                    <li><a href="/personality-test/personality-test.html">성격 유형 테스트</a></li>
+                    <li><a href="/color-test/">색깔 심리 테스트</a></li>
+                    <li><a href="/daily-fortune/">오늘의 운세</a></li>
+                    <li><a href="/tarot/">타로 카드</a></li>
+                    <li><a href="/ziwei/">자미두수</a></li>
+                    <li><a href="/face-palm/">AI 관상/손금</a></li>
+                </ul>
+            </div>
+
+            <div class="sitemap-card">
+                <h2><span class="icon">🎮</span> AI 게임</h2>
+                <ul>
+                    <li><a href="/twenty-questions.html">AI 스무고개</a></li>
+                </ul>
+            </div>
+
+            <div class="sitemap-card">
+                <h2><span class="icon">ℹ️</span> 정보</h2>
+                <ul>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="sitemap-card">
+                <h2><span class="icon">📜</span> 정책</h2>
+                <ul>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="sitemap.html">Sitemap</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer style="background-color: #f8f9fa; padding: 40px 20px; margin-top: 60px; border-top: 1px solid #e0e0e0;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <div style="margin-bottom: 20px;">
+                <a href="about.html" style="margin: 0 15px; color: #666;">About</a>
+                <a href="contact.html" style="margin: 0 15px; color: #666;">Contact</a>
+                <a href="privacy.html" style="margin: 0 15px; color: #666;">Privacy Policy</a>
+                <a href="terms.html" style="margin: 0 15px; color: #666;">Terms of Service</a>
+                <a href="sitemap.html" style="margin: 0 15px; color: #666;">Sitemap</a>
+            </div>
+            <div style="color: #999; font-size: 14px;">
+                <p>© 2024 마음테스트. All rights reserved.</p>
+                <p>본 테스트 결과는 참고용이며 전문적인 상담을 대체하지 않습니다.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

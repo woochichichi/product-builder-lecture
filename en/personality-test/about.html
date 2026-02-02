@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성격 유형 테스트 소개 - 마음테스트</title>
+    <meta name="description" content="12가지 심층 질문을 통해 당신의 성격 유형을 분석하는 테스트입니다. 8가지 유형 중 당신에게 가장 잘 맞는 유형을 찾아드립니다.">
+    <meta property="og:title" content="성격 유형 테스트 소개 - 마음테스트" />
+    <meta property="og:description" content="12가지 심층 질문을 통해 당신의 성격 유형을 분석하는 테스트입니다." />
+    <meta property="og:url" content="https://musinsa.cloud/personality-test/about.html" />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://musinsa.cloud/personality-test/about.html" />
+    <link rel="preload" href="../../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../../global.css"></noscript>
+    <style>
+        .about-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .about-hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), #7eb8f5);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+        .about-hero h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .about-hero p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .about-section {
+            background: var(--container-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            margin-bottom: 2rem;
+        }
+        .about-section h2 {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .type-card {
+            background: var(--input-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+        .type-card:hover {
+            transform: translateY(-5px);
+        }
+        .type-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .type-card h3 .icon {
+            font-size: 1.5rem;
+        }
+        .type-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .type-card li {
+            padding: 0.4rem 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+        .type-card li::before {
+            content: "• ";
+            color: var(--primary-color);
+        }
+        .method-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: method;
+        }
+        .method-list li {
+            padding: 1rem 1rem 1rem 3rem;
+            margin: 0.5rem 0;
+            background: var(--input-bg);
+            border-radius: 10px;
+            position: relative;
+            line-height: 1.7;
+        }
+        .method-list li::before {
+            counter-increment: method;
+            content: counter(method);
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .usage-item {
+            padding: 1rem;
+            background: var(--input-bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .usage-item .bullet {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        .faq-item {
+            margin-bottom: 1rem;
+        }
+        .faq-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .faq-item p {
+            line-height: 1.7;
+            color: var(--text-color);
+            padding-left: 1rem;
+            border-left: 3px solid var(--input-bg);
+        }
+        .cta-box {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), #7eb8f5);
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+        .cta-box a {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        .cta-box a:hover {
+            transform: translateY(-3px);
+        }
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 1.6rem;
+            }
+            .usage-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFQLBFRP7Q"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QFQLBFRP7Q');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-links">
+            <a href="/en/">홈</a>
+            <a href="/en/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/en/daily-fortune/">오늘의 운세</a>
+            <a href="/en/color-test/">색깔 심리</a>
+            <a href="/en/tarot/">타로</a>
+            <a href="/en/ziwei/">자미두수</a>
+            <a href="/en/face-palm/">AI 관상</a>
+        </nav>
+    </header>
+
+    <main class="about-container">
+        <div class="about-hero">
+            <h1>성격 유형 테스트란?</h1>
+            <p>12가지 심층 질문을 통해 당신의 성격 유형을 분석하는 테스트입니다.<br>3-5분이면 완료되며, 8가지 유형 중 당신에게 가장 잘 맞는 유형을 찾아드립니다.</p>
+        </div>
+
+        <section class="about-section">
+            <h2>8가지 성격 유형</h2>
+            <div class="type-grid">
+                <div class="type-card">
+                    <h3><span class="icon">🎯</span> 지휘관형 (Commander)</h3>
+                    <ul>
+                        <li>리더십이 강하고 목표 지향적</li>
+                        <li>결단력 있고 추진력이 뛰어남</li>
+                        <li>적합 직업: 경영자, 프로젝트 매니저, 변호사</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3><span class="icon">🌟</span> 사교형 (Socializer)</h3>
+                    <ul>
+                        <li>사람들과 어울리기 좋아함</li>
+                        <li>에너지 넘치고 긍정적</li>
+                        <li>적합 직업: 마케터, 영업, 이벤트 플래너</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3><span class="icon">💭</span> 몽상가형 (Dreamer)</h3>
+                    <ul>
+                        <li>창의적이고 상상력 풍부</li>
+                        <li>예술적 감각이 뛰어남</li>
+                        <li>적합 직업: 작가, 디자이너, 아티스트</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3><span class="icon">🔍</span> 분석가형 (Analyst)</h3>
+                    <ul>
+                        <li>논리적이고 체계적</li>
+                        <li>문제 해결 능력 우수</li>
+                        <li>적합 직업: 연구원, 데이터 분석가, 프로그래머</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3><span class="icon">🤝</span> 조력자형 (Helper)</h3>
+                    <ul>
+                        <li>타인을 돕는 것에서 보람 느낌</li>
+                        <li>공감 능력이 뛰어남</li>
+                        <li>적합 직업: 상담사, 간호사, 사회복지사</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3><span class="icon">⚡</span> 탐험가형 (Explorer)</h3>
+                    <ul>
+                        <li>새로운 경험 추구</li>
+                        <li>적응력이 뛰어남</li>
+                        <li>적합 직업: 여행 가이드, 기자, 사진작가</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3><span class="icon">🛡️</span> 수호자형 (Guardian)</h3>
+                    <ul>
+                        <li>책임감이 강하고 신뢰할 수 있음</li>
+                        <li>전통과 규칙을 중시</li>
+                        <li>적합 직업: 회계사, 행정직, 교사</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3><span class="icon">🎨</span> 예술가형 (Artist)</h3>
+                    <ul>
+                        <li>감수성이 풍부하고 섬세함</li>
+                        <li>미적 감각이 뛰어남</li>
+                        <li>적합 직업: 예술가, 음악가, 인테리어 디자이너</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <h2>테스트 방법</h2>
+            <ol class="method-list">
+                <li>12가지 질문에 솔직하게 답변하세요</li>
+                <li>정답은 없습니다 - 본능적으로 끌리는 답을 선택하세요</li>
+                <li>결과는 즉시 확인 가능합니다</li>
+                <li>친구들과 공유하고 비교해보세요</li>
+            </ol>
+        </section>
+
+        <section class="about-section">
+            <h2>결과 활용법</h2>
+            <div class="usage-grid">
+                <div class="usage-item">
+                    <span class="bullet">✓</span>
+                    <span>자신의 강점과 약점 파악</span>
+                </div>
+                <div class="usage-item">
+                    <span class="bullet">✓</span>
+                    <span>직업 선택 시 참고자료로 활용</span>
+                </div>
+                <div class="usage-item">
+                    <span class="bullet">✓</span>
+                    <span>대인관계 개선에 도움</span>
+                </div>
+                <div class="usage-item">
+                    <span class="bullet">✓</span>
+                    <span>팀 빌딩 활동에 활용</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <h2>자주 묻는 질문</h2>
+            <div class="faq-item">
+                <h4>Q. 얼마나 정확한가요?</h4>
+                <p>A. 심리학 이론을 기반으로 하지만, 재미와 자기 탐색 목적의 테스트입니다. 전문적인 심리 검사를 대체하지 않습니다.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Q. 결과가 마음에 안 들어요.</h4>
+                <p>A. 다시 테스트해도 좋습니다! 시간에 따라 답변이 달라질 수 있습니다.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Q. 개인정보가 저장되나요?</h4>
+                <p>A. 아니요, 모든 결과는 브라우저에서만 처리되며 저장되지 않습니다.</p>
+            </div>
+        </section>
+
+        <div class="cta-box">
+            <a href="/en/personality-test/personality-test.html">지금 바로 테스트 시작하기 →</a>
+        </div>
+    </main>
+
+    <footer style="background-color: #f8f9fa; padding: 40px 20px; margin-top: 60px; border-top: 1px solid #e0e0e0;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <div style="margin-bottom: 20px;">
+                <a href="/en/about.html" style="margin: 0 15px; color: #666;">About</a>
+                <a href="/en/contact.html" style="margin: 0 15px; color: #666;">Contact</a>
+                <a href="/en/privacy.html" style="margin: 0 15px; color: #666;">Privacy Policy</a>
+                <a href="/en/terms.html" style="margin: 0 15px; color: #666;">Terms of Service</a>
+                <a href="/en/sitemap.html" style="margin: 0 15px; color: #666;">Sitemap</a>
+            </div>
+            <div style="color: #999; font-size: 14px;">
+                <p>© 2024 마음테스트. All rights reserved.</p>
+                <p>본 테스트 결과는 참고용이며 전문적인 상담을 대체하지 않습니다.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

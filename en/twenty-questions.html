@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 20 Questions Game | Mind Test</title>
+    <meta name="description" content="Play 20 Questions with AI! Think of a word and let the AI guess it in 20 yes/no questions. A fun and intelligent guessing game.">
+    <meta name="keywords" content="20 questions, AI game, guessing game, mind game, word game">
+    <meta property="og:title" content="AI 20 Questions Game" />
+    <meta property="og:description" content="Play 20 Questions with AI! Think of a word and let the AI guess it." />
+    <meta property="og:url" content="https://musinsa.cloud/en/twenty-questions.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <link rel="alternate" hreflang="ko" href="https://musinsa.cloud/twenty-questions.html" />
+    <link rel="alternate" hreflang="en" href="https://musinsa.cloud/en/twenty-questions.html" />
+    <link rel="alternate" hreflang="x-default" href="https://musinsa.cloud/twenty-questions.html" />
+    <link rel="canonical" href="https://musinsa.cloud/en/twenty-questions.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 2rem);
+            max-height: 800px;
+        }
+
+        /* Language Switch */
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .lang-switch:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Counter */
+        .counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .counter-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .counter-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #a855f7);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            animation: slideIn 0.3s ease;
+            line-height: 1.5;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: linear-gradient(135deg, #374151, #1f2937);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.system {
+            align-self: center;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .message.result {
+            align-self: center;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .message.result.lose {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        /* Typing Indicator */
+        .typing {
+            display: flex;
+            gap: 4px;
+            padding: 1rem;
+            align-self: flex-start;
+        }
+
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing span:nth-child(1) { animation-delay: 0s; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Buttons Area */
+        .buttons-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            color: white;
+        }
+
+        .btn-yes:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        .btn-no:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--border);
+        }
+
+        /* Start Screen */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .start-screen .emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .start-screen h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .start-screen p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .rules {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .rules h3 {
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        .rules ol {
+            padding-left: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        /* Confirm Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            animation: scaleIn 0.2s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .confirm-buttons .btn {
+            flex: 1;
+            padding: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Scrollbar */
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                padding: 0.9rem 1rem;
+            }
+
+            .lang-switch {
+                top: auto;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/twenty-questions.html" class="lang-switch">🌐 한국어</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>AI 20 Questions</h1>
+            <p>Think of a word. Can the AI guess it?</p>
+        </div>
+
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <div class="emoji">🤔</div>
+            <h2>Ready to play?</h2>
+            <p>Think of a word. It can be anything - an object, animal, person, or concept!</p>
+
+            <div class="rules">
+                <h3>How to Play</h3>
+                <ol>
+                    <li>Think of a word in your mind</li>
+                    <li>AI will ask yes/no questions</li>
+                    <li>Answer honestly</li>
+                    <li>AI has 20 questions to guess it</li>
+                </ol>
+            </div>
+
+            <button class="btn btn-primary" onclick="startGame()" style="width: 100%;">
+                🎮 Start Game
+            </button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="hidden">
+            <div class="counter">
+                <div>
+                    <span class="counter-text">Question</span>
+                    <span class="counter-number" id="questionCount">0</span>
+                    <span class="counter-text">/ 20</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="chat-area" id="chatArea">
+                <!-- Messages will be added here -->
+            </div>
+
+            <div class="buttons-area" id="buttonsArea">
+                <div class="answer-buttons" id="answerButtons">
+                    <button class="btn btn-yes" onclick="answer('Yes')" id="yesBtn">
+                        ⭕ Yes
+                    </button>
+                    <button class="btn btn-no" onclick="answer('No')" id="noBtn">
+                        ❌ No
+                    </button>
+                </div>
+                <button class="btn btn-secondary" onclick="confirmNewGame()">
+                    🔄 New Game
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog -->
+    <div class="modal-overlay hidden" id="confirmModal">
+        <div class="modal">
+            <h3>🔄 New Game</h3>
+            <p>End the current game and start a new one?</p>
+            <div class="confirm-buttons">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="newGame()">New Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ Cloudflare Worker URL - Replace with your actual Worker URL after deployment
+        const WORKER_URL = 'https://twenty-questions.YOUR_SUBDOMAIN.workers.dev';
+
+        // Game State
+        let questionCount = 0;
+        let conversationHistory = [];
+        let isGameOver = false;
+
+        // DOM Elements
+        const startScreen = document.getElementById('startScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const chatArea = document.getElementById('chatArea');
+        const questionCountEl = document.getElementById('questionCount');
+        const progressBar = document.getElementById('progressBar');
+        const answerButtons = document.getElementById('answerButtons');
+        const confirmModal = document.getElementById('confirmModal');
+
+        // Start Game
+        function startGame() {
+            startScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            resetGame();
+            askFirstQuestion();
+        }
+
+        // Reset Game
+        function resetGame() {
+            questionCount = 0;
+            conversationHistory = [];
+            isGameOver = false;
+            chatArea.innerHTML = '';
+            updateCounter();
+            enableAnswerButtons();
+        }
+
+        // Update Counter
+        function updateCounter() {
+            questionCountEl.textContent = questionCount;
+            progressBar.style.width = `${(questionCount / 20) * 100}%`;
+        }
+
+        // Add Message to Chat
+        function addMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Show Typing Indicator
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = '<span></span><span></span><span></span>';
+            chatArea.appendChild(typingDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Hide Typing Indicator
+        function hideTyping() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        // Disable/Enable Answer Buttons
+        function disableAnswerButtons() {
+            document.getElementById('yesBtn').disabled = true;
+            document.getElementById('noBtn').disabled = true;
+        }
+
+        function enableAnswerButtons() {
+            document.getElementById('yesBtn').disabled = false;
+            document.getElementById('noBtn').disabled = false;
+        }
+
+        // Ask First Question
+        async function askFirstQuestion() {
+            addMessage('Game started! Have you thought of a word?', 'system');
+
+            showTyping();
+            disableAnswerButtons();
+
+            try {
+                const response = await callAI('The game is starting. Please ask the first question.');
+                hideTyping();
+
+                questionCount++;
+                updateCounter();
+                conversationHistory.push({ role: 'ai', content: response });
+                addMessage(response, 'ai');
+                enableAnswerButtons();
+
+                checkForAnswer(response);
+            } catch (error) {
+                hideTyping();
+                addMessage('An error occurred. Please try again later.', 'system');
+                console.error(error);
+
+                // Show retry button
+                answerButtons.innerHTML = `
+                    <button class="btn btn-primary" onclick="askFirstQuestion()" style="grid-column: span 2;">
+                        🔄 Try Again
+                    </button>
+                `;
+            }
+        }
+
+        // User Answer
+        async function answer(userAnswer) {
+            if (isGameOver) return;
+
+            addMessage(userAnswer, 'user');
+            conversationHistory.push({ role: 'user', content: userAnswer });
+
+            showTyping();
+            disableAnswerButtons();
+
+            try {
+                const response = await callAI(userAnswer);
+                hideTyping();
+
+                // Check if it's not a final answer
+                if (!response.includes('Answer:') && !response.includes('My guess:') && !response.includes('Final answer:')) {
+                    questionCount++;
+                    updateCounter();
+                }
+
+                conversationHistory.push({ role: 'ai', content: response });
+                addMessage(response, 'ai');
+
+                // Check for answer or game over
+                if (checkForAnswer(response)) {
+                    return;
+                }
+
+                if (questionCount >= 20) {
+                    gameOver(false);
+                    return;
+                }
+
+                enableAnswerButtons();
+            } catch (error) {
+                hideTyping();
+                addMessage('An error occurred. Please try again.', 'system');
+                enableAnswerButtons();
+                console.error(error);
+            }
+        }
+
+        // Check if AI made a guess
+        function checkForAnswer(response) {
+            if (response.includes('Answer:') || response.includes('My guess:') || response.includes('Final answer:')) {
+                isGameOver = true;
+                disableAnswerButtons();
+
+                // Show confirm buttons
+                const confirmDiv = document.createElement('div');
+                confirmDiv.className = 'message system';
+                confirmDiv.innerHTML = `
+                    <p>Did the AI guess correctly?</p>
+                    <div class="confirm-buttons">
+                        <button class="btn btn-yes" onclick="handleGuessResult(true)">Correct!</button>
+                        <button class="btn btn-no" onclick="handleGuessResult(false)">Wrong</button>
+                    </div>
+                `;
+                chatArea.appendChild(confirmDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
+                return true;
+            }
+            return false;
+        }
+
+        // Handle guess result
+        function handleGuessResult(correct) {
+            if (correct) {
+                addMessage(`🎉 Got it in ${questionCount} questions!`, 'result');
+            } else {
+                addMessage('😅 Oh well! Better luck next time.', 'result lose');
+            }
+
+            // Show new game button prominently
+            answerButtons.innerHTML = `
+                <button class="btn btn-primary" onclick="newGame()" style="grid-column: span 2;">
+                    🎮 Start New Game
+                </button>
+            `;
+        }
+
+        // Game Over
+        function gameOver(won) {
+            isGameOver = true;
+            disableAnswerButtons();
+
+            if (!won) {
+                addMessage("😅 Couldn't guess it in 20 questions. What were you thinking of?", 'result lose');
+            }
+
+            answerButtons.innerHTML = `
+                <button class="btn btn-primary" onclick="newGame()" style="grid-column: span 2;">
+                    🎮 Start New Game
+                </button>
+            `;
+        }
+
+        // Call AI via Cloudflare Worker
+        async function callAI(userMessage) {
+            const conversationText = conversationHistory.map(msg => {
+                return msg.role === 'ai' ? `AI: ${msg.content}` : `User: ${msg.content}`;
+            }).join('\n');
+
+            const prompt = `You are the questioner in a 20 Questions game.
+You need to guess the word the user is thinking of within 20 questions.
+Ask logical questions to narrow down the possibilities.
+
+Rules:
+- Only ask yes/no questions
+- Use previous answers to narrow down the scope
+- When confident, make a guess in the format 'Answer: [word]' or 'My guess: [word]'
+- Ask questions in natural English
+- Ask only one question at a time
+
+Conversation so far:
+${conversationText}
+
+Current question count: ${questionCount}/20
+
+${userMessage === 'The game is starting. Please ask the first question.' ?
+    'Ask your first question. (e.g., "Is it a living thing?")' :
+    `User's answer: ${userMessage}\n\nAsk your next question. If you're confident, make a guess with 'Answer: [word]' or 'My guess: [word]'.`}`;
+
+            const response = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || 'API request failed');
+            }
+
+            const data = await response.json();
+            return data.response;
+        }
+
+        // Confirm Modal
+        function confirmNewGame() {
+            if (isGameOver) {
+                newGame();
+            } else {
+                confirmModal.classList.remove('hidden');
+            }
+        }
+
+        function closeConfirmModal() {
+            confirmModal.classList.add('hidden');
+        }
+
+        function newGame() {
+            closeConfirmModal();
+
+            // Reset answer buttons
+            answerButtons.innerHTML = `
+                <button class="btn btn-yes" onclick="answer('Yes')" id="yesBtn">
+                    ⭕ Yes
+                </button>
+                <button class="btn btn-no" onclick="answer('No')" id="noBtn">
+                    ❌ No
+                </button>
+            `;
+
+            resetGame();
+            askFirstQuestion();
+        }
+
+        // Close modal on outside click
+        confirmModal.addEventListener('click', (e) => {
+            if (e.target === confirmModal) closeConfirmModal();
+        });
+    </script>
+</body>
+</html>

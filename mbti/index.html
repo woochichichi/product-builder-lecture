@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 성격유형 테스트 - 나의 MBTI 알아보기 | 무료 테스트</title>
+    <meta name="description" content="무료 MBTI 성격유형 테스트! 12가지 질문으로 나의 MBTI를 알아보세요. INTJ, ENFP, ISTJ 등 16가지 성격유형 중 나는 어떤 유형일까요?">
+    <meta name="keywords" content="MBTI, MBTI 테스트, 성격유형, 무료 MBTI, MBTI 검사, 16가지 성격">
+    <meta property="og:title" content="MBTI 성격유형 테스트 - 나의 MBTI 알아보기" />
+    <meta property="og:description" content="무료 MBTI 성격유형 테스트! 12가지 질문으로 나의 MBTI를 알아보세요." />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=MBTI+테스트" />
+    <meta property="og:url" content="https://musinsa.cloud/mbti/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MBTI 성격유형 테스트" />
+    <meta name="twitter:description" content="무료 MBTI 성격유형 테스트! 12가지 질문으로 나의 MBTI를 알아보세요." />
+    <link rel="canonical" href="https://musinsa.cloud/mbti/" />
+    <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../global.css"></noscript>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9432316995122325"
+     crossorigin="anonymous"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFQLBFRP7Q"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QFQLBFRP7Q');
+    </script>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "v6teuzj0e4");
+    </script>
+    <style>
+        .mbti-intro {
+            text-align: left;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--input-bg);
+            border-radius: 15px;
+        }
+        .mbti-intro h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .mbti-intro p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .mbti-intro ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        .mbti-intro li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+        .start-button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 2rem auto 0;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #6B5B95, #9B8AB8);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(107, 91, 149, 0.3);
+        }
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(107, 91, 149, 0.4);
+        }
+        .mbti-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+        .mbti-type-preview {
+            padding: 1rem 0.5rem;
+            background: var(--input-bg);
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: default;
+        }
+        .mbti-type-preview:hover {
+            transform: translateY(-3px);
+        }
+        .mbti-type-preview .type-code {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+        .mbti-type-preview .type-name {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        .dimension-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .dimension-card {
+            padding: 1.2rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .dimension-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .dimension-card p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        #quiz-container {
+            display: none;
+        }
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+        .progress-bar {
+            height: 8px;
+            background: var(--input-bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6B5B95, #9B8AB8);
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .question {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .question p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .option {
+            padding: 1.2rem 1.5rem;
+            background: var(--input-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            line-height: 1.5;
+        }
+        .option:hover {
+            border-color: #6B5B95;
+            transform: translateX(5px);
+        }
+        #result-container {
+            display: none;
+            text-align: center;
+        }
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        .result-type {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 0.5rem;
+        }
+        .result-name {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        .result-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: left;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 15px;
+        }
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .detail-box {
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            text-align: left;
+        }
+        .detail-box h4 {
+            color: #6B5B95;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+        .detail-box p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .dimension-result {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .dimension-item {
+            padding: 1rem;
+            background: var(--input-bg);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .dimension-item .letter {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+        .dimension-item .label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.3rem;
+        }
+        .retry-button {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #6B5B95, #9B8AB8);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        .retry-button:hover {
+            transform: translateY(-3px);
+        }
+        .share-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--input-bg);
+            border-radius: 15px;
+        }
+        .share-result p {
+            margin-bottom: 1rem;
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .share-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .share-btn.kakao { background: #FEE500; color: #000; }
+        .share-btn.twitter { background: #1DA1F2; color: white; }
+        .share-btn.copy { background: #6B5B95; color: white; }
+        .share-btn:hover { transform: translateY(-2px); }
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .mbti-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
+            }
+            .mbti-type-preview {
+                padding: 0.8rem 0.3rem;
+            }
+            .mbti-type-preview .type-code {
+                font-size: 0.9rem;
+            }
+            .mbti-type-preview .type-name {
+                font-size: 0.65rem;
+            }
+            .dimension-info {
+                grid-template-columns: 1fr;
+            }
+            .result-details {
+                grid-template-columns: 1fr;
+            }
+            .dimension-result {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .question p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-links">
+            <a href="/">홈</a>
+            <a href="/personality-test/personality-test.html">성격 테스트</a>
+            <a href="/daily-fortune/">오늘의 운세</a>
+            <a href="/color-test/">색깔 심리</a>
+            <a href="/tarot/">타로</a>
+            <a href="/mbti/">MBTI</a>
+            <a href="/face-palm/">AI 관상</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>MBTI 성격유형 테스트</h1>
+        <p>12가지 질문으로 나의 MBTI 유형을 알아보세요!</p>
+
+        <div class="mbti-intro" id="intro-section">
+            <h2>MBTI란?</h2>
+            <p>MBTI(Myers-Briggs Type Indicator)는 칼 융의 심리 유형론을 바탕으로 개발된 성격 유형 검사입니다. 4가지 선호 지표를 조합하여 16가지 성격 유형으로 분류합니다.</p>
+
+            <div class="dimension-info">
+                <div class="dimension-card">
+                    <h4>E 외향 vs I 내향</h4>
+                    <p>에너지의 방향: 외부 세계에서 에너지를 얻는지, 내면 세계에서 에너지를 얻는지</p>
+                </div>
+                <div class="dimension-card">
+                    <h4>S 감각 vs N 직관</h4>
+                    <p>정보 인식 방식: 오감으로 구체적 정보를 선호하는지, 패턴과 가능성을 선호하는지</p>
+                </div>
+                <div class="dimension-card">
+                    <h4>T 사고 vs F 감정</h4>
+                    <p>판단 기준: 논리와 객관성을 중시하는지, 가치와 관계를 중시하는지</p>
+                </div>
+                <div class="dimension-card">
+                    <h4>J 판단 vs P 인식</h4>
+                    <p>생활 방식: 계획적이고 체계적인지, 유연하고 자율적인지</p>
+                </div>
+            </div>
+
+            <ul>
+                <li><strong>소요 시간:</strong> 약 3-5분</li>
+                <li><strong>질문 수:</strong> 12개</li>
+                <li><strong>결과 유형:</strong> 16가지 MBTI 유형</li>
+            </ul>
+
+            <button id="start-test-btn" class="start-button">테스트 시작하기</button>
+        </div>
+
+        <div id="quiz-container">
+            <!-- Questions will be injected by JavaScript -->
+        </div>
+
+        <div id="result-container">
+            <!-- Results will be injected by JavaScript -->
+        </div>
+
+        <div class="mbti-preview" id="preview-section">
+            <h2 style="margin-top: 2rem; color: var(--primary-color);">16가지 MBTI 유형</h2>
+            <div class="mbti-grid">
+                <div class="mbti-type-preview"><div class="type-code">INTJ</div><div class="type-name">전략가</div></div>
+                <div class="mbti-type-preview"><div class="type-code">INTP</div><div class="type-name">논리술사</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ENTJ</div><div class="type-name">통솔자</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ENTP</div><div class="type-name">변론가</div></div>
+                <div class="mbti-type-preview"><div class="type-code">INFJ</div><div class="type-name">옹호자</div></div>
+                <div class="mbti-type-preview"><div class="type-code">INFP</div><div class="type-name">중재자</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ENFJ</div><div class="type-name">선도자</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ENFP</div><div class="type-name">활동가</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ISTJ</div><div class="type-name">현실주의자</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ISFJ</div><div class="type-name">수호자</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ESTJ</div><div class="type-name">경영자</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ESFJ</div><div class="type-name">집정관</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ISTP</div><div class="type-name">장인</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ISFP</div><div class="type-name">모험가</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ESTP</div><div class="type-name">사업가</div></div>
+                <div class="mbti-type-preview"><div class="type-code">ESFP</div><div class="type-name">연예인</div></div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background-color: #f8f9fa; padding: 40px 20px; margin-top: 60px; border-top: 1px solid #e0e0e0;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <div style="margin-bottom: 20px;">
+                <a href="/about.html" style="margin: 0 15px; color: #666;">About</a>
+                <a href="/contact.html" style="margin: 0 15px; color: #666;">Contact</a>
+                <a href="/privacy.html" style="margin: 0 15px; color: #666;">Privacy Policy</a>
+                <a href="/terms.html" style="margin: 0 15px; color: #666;">Terms of Service</a>
+                <a href="/sitemap.html" style="margin: 0 15px; color: #666;">Sitemap</a>
+            </div>
+            <div style="color: #999; font-size: 14px;">
+                <p>© 2024 마음테스트. All rights reserved.</p>
+                <p>본 테스트 결과는 참고용이며 전문적인 상담을 대체하지 않습니다.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="mbti.js"></script>
+</body>
+</html>

@@ -1,23 +1,30 @@
-
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>마음테스트 - 무료 심리 테스트 모음</title>
-  <meta name="description" content="성격 테스트, 색깔 심리 테스트, 오늘의 운세 등 다양한 무료 심리 테스트를 즐겨보세요. 나를 더 깊이 알아가는 재미있는 심리 테스트 모음!" />
-  <meta name="keywords" content="심리 테스트, 성격 테스트, 색깔 테스트, 무료 테스트, 운세, MBTI" />
-  <meta property="og:title" content="마음테스트 - 무료 심리 테스트 모음" />
-  <meta property="og:description" content="성격 테스트, 색깔 심리 테스트, 오늘의 운세 등 다양한 무료 심리 테스트를 즐겨보세요." />
-  <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=마음테스트" />
-  <meta property="og:url" content="https://musinsa.cloud/" />
+  <title>Mind Test - Free Psychological Tests | MBTI, Enneagram, Personality</title>
+  <meta name="description" content="Free psychological tests including MBTI, Enneagram, Personality Type Test, Color Psychology, Tarot, and more. Discover your hidden personality and psychology!" />
+  <meta name="keywords" content="personality test, MBTI, MBTI test free, enneagram, psychology test, free test, color psychology, tarot, fortune" />
+
+  <!-- hreflang for SEO -->
+  <link rel="alternate" hreflang="ko" href="https://musinsa.cloud/" />
+  <link rel="alternate" hreflang="en" href="https://musinsa.cloud/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://musinsa.cloud/" />
+
+  <meta property="og:title" content="Mind Test - Free Psychological Tests" />
+  <meta property="og:description" content="Discover yourself through various psychological tests. MBTI, Enneagram, Personality Tests and more!" />
+  <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=Mind+Test" />
+  <meta property="og:url" content="https://musinsa.cloud/en/" />
   <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="ko_KR" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="마음테스트 - 무료 심리 테스트 모음" />
-  <meta name="twitter:description" content="성격 테스트, 색깔 심리 테스트, 오늘의 운세 등 다양한 무료 심리 테스트를 즐겨보세요." />
-  <link rel="canonical" href="https://musinsa.cloud/" />
-  <link rel="preload" href="global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="global.css"></noscript>
+  <meta name="twitter:title" content="Mind Test - Free Psychological Tests" />
+  <meta name="twitter:description" content="Discover yourself through various psychological tests" />
+  <link rel="canonical" href="https://musinsa.cloud/en/" />
+  <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="../global.css"></noscript>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFQLBFRP7Q"></script>
   <script>
@@ -36,17 +43,17 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "v6teuzj0e4");
   </script>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "마음테스트",
-      "url": "https://musinsa.cloud/",
-      "description": "성격 테스트, 색깔 심리 테스트, 오늘의 운세 등 다양한 무료 심리 테스트 모음",
+      "name": "Mind Test",
+      "url": "https://musinsa.cloud/en/",
+      "description": "Free psychological tests including MBTI, Enneagram, Personality Type Test, and more",
       "publisher": {
         "@type": "Organization",
-        "name": "마음테스트"
+        "name": "Mind Test"
       }
     }
   </script>
@@ -188,131 +195,152 @@
     .share-button.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
     .share-button.tiktok { background: #000; color: white; }
     .share-button:hover { transform: translateY(-2px); opacity: 0.9; }
+    .lang-switch {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      padding: 8px 16px;
+      background: var(--container-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 20px;
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 600;
+      box-shadow: 0 2px 10px var(--shadow-color);
+      z-index: 100;
+    }
+    .lang-switch:hover {
+      background: var(--primary-color);
+      color: white;
+    }
     @media (max-width: 768px) {
       .hero-section h1 { font-size: 1.8rem; }
       .hero-section p { font-size: 1rem; }
       .features-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .lang-switch { top: auto; bottom: 20px; right: 20px; }
     }
   </style>
 </head>
 <body>
+  <a href="/" class="lang-switch">🌐 한국어</a>
+
   <header class="header">
     <nav class="nav-links">
-        <a href="/">홈</a>
-        <a href="/mbti/">MBTI</a>
-        <a href="/enneagram/">애니어그램</a>
-        <a href="/personality-test/personality-test.html">성격 테스트</a>
-        <a href="/daily-fortune/">오늘의 운세</a>
-        <a href="/tarot/">타로</a>
-        <a href="/color-test/">색깔 심리</a>
+        <a href="/en/">Home</a>
+        <a href="/en/mbti/">MBTI</a>
+        <a href="/en/enneagram/">Enneagram</a>
+        <a href="/en/personality-test/personality-test.html">Personality</a>
+        <a href="/en/daily-fortune/">Fortune</a>
+        <a href="/en/tarot/">Tarot</a>
+        <a href="/en/color-test/">Color</a>
     </nav>
   </header>
 
   <main>
     <section class="hero-section">
-      <h1>나를 알아가는 심리 테스트</h1>
-      <p>다양한 심리 테스트로 숨겨진 나의 성격, 심리, 운세를 발견해보세요. 모든 테스트는 무료이며, 결과를 친구들과 공유할 수 있어요!</p>
+      <h1>Discover Yourself Through Psychological Tests</h1>
+      <p>Explore your hidden personality, psychology, and fortune through various psychological tests. All tests are free and you can share results with friends!</p>
     </section>
 
     <section class="section-title">
-      <h2>인기 심리 테스트</h2>
-      <p>지금 바로 테스트를 시작해보세요</p>
+      <h2>Popular Psychological Tests</h2>
+      <p>Start your test now</p>
     </section>
 
     <div class="test-grid">
-      <a href="/personality-test/personality-test.html" class="test-card">
-        <div class="test-icon">🧠</div>
-        <h2>성격 유형 테스트</h2>
-        <p>12가지 심층 질문으로 알아보는 나의 성격 유형. 지휘관, 몽상가, 탐험가 등 8가지 유형 중 나는 어디에 속할까요?</p>
-        <span class="tag">12문항 / 3-5분</span>
-      </a>
-
-      <a href="/color-test/" class="test-card">
-        <div class="test-icon">🎨</div>
-        <h2>색깔 심리 테스트</h2>
-        <p>좋아하는 색깔로 알아보는 숨겨진 심리! 색상 선택을 통해 당신의 내면과 성격의 비밀을 발견해보세요.</p>
-        <span class="tag">3단계 / 2-3분</span>
-      </a>
-
-      <a href="/daily-fortune/" class="test-card">
-        <div class="test-icon">🔮</div>
-        <h2>오늘의 운세</h2>
-        <p>매일 새롭게 업데이트되는 오늘의 운세! 연애운, 금전운, 건강운, 직장운과 행운의 아이템을 확인하세요.</p>
-        <span class="tag">매일 업데이트</span>
-      </a>
-
-      <a href="/tarot/" class="test-card">
-        <div class="test-icon">🃏</div>
-        <h2>타로 카드</h2>
-        <p>3장의 타로 카드로 알아보는 과거, 현재, 미래의 메시지. 직감을 믿고 끌리는 카드를 선택해보세요.</p>
-        <span class="tag">3장 선택 / 2-3분</span>
-      </a>
-
-      <a href="/ziwei/" class="test-card">
-        <div class="test-icon">⭐</div>
-        <h2>자미두수</h2>
-        <p>동양 최고의 명리학 자미두수로 알아보는 나의 운명. 생년월일시를 입력하여 명반을 분석해보세요.</p>
-        <span class="tag">생년월일 입력 / 3-5분</span>
-      </a>
-
-      <a href="/face-palm/" class="test-card">
-        <div class="test-icon">👤</div>
-        <h2>AI 관상/손금</h2>
-        <p>AI가 분석하는 관상과 손금! 얼굴 특징과 손금 라인을 선택하면 운세를 분석해드립니다.</p>
-        <span class="tag">특징 선택 / 3-5분</span>
-      </a>
-
-      <a href="/mbti/" class="test-card">
+      <a href="/en/mbti/" class="test-card">
         <div class="test-icon">🔤</div>
-        <h2>MBTI 테스트</h2>
-        <p>16가지 성격유형 중 나는 어떤 유형? INTJ, ENFP, ISTJ 등 나의 MBTI를 무료로 알아보세요.</p>
-        <span class="tag">12문항 / 3-5분</span>
+        <h2>MBTI Test</h2>
+        <p>Which of the 16 personality types are you? Discover your MBTI type - INTJ, ENFP, ISTJ and more - for free!</p>
+        <span class="tag">12 questions / 3-5 min</span>
       </a>
 
-      <a href="/enneagram/" class="test-card">
+      <a href="/en/enneagram/" class="test-card">
         <div class="test-icon">🔢</div>
-        <h2>애니어그램 테스트</h2>
-        <p>9가지 핵심 성격유형과 날개까지! MBTI 다음으로 인기 있는 자기계발 성격 테스트입니다.</p>
-        <span class="tag">18문항 / 5-7분</span>
+        <h2>Enneagram Test</h2>
+        <p>9 core personality types plus wings! The most popular self-development personality test after MBTI.</p>
+        <span class="tag">18 questions / 5-7 min</span>
       </a>
 
-      <a href="/twenty-questions.html" class="test-card">
+      <a href="/en/personality-test/personality-test.html" class="test-card">
+        <div class="test-icon">🧠</div>
+        <h2>Personality Type Test</h2>
+        <p>Discover your personality type through 12 in-depth questions. Which of the 8 types are you - Commander, Dreamer, Explorer?</p>
+        <span class="tag">12 questions / 3-5 min</span>
+      </a>
+
+      <a href="/en/color-test/" class="test-card">
+        <div class="test-icon">🎨</div>
+        <h2>Color Psychology Test</h2>
+        <p>Discover your hidden psychology through your favorite colors! Uncover the secrets of your inner self through color choices.</p>
+        <span class="tag">3 steps / 2-3 min</span>
+      </a>
+
+      <a href="/en/daily-fortune/" class="test-card">
+        <div class="test-icon">🔮</div>
+        <h2>Daily Fortune</h2>
+        <p>Daily updated fortune! Check your love, money, health, and career fortune along with your lucky items.</p>
+        <span class="tag">Updated daily</span>
+      </a>
+
+      <a href="/en/tarot/" class="test-card">
+        <div class="test-icon">🃏</div>
+        <h2>Tarot Cards</h2>
+        <p>Messages about past, present, and future through 3 tarot cards. Trust your intuition and choose the cards that draw you in.</p>
+        <span class="tag">Choose 3 cards / 2-3 min</span>
+      </a>
+
+      <a href="/en/ziwei/" class="test-card">
+        <div class="test-icon">⭐</div>
+        <h2>Ziwei Doushu</h2>
+        <p>Discover your destiny through Ziwei Doushu, the supreme Eastern astrology. Analyze your destiny chart.</p>
+        <span class="tag">Birth date input / 3-5 min</span>
+      </a>
+
+      <a href="/en/face-palm/" class="test-card">
+        <div class="test-icon">👤</div>
+        <h2>AI Face & Palm Reading</h2>
+        <p>Face and palm reading analyzed by AI! Select your facial features and palm lines to get your fortune analyzed.</p>
+        <span class="tag">Feature selection / 3-5 min</span>
+      </a>
+
+      <a href="/en/twenty-questions.html" class="test-card">
         <div class="test-icon">🤔</div>
-        <h2>AI 스무고개</h2>
-        <p>단어 하나를 생각하세요! AI가 20번의 질문으로 맞춰봅니다. 과연 당신의 마음을 읽을 수 있을까요?</p>
-        <span class="tag">AI 게임</span>
+        <h2>AI 20 Questions</h2>
+        <p>Think of a word! The AI will try to guess it in 20 yes/no questions. Can it read your mind?</p>
+        <span class="tag">AI Game</span>
       </a>
     </div>
 
     <section class="features-section">
       <div class="section-title" style="margin: 0;">
-        <h2>마음테스트의 특징</h2>
+        <h2>Features of Mind Test</h2>
       </div>
       <div class="features-grid">
         <div class="feature-item">
           <div class="icon">✨</div>
-          <h3>100% 무료</h3>
-          <p>모든 테스트를 무료로 무제한 이용하세요</p>
+          <h3>100% Free</h3>
+          <p>Use all tests for free without limits</p>
         </div>
         <div class="feature-item">
           <div class="icon">🔒</div>
-          <h3>개인정보 보호</h3>
-          <p>데이터 저장 없이 브라우저에서 바로 결과 확인</p>
+          <h3>Privacy Protection</h3>
+          <p>Results processed in browser without data storage</p>
         </div>
         <div class="feature-item">
           <div class="icon">📱</div>
-          <h3>모바일 최적화</h3>
-          <p>어디서든 편하게 테스트를 즐기세요</p>
+          <h3>Mobile Optimized</h3>
+          <p>Enjoy tests anywhere, anytime</p>
         </div>
       </div>
     </section>
 
     <div class="social-share">
-      <h2>친구에게 공유하기</h2>
+      <h2>Share with Friends</h2>
       <div class="share-buttons">
-        <button id="share-kakao" class="share-button kakao">카카오톡</button>
-        <button id="share-instagram" class="share-button instagram">인스타그램</button>
-        <button id="share-tiktok" class="share-button tiktok">틱톡</button>
+        <button id="share-kakao" class="share-button kakao">KakaoTalk</button>
+        <button id="share-instagram" class="share-button instagram">Instagram</button>
+        <button id="share-tiktok" class="share-button tiktok">TikTok</button>
       </div>
     </div>
   </main>
@@ -320,15 +348,15 @@
   <footer style="background-color: #f8f9fa; padding: 40px 20px; margin-top: 60px; border-top: 1px solid #e0e0e0;">
     <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
       <div style="margin-bottom: 20px;">
-        <a href="about.html" style="margin: 0 15px; color: #666;">About</a>
-        <a href="contact.html" style="margin: 0 15px; color: #666;">Contact</a>
-        <a href="privacy.html" style="margin: 0 15px; color: #666;">Privacy Policy</a>
-        <a href="terms.html" style="margin: 0 15px; color: #666;">Terms of Service</a>
-        <a href="sitemap.html" style="margin: 0 15px; color: #666;">Sitemap</a>
+        <a href="/en/about.html" style="margin: 0 15px; color: #666;">About</a>
+        <a href="/en/contact.html" style="margin: 0 15px; color: #666;">Contact</a>
+        <a href="/en/privacy.html" style="margin: 0 15px; color: #666;">Privacy Policy</a>
+        <a href="/en/terms.html" style="margin: 0 15px; color: #666;">Terms of Service</a>
+        <a href="/en/sitemap.html" style="margin: 0 15px; color: #666;">Sitemap</a>
       </div>
       <div style="color: #999; font-size: 14px;">
-        <p>© 2024 마음테스트. All rights reserved.</p>
-        <p>본 테스트 결과는 참고용이며 전문적인 상담을 대체하지 않습니다.</p>
+        <p>© 2024 Mind Test. All rights reserved.</p>
+        <p>Test results are for reference only and do not replace professional counseling.</p>
       </div>
     </div>
   </footer>
@@ -351,15 +379,15 @@
     }
 
     document.getElementById('share-kakao').addEventListener('click', () => {
-      copyToClipboard('링크가 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
+      copyToClipboard('Link copied! Paste it on KakaoTalk.');
     });
 
     document.getElementById('share-instagram').addEventListener('click', () => {
-      copyToClipboard('링크가 복사되었습니다! 인스타그램 스토리나 DM에 붙여넣기 해주세요.');
+      copyToClipboard('Link copied! Paste it on Instagram Story or DM.');
     });
 
     document.getElementById('share-tiktok').addEventListener('click', () => {
-      copyToClipboard('링크가 복사되었습니다! 틱톡에 붙여넣기 해주세요.');
+      copyToClipboard('Link copied! Paste it on TikTok.');
     });
   </script>
 </body>

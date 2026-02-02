@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>문의하기 - 마음테스트</title>
-    <meta name="description" content="마음테스트에 대한 의견, 제안, 문의사항이 있으신가요? 언제든지 연락 주세요!">
-    <meta property="og:title" content="문의하기 - 마음테스트" />
-    <meta property="og:description" content="마음테스트에 대한 의견, 제안, 문의사항이 있으신가요? 언제든지 연락 주세요!" />
-    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=마음테스트" />
-    <meta property="og:url" content="https://musinsa.cloud/contact.html" />
+    <title>Contact Us - Mind Test</title>
+    <meta name="description" content="Have questions, suggestions, or feedback about Mind Test? Feel free to reach out anytime!">
+    <meta property="og:title" content="Contact Us - Mind Test" />
+    <meta property="og:description" content="Have questions, suggestions, or feedback about Mind Test? Feel free to reach out anytime!" />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=Mind+Test" />
+    <meta property="og:url" content="https://musinsa.cloud/en/contact.html" />
     <meta property="og:type" content="website" />
-    <link rel="canonical" href="https://musinsa.cloud/contact.html" />
-    <link rel="preload" href="global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="global.css"></noscript>
+    <meta property="og:locale" content="en_US" />
+    <link rel="alternate" hreflang="ko" href="https://musinsa.cloud/contact.html" />
+    <link rel="alternate" hreflang="en" href="https://musinsa.cloud/en/contact.html" />
+    <link rel="alternate" hreflang="x-default" href="https://musinsa.cloud/contact.html" />
+    <link rel="canonical" href="https://musinsa.cloud/en/contact.html" />
+    <link rel="preload" href="../global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../global.css"></noscript>
     <style>
         .contact-container {
             max-width: 800px;
@@ -138,6 +142,24 @@
         .privacy-note a:hover {
             text-decoration: underline;
         }
+        .lang-switch {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 8px 16px;
+            background: var(--container-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            z-index: 100;
+        }
+        .lang-switch:hover {
+            background: var(--primary-color);
+            color: white;
+        }
         @media (max-width: 768px) {
             .contact-container {
                 margin: 1rem;
@@ -148,6 +170,11 @@
             }
             .sns-grid {
                 grid-template-columns: 1fr;
+            }
+            .lang-switch {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
             }
         }
     </style>
@@ -163,63 +190,65 @@
      crossorigin="anonymous"></script>
 </head>
 <body>
+    <a href="/contact.html" class="lang-switch">🌐 한국어</a>
+
     <header class="header">
         <nav class="nav-links">
-            <a href="/">홈</a>
-            <a href="/personality-test/personality-test.html">성격 테스트</a>
-            <a href="/daily-fortune/">오늘의 운세</a>
-            <a href="/color-test/">색깔 심리</a>
-            <a href="/tarot/">타로</a>
-            <a href="/ziwei/">자미두수</a>
-            <a href="/face-palm/">AI 관상</a>
+            <a href="/en/">Home</a>
+            <a href="/en/personality-test/personality-test.html">Personality</a>
+            <a href="/en/daily-fortune/">Fortune</a>
+            <a href="/en/color-test/">Color</a>
+            <a href="/en/tarot/">Tarot</a>
+            <a href="/en/ziwei/">Ziwei</a>
+            <a href="/en/face-palm/">AI Face</a>
         </nav>
     </header>
 
     <main>
         <div class="contact-container">
-            <h1>문의하기</h1>
-            <p class="contact-intro">마음테스트에 대한 의견, 제안, 문의사항이 있으신가요?<br>언제든지 연락 주세요!</p>
+            <h1>Contact Us</h1>
+            <p class="contact-intro">Have questions, suggestions, or feedback about Mind Test?<br>Feel free to reach out anytime!</p>
 
             <div class="email-box">
-                <h2><span class="icon">📧</span> 이메일</h2>
+                <h2><span class="icon">📧</span> Email</h2>
                 <a href="mailto:contact@musinsa.cloud">contact@musinsa.cloud</a>
             </div>
 
             <section class="contact-section">
-                <h2><span class="icon">📝</span> 문의 유형</h2>
+                <h2><span class="icon">📝</span> Inquiry Types</h2>
                 <ul class="inquiry-list">
-                    <li><span class="bullet">•</span> 서비스 이용 관련 문의</li>
-                    <li><span class="bullet">•</span> 광고 및 제휴 문의</li>
-                    <li><span class="bullet">•</span> 개인정보 관련 문의</li>
-                    <li><span class="bullet">•</span> 버그 신고</li>
-                    <li><span class="bullet">•</span> 새로운 테스트 제안</li>
+                    <li><span class="bullet">•</span> Service usage inquiries</li>
+                    <li><span class="bullet">•</span> Advertising and partnership inquiries</li>
+                    <li><span class="bullet">•</span> Privacy-related inquiries</li>
+                    <li><span class="bullet">•</span> Bug reports</li>
+                    <li><span class="bullet">•</span> New test suggestions</li>
                 </ul>
             </section>
 
             <section class="contact-section">
-                <h2><span class="icon">🕐</span> 운영 시간</h2>
+                <h2><span class="icon">🕐</span> Business Hours</h2>
                 <div class="hours-info">
-                    <p><strong>평일</strong> 10:00 - 18:00 (주말 및 공휴일 제외)</p>
-                    <p>이메일 문의는 24시간 접수 가능하며, 1-2 영업일 내 답변드립니다.</p>
+                    <p><strong>Weekdays</strong> 10:00 AM - 6:00 PM KST (Closed weekends and holidays)</p>
+                    <p>Email inquiries are accepted 24/7 and will be answered within 1-2 business days.</p>
                 </div>
             </section>
 
             <section class="contact-section">
-                <h2><span class="icon">📱</span> SNS</h2>
+                <h2><span class="icon">📱</span> Social Media</h2>
                 <div class="sns-grid">
                     <div class="sns-item">
-                        <div class="platform">카카오톡 채널</div>
-                        <div class="status">[준비중]</div>
+                        <div class="platform">Twitter/X</div>
+                        <div class="status">[Coming Soon]</div>
                     </div>
                     <div class="sns-item">
-                        <div class="platform">인스타그램</div>
-                        <div class="status">[준비중]</div>
+                        <div class="platform">Instagram</div>
+                        <div class="status">[Coming Soon]</div>
                     </div>
                 </div>
             </section>
 
             <div class="privacy-note">
-                개인정보 처리방침 관련 문의는 <a href="mailto:privacy@musinsa.cloud">privacy@musinsa.cloud</a>로 연락주세요.
+                For privacy policy inquiries, please contact <a href="mailto:privacy@musinsa.cloud">privacy@musinsa.cloud</a>.
             </div>
         </div>
     </main>
@@ -227,15 +256,15 @@
     <footer style="background-color: #f8f9fa; padding: 40px 20px; margin-top: 60px; border-top: 1px solid #e0e0e0;">
         <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
             <div style="margin-bottom: 20px;">
-                <a href="about.html" style="margin: 0 15px; color: #666;">About</a>
-                <a href="contact.html" style="margin: 0 15px; color: #666;">Contact</a>
-                <a href="privacy.html" style="margin: 0 15px; color: #666;">Privacy Policy</a>
-                <a href="terms.html" style="margin: 0 15px; color: #666;">Terms of Service</a>
-                <a href="sitemap.html" style="margin: 0 15px; color: #666;">Sitemap</a>
+                <a href="/en/about.html" style="margin: 0 15px; color: #666;">About</a>
+                <a href="/en/contact.html" style="margin: 0 15px; color: #666;">Contact</a>
+                <a href="/en/privacy.html" style="margin: 0 15px; color: #666;">Privacy Policy</a>
+                <a href="/en/terms.html" style="margin: 0 15px; color: #666;">Terms of Service</a>
+                <a href="/en/sitemap.html" style="margin: 0 15px; color: #666;">Sitemap</a>
             </div>
             <div style="color: #999; font-size: 14px;">
-                <p>© 2024 마음테스트. All rights reserved.</p>
-                <p>본 테스트 결과는 참고용이며 전문적인 상담을 대체하지 않습니다.</p>
+                <p>© 2024 Mind Test. All rights reserved.</p>
+                <p>Test results are for reference only and do not replace professional counseling.</p>
             </div>
         </div>
     </footer>

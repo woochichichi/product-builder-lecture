@@ -1,0 +1,225 @@
+
+/* personality-test.css */
+#quiz-container {
+    margin-top: 2rem;
+}
+
+.progress-container {
+    margin-bottom: 2rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--input-border);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), #7eb8f5);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.question {
+    margin-bottom: 2rem;
+}
+
+.question p {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.option {
+    padding: 1.2rem;
+    border: 2px solid var(--input-border);
+    border-radius: 12px;
+    background-color: var(--input-bg);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.option:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(90, 158, 228, 0.3);
+}
+
+#result-container {
+    margin-top: 2rem;
+    padding: 2rem;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--input-bg) 0%, var(--container-bg) 100%);
+    box-shadow: 0 8px 32px var(--shadow-color);
+}
+
+#result-container h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.result-emoji {
+    font-size: 4rem;
+    margin: 1rem 0;
+}
+
+#result-type {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    color: var(--primary-color);
+}
+
+#result-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.result-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.detail-box {
+    padding: 1.2rem;
+    background-color: var(--container-bg);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.detail-box h4 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.detail-box p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.retry-button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.retry-button:hover {
+    background-color: #4a8ed4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(90, 158, 228, 0.4);
+}
+
+.share-result {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--input-border);
+}
+
+.share-result p {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 0.7rem 1.2rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.share-btn.kakao {
+    background-color: #FEE500;
+    color: #000;
+}
+
+.share-btn.instagram {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: white;
+}
+
+.share-btn.tiktok {
+    background-color: #000;
+    color: white;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .result-details {
+        grid-template-columns: 1fr;
+    }
+
+    .result-emoji {
+        font-size: 3rem;
+    }
+
+    #result-type {
+        font-size: 1.5rem;
+    }
+
+    .share-buttons {
+        flex-direction: column;
+    }
+
+    .share-btn {
+        width: 100%;
+    }
+}
