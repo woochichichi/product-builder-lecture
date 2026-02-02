@@ -34,13 +34,14 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Daily Challenge Banner */
-        .daily-banner { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); border: 1px solid rgba(245,158,11,0.4); padding: 1rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; }
-        .daily-banner h3 { color: var(--warning); margin-bottom: 0.5rem; font-size: 0.95rem; }
-        .daily-banner .streak { font-size: 1.5rem; font-weight: 700; color: var(--warning); }
-        .daily-words { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 0.8rem; }
-        .daily-word { padding: 0.4rem 0.8rem; background: rgba(245,158,11,0.3); border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
-        .daily-word:hover { background: var(--warning); color: #000; }
+        /* How to Play */
+        .how-to-play { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3); padding: 1rem; border-radius: 12px; margin-bottom: 1rem; }
+        .how-to-play h3 { color: var(--primary); margin-bottom: 0.6rem; font-size: 0.95rem; }
+        .how-to-play p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.3rem; padding-left: 0.5rem; }
+
+        /* Streak Banner */
+        .streak-banner { display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); border: 1px solid rgba(245,158,11,0.4); padding: 0.6rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.9rem; }
+        .streak-banner .streak { font-size: 1.3rem; font-weight: 700; color: var(--warning); }
 
         /* Difficulty Selection */
         .difficulty-section { width: 100%; margin-bottom: 1rem; }
@@ -51,6 +52,8 @@
         .difficulty-option.selected { border-color: var(--primary); background: rgba(99,102,241,0.1); }
         .difficulty-option .diff-icon { font-size: 1.2rem; }
         .difficulty-option .diff-name { font-size: 0.7rem; font-weight: 600; margin-top: 0.2rem; }
+        .difficulty-option .diff-desc { font-size: 0.6rem; color: var(--text-muted); margin-top: 0.1rem; }
+        .difficulty-option[title] { cursor: pointer; position: relative; }
         .diff-easy { color: #22c55e; } .diff-normal { color: #3b82f6; }
         .diff-hard { color: #f59e0b; } .diff-expert { color: #ef4444; }
 
@@ -264,28 +267,44 @@
 
         <!-- Game Tab -->
         <div class="tab-content active" id="gameTab">
-            <!-- Daily Banner -->
-            <div class="daily-banner">
-                <h3>🔥 오늘의 챌린지</h3>
-                <div>연속 접속 <span class="streak" id="dailyStreak">1</span>일째!</div>
-                <div class="daily-words" id="dailyWords"></div>
+            <!-- How to Play -->
+            <div class="how-to-play">
+                <h3>🎮 게임 방법</h3>
+                <p>1. 마음속으로 단어를 하나 생각하세요</p>
+                <p>2. AI가 예/아니오 질문을 합니다</p>
+                <p>3. AI가 맞추기 전에 버텨보세요!</p>
+            </div>
+
+            <!-- Streak Banner -->
+            <div class="streak-banner">
+                <span>🔥 연속 접속</span>
+                <span class="streak" id="dailyStreak">1</span>
+                <span>일째!</span>
             </div>
 
             <!-- Difficulty -->
             <div class="difficulty-section">
-                <h3>🎯 난이도</h3>
+                <h3>🎯 난이도 선택</h3>
                 <div class="difficulty-options">
-                    <div class="difficulty-option selected" data-difficulty="easy" onclick="selectDifficulty('easy')">
-                        <div class="diff-icon">🌱</div><div class="diff-name diff-easy">쉬움</div>
+                    <div class="difficulty-option selected" data-difficulty="easy" onclick="selectDifficulty('easy')" title="10번 질문 | 초보자 추천">
+                        <div class="diff-icon">🌱</div>
+                        <div class="diff-name diff-easy">쉬움</div>
+                        <div class="diff-desc">10번</div>
                     </div>
-                    <div class="difficulty-option" data-difficulty="normal" onclick="selectDifficulty('normal')">
-                        <div class="diff-icon">🎯</div><div class="diff-name diff-normal">보통</div>
+                    <div class="difficulty-option" data-difficulty="normal" onclick="selectDifficulty('normal')" title="15번 질문 | 적당한 도전">
+                        <div class="diff-icon">🎯</div>
+                        <div class="diff-name diff-normal">보통</div>
+                        <div class="diff-desc">15번</div>
                     </div>
-                    <div class="difficulty-option" data-difficulty="hard" onclick="selectDifficulty('hard')">
-                        <div class="diff-icon">🔥</div><div class="diff-name diff-hard">어려움</div>
+                    <div class="difficulty-option" data-difficulty="hard" onclick="selectDifficulty('hard')" title="20번 질문 | 어려운 도전">
+                        <div class="diff-icon">🔥</div>
+                        <div class="diff-name diff-hard">어려움</div>
+                        <div class="diff-desc">20번</div>
                     </div>
-                    <div class="difficulty-option" data-difficulty="expert" onclick="selectDifficulty('expert')">
-                        <div class="diff-icon">💀</div><div class="diff-name diff-expert">전문가</div>
+                    <div class="difficulty-option" data-difficulty="expert" onclick="selectDifficulty('expert')" title="25번 질문 | 극한 도전">
+                        <div class="diff-icon">💀</div>
+                        <div class="diff-name diff-expert">전문가</div>
+                        <div class="diff-desc">25번</div>
                     </div>
                 </div>
             </div>
@@ -310,7 +329,7 @@
                 <div class="badge" data-badge="perfect" title="5게임 연속">🎯</div>
             </div>
 
-            <button class="btn btn-primary btn-large" onclick="startGame()" style="width: 100%;">🎮 게임 시작</button>
+            <button class="btn btn-primary btn-large" onclick="confirmStartGame()" style="width: 100%;">🎮 게임 시작</button>
         </div>
 
         <!-- Leaderboard Tab -->
@@ -431,10 +450,24 @@
     <div class="confetti-container" id="confetti"></div>
     <div class="modal-overlay hidden" id="confirmModal">
         <div class="modal">
-            <h3>🔄 새 게임</h3><p>현재 게임을 종료할까요?</p>
+            <h3>🔄 새 게임</h3><p>현재 게임을 종료하고 처음으로 돌아갈까요?</p>
             <div class="confirm-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">취소</button>
-                <button class="btn btn-primary" onclick="newGame()">확인</button>
+                <button class="btn btn-secondary" onclick="closeModal()">계속하기</button>
+                <button class="btn btn-primary" onclick="newGame()">처음으로</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Confirm Modal -->
+    <div class="modal-overlay hidden" id="startConfirmModal">
+        <div class="modal">
+            <h3>🤔 준비되셨나요?</h3>
+            <p>마음속에 단어를 하나 생각하셨나요?<br><br>
+            <strong>예시:</strong> 동물, 음식, 물건, 장소, 유명인 등<br>
+            <span style="font-size:0.8rem;color:var(--text-muted);">AI가 예/아니오 질문으로 맞춰볼게요!</span></p>
+            <div class="confirm-buttons">
+                <button class="btn btn-secondary" onclick="closeStartConfirmModal()">잠깐만요</button>
+                <button class="btn btn-primary" onclick="closeStartConfirmModal(); startGame();">네, 시작!</button>
             </div>
         </div>
     </div>
@@ -931,8 +964,6 @@
             { id: 'allDiff', name: '마스터', desc: '모든 난이도 클리어', icon: '👑' }
         ];
 
-        const DAILY_WORDS = ['양자역학','블랙홀','피라미드','오로라','카멜레온','무지개','현미경','알고리즘','홀로그램','엔트로피','모나리자','콜로세움','만리장성','해파리','민들레','프리즘','드론','나침반','블록체인','메타버스'];
-
         // State
         let qCount = 0, history = [], gameOver = false, difficulty = 'easy', maxQ = 10;
         let hints = 2, hintCD = false, sessionNum = 1;
@@ -949,7 +980,6 @@
         function init() {
             checkDaily();
             updateUI();
-            generateDailyWords();
             updateNicknameDisplay();
 
             // Supabase 초기화
@@ -979,14 +1009,6 @@
                 data.lastPlay = today;
                 save();
             }
-        }
-
-        function generateDailyWords() {
-            const seed = new Date().toDateString();
-            const shuffled = [...DAILY_WORDS].sort(() => 0.5 - Math.random());
-            const words = shuffled.slice(0, 5);
-            const container = document.getElementById('dailyWords');
-            container.innerHTML = words.map(w => `<div class="daily-word" onclick="alert('오늘의 단어: ${w}\\n이 단어로 게임해보세요!')">${w}</div>`).join('');
         }
 
         function updateUI() {
@@ -1418,18 +1440,35 @@
         }
 
         // Modal
-        function confirmNewGame() { if (gameOver) newGame(); else document.getElementById('confirmModal').classList.remove('hidden'); }
+        function confirmStartGame() {
+            document.getElementById('startConfirmModal').classList.remove('hidden');
+        }
+
+        function closeStartConfirmModal() {
+            document.getElementById('startConfirmModal').classList.add('hidden');
+        }
+
+        function confirmNewGame() {
+            if (gameOver) {
+                goToStart();
+            } else {
+                document.getElementById('confirmModal').classList.remove('hidden');
+            }
+        }
+
         function closeModal() { document.getElementById('confirmModal').classList.add('hidden'); }
+
         function newGame() {
-            closeModal(); stopGameTimer(); resetAnswerTimer();
-            sessionNum++; resetGame();
-            document.getElementById('sessionCounter').textContent = `🎯 ${sessionNum}번째 게임`;
-            startGameTimer(); askFirst();
+            closeModal();
+            stopGameTimer();
+            resetAnswerTimer();
+            goToStart();
         }
 
         document.getElementById('confirmModal').addEventListener('click', e => { if (e.target.id === 'confirmModal') closeModal(); });
         document.getElementById('nicknameModal').addEventListener('click', e => { if (e.target.id === 'nicknameModal') closeNicknameModal(); });
         document.getElementById('scoreModal').addEventListener('click', e => { if (e.target.id === 'scoreModal') closeScoreModal(); });
+        document.getElementById('startConfirmModal').addEventListener('click', e => { if (e.target.id === 'startConfirmModal') closeStartConfirmModal(); });
 
         // Enter 키로 닉네임 저장
         document.getElementById('nicknameInput').addEventListener('keypress', e => { if (e.key === 'Enter') saveNickname(); });
