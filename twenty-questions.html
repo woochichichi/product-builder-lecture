@@ -455,11 +455,12 @@
                 <p>🌟 <span class="tomorrow-msg">내일 새로운 챌린지가 기다립니다!</span></p>
             </div>
 
-            <div class="challenge-share-section" id="challengeShareSection">
-                <button class="btn btn-challenge" onclick="challengeFriendWithSameWord()" style="width:100%;margin-bottom:0.5rem;">
-                    🎯 친구에게 도전장 보내기
+            <div class="challenge-share-section" id="challengeShareSection" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(217,119,6,0.1));border:2px solid var(--warning);border-radius:12px;padding:1rem;margin-bottom:0.8rem;">
+                <p style="font-size:1rem;font-weight:700;color:var(--warning);text-align:center;margin-bottom:0.3rem;" id="challengeTaunt">🔥 나는 N번 만에 맞췄다!</p>
+                <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;margin-bottom:0.8rem;">친구는 더 빨리 맞출 수 있을까? 😏</p>
+                <button class="btn btn-challenge" onclick="challengeFriendWithSameWord()" style="width:100%;">
+                    📩 도전장 보내기
                 </button>
-                <p style="font-size:0.8rem;color:var(--text-muted);text-align:center;">같은 단어로 친구와 대결!</p>
             </div>
 
             <div class="share-section">
@@ -1644,6 +1645,7 @@
             const challengeShareSection = document.getElementById('challengeShareSection');
             if (userWon) {
                 challengeShareSection.style.display = 'block';
+                document.getElementById('challengeTaunt').textContent = `🔥 나는 ${qCount}번 만에 맞췄다!`;
                 createConfetti();
             } else {
                 challengeShareSection.style.display = 'none';
@@ -1750,14 +1752,20 @@
         async function callAI(question) {
             const conv = history.map(h => h.role === 'ai' ? `AI: ${h.content}` : `질문: ${h.content}`).join('\n');
 
+            const wordLength = secretWord.length;
             const prompt = `당신은 스무고개 게임의 출제자입니다.
-정답 단어: "${secretWord}"
+정답 단어: "${secretWord}" (${wordLength}글자)
+
+중요한 사실:
+- 이 단어는 정확히 ${wordLength}글자입니다
+- 글자 수를 물으면 정확하게 "${wordLength}글자에요"라고 답하세요
 
 규칙:
 - 사용자의 질문에 "예" 또는 "아니오"로만 답하세요
 - 정답 단어를 절대 직접 말하지 마세요
 - 질문이 애매하면 "글쎄요, 다르게 질문해보세요"라고 답하세요
 - 답변은 한 문장으로 짧게
+- 사실에 기반해서 정확하게 답하세요
 
 이전 대화:
 ${conv}
