@@ -179,6 +179,17 @@
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); } 50% { box-shadow: 0 0 0 8px rgba(99,102,241,0); } }
         @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
         .btn:hover:not(:disabled) { transform: translateY(-2px); }
+
+        /* Input Area */
+        .input-area { display: flex; flex-direction: column; gap: 0.5rem; }
+        .question-input-row { display: flex; gap: 0.5rem; }
+        .question-input-row input { flex: 1; padding: 0.8rem; border: 2px solid var(--border); border-radius: 10px; background: var(--card-bg); color: var(--text); font-size: 0.9rem; }
+        .question-input-row input:focus { outline: none; border-color: var(--primary); }
+        .question-input-row .btn { padding: 0.8rem 1.2rem; white-space: nowrap; }
+        .action-row { display: flex; gap: 0.5rem; }
+        .action-row .btn { flex: 1; }
+        .btn-guess { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; font-weight: 700; }
+
         .game-mode-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
         .btn-challenge { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
 
@@ -276,9 +287,9 @@
             <!-- How to Play -->
             <div class="how-to-play">
                 <h3>🎮 게임 방법</h3>
-                <p>1. 마음속으로 단어를 하나 생각하세요</p>
-                <p>2. AI가 예/아니오 질문을 합니다</p>
-                <p>3. AI가 맞추기 전에 버텨보세요!</p>
+                <p>1. AI가 단어를 하나 생각합니다</p>
+                <p>2. 예/아니오 질문을 해서 추리하세요</p>
+                <p>3. 적은 질문으로 맞출수록 고득점!</p>
             </div>
 
             <!-- Streak Banner -->
@@ -399,11 +410,7 @@
                 <div class="timer-left">
                     <span class="counter-text">질문</span>
                     <span class="counter-number" id="qCount">0</span>
-                    <span class="counter-text">/ <span id="maxQ">10</span></span>
-                </div>
-                <div class="circular-timer">
-                    <svg width="50" height="50"><circle class="bg" cx="25" cy="25" r="21"/><circle class="progress" id="timerProgress" cx="25" cy="25" r="21" stroke-dasharray="132" stroke-dashoffset="0"/></svg>
-                    <div class="time-text" id="answerTime">30</div>
+                    <span class="counter-text">/ <span id="maxQ">20</span></span>
                 </div>
                 <div class="game-timer" id="gameTimer">00:00</div>
             </div>
@@ -411,12 +418,15 @@
 
             <div class="chat-area" id="chatArea"></div>
 
-            <div class="buttons-area">
-                <div class="answer-buttons" id="answerBtns">
-                    <button class="btn btn-yes" onclick="answer('예')" id="yesBtn">⭕ 예</button>
-                    <button class="btn btn-no" onclick="answer('아니오')" id="noBtn">❌ 아니오</button>
+            <div class="input-area">
+                <div class="question-input-row">
+                    <input type="text" id="questionInput" placeholder="예/아니오로 답할 수 있는 질문을 입력하세요" maxlength="100">
+                    <button class="btn btn-primary" onclick="askQuestion()" id="askBtn">질문</button>
                 </div>
-                <button class="btn btn-secondary" onclick="confirmNewGame()" style="width:100%;">🔄 새 게임</button>
+                <div class="action-row">
+                    <button class="btn btn-guess" onclick="showGuessModal()" id="guessBtn">🎯 정답 맞추기</button>
+                    <button class="btn btn-secondary" onclick="confirmNewGame()">🔄 새 게임</button>
+                </div>
             </div>
         </div>
 
@@ -443,8 +453,15 @@
                 <p>🌟 <span class="tomorrow-msg">내일 새로운 챌린지가 기다립니다!</span></p>
             </div>
 
+            <div class="challenge-share-section" id="challengeShareSection">
+                <button class="btn btn-challenge" onclick="challengeFriendWithSameWord()" style="width:100%;margin-bottom:0.5rem;">
+                    🎯 친구에게 도전장 보내기
+                </button>
+                <p style="font-size:0.8rem;color:var(--text-muted);text-align:center;">같은 단어로 친구와 대결!</p>
+            </div>
+
             <div class="share-section">
-                <p>친구에게 공유</p>
+                <p>결과 공유</p>
                 <div class="share-buttons">
                     <button class="share-btn twitter" onclick="shareTwitter()">𝕏</button>
                     <button class="share-btn kakao" onclick="shareKakao()">💬</button>
@@ -470,13 +487,27 @@
         </div>
     </div>
 
+    <!-- Guess Modal -->
+    <div class="modal-overlay hidden" id="guessModal">
+        <div class="modal">
+            <h3>🎯 정답 맞추기</h3>
+            <p>AI가 생각한 단어가 무엇일까요?</p>
+            <input type="text" id="guessInput" placeholder="정답을 입력하세요" maxlength="30">
+            <div class="input-hint">틀리면 질문 2회 차감!</div>
+            <div class="confirm-buttons">
+                <button class="btn btn-secondary" onclick="closeGuessModal()">취소</button>
+                <button class="btn btn-primary" onclick="submitGuess()">맞추기!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Challenge Modal -->
     <div class="modal-overlay hidden" id="challengeModal">
         <div class="modal">
             <h3>🎯 친구에게 도전장 보내기</h3>
             <p>친구가 맞춰야 할 단어를 입력하세요!</p>
             <input type="text" id="challengeWordInput" placeholder="예: 피아노, 아이폰, 강아지..." maxlength="20">
-            <div class="input-hint">AI가 이 단어를 맞추면 당신이 승리!</div>
+            <div class="input-hint">친구가 이 단어를 몇 번 만에 맞추는지 대결!</div>
 
             <div class="settings-group" style="margin-top:1rem;">
                 <label>내 닉네임 (도전장에 표시)</label>
@@ -508,13 +539,14 @@
     <!-- Start Confirm Modal -->
     <div class="modal-overlay hidden" id="startConfirmModal">
         <div class="modal">
-            <h3>🤔 준비되셨나요?</h3>
-            <p>마음속에 단어를 하나 생각하셨나요?<br><br>
-            <strong>예시:</strong> 동물, 음식, 물건, 장소, 유명인 등<br>
-            <span style="font-size:0.8rem;color:var(--text-muted);">AI가 예/아니오 질문으로 맞춰볼게요!</span></p>
+            <h3>🎮 게임 시작!</h3>
+            <p>AI가 단어를 하나 생각할게요!<br><br>
+            예/아니오로 답할 수 있는 질문을 해서<br>
+            AI가 생각한 단어를 맞춰보세요!<br><br>
+            <span style="font-size:0.8rem;color:var(--text-muted);">적은 질문으로 맞출수록 고득점!</span></p>
             <div class="confirm-buttons">
                 <button class="btn btn-secondary" onclick="closeStartConfirmModal()">잠깐만요</button>
-                <button class="btn btn-primary" onclick="closeStartConfirmModal(); startGame();">네, 시작!</button>
+                <button class="btn btn-primary" onclick="closeStartConfirmModal(); startGame();">시작!</button>
             </div>
         </div>
     </div>
@@ -539,8 +571,6 @@
             <h3>🏆 기록 등록</h3>
             <p>축하합니다! 기록을 리더보드에 등록하시겠습니까?</p>
             <div class="word-input-section">
-                <label>생각했던 단어를 입력하세요 (선택)</label>
-                <input type="text" id="wordInput" placeholder="예: 피아노, 코끼리..." maxlength="30">
                 <div class="checkbox-row">
                     <input type="checkbox" id="saveToLeaderboard" checked>
                     <label for="saveToLeaderboard">리더보드에 공개</label>
@@ -942,8 +972,8 @@
         }
 
         async function submitScore() {
-            const word = document.getElementById('wordInput').value.trim() || '비공개';
             const savePublic = document.getElementById('saveToLeaderboard').checked;
+            const word = secretWord || '비공개';
 
             let nickname = localStorage.getItem('tq_nickname');
             if (!nickname) {
@@ -1055,6 +1085,8 @@
             window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(challengeLink)}`, '_blank');
         }
 
+        let challengerScore = null; // 도전자의 질문 수
+
         function checkChallengeUrl() {
             const params = new URLSearchParams(window.location.search);
             const c = params.get('c');
@@ -1065,11 +1097,19 @@
                     challengeWord = decoded.w;
                     challengeFrom = decoded.f || '친구';
                     difficulty = decoded.d || 'easy';
+                    challengerScore = decoded.q || null;
                     challengeMode = true;
 
                     // UI 업데이트
                     document.getElementById('challengeBanner').classList.remove('hidden');
                     document.getElementById('challengeFrom').textContent = challengeFrom;
+
+                    // 도전자 점수 표시
+                    if (challengerScore) {
+                        document.querySelector('.challenge-msg').innerHTML =
+                            `"이 단어 ${challengerScore}번 안에 맞출 수 있어?" 🤔`;
+                    }
+
                     document.querySelector('.game-mode-buttons').style.display = 'none';
 
                     // 난이도 선택 업데이트
@@ -1089,10 +1129,10 @@
         }
 
         const DIFF = {
-            easy: { max: 10, name: '쉬움', cls: 'easy', icon: '🌱', prompt: '빠르고 직접적으로 질문하세요.' },
-            normal: { max: 15, name: '보통', cls: 'normal', icon: '🎯', prompt: '논리적으로 질문하세요.' },
-            hard: { max: 20, name: '어려움', cls: 'hard', icon: '🔥', prompt: '신중하게 질문하세요.' },
-            expert: { max: 25, name: '전문가', cls: 'expert', icon: '💀', prompt: '극도로 신중하게 질문하세요.' }
+            easy: { max: 20, name: '쉬움', cls: 'easy', icon: '🌱', desc: '일상 단어' },
+            normal: { max: 20, name: '보통', cls: 'normal', icon: '🎯', desc: '동물/자연' },
+            hard: { max: 20, name: '어려움', cls: 'hard', icon: '🔥', desc: '유명인/장소' },
+            expert: { max: 20, name: '전문가', cls: 'expert', icon: '💀', desc: '추상 개념' }
         };
 
         const ACHIEVEMENTS = [
@@ -1105,15 +1145,25 @@
         ];
 
         // State
-        let qCount = 0, history = [], gameOver = false, difficulty = 'easy', maxQ = 10;
+        let qCount = 0, history = [], gameOver = false, difficulty = 'easy', maxQ = 20;
         let sessionNum = 1;
-        let gameStart = null, gameInterval = null, answerStart = null, answerInterval = null, answerTime = 30;
+        let gameStart = null, gameInterval = null;
+        let secretWord = null; // AI가 생각한 단어
+        let isAsking = false; // 질문 처리 중
 
         // Challenge Mode State
         let challengeMode = false;
         let challengeWord = null;
         let challengeFrom = null;
         let challengeLink = null;
+
+        // 단어 목록 (카테고리별)
+        const WORD_LISTS = {
+            easy: ['사과','바나나','고양이','강아지','자동차','비행기','피아노','기타','축구','농구','햄버거','피자','컴퓨터','휴대폰','텔레비전','냉장고','우산','가방','신발','모자','연필','책','의자','테이블','침대'],
+            normal: ['코끼리','기린','펭귄','돌고래','해파리','무지개','태양','달','별','구름','번개','화산','바다','산','강','나무','꽃','나비','벌','개미','거미','뱀','악어','상어','고래'],
+            hard: ['에펠탑','피라미드','만리장성','자유의여신상','콜로세움','빅벤','타지마할','오페라하우스','아인슈타인','뉴턴','에디슨','모차르트','피카소','셰익스피어','클레오파트라','나폴레옹','링컨','간디','마틴루터킹','스티브잡스'],
+            expert: ['양자역학','상대성이론','블랙홀','DNA','광합성','진화론','민주주의','자본주의','르네상스','산업혁명','세계대전','냉전','인터넷','인공지능','블록체인','메타버스','암호화폐','유전공학','나노기술','우주탐사']
+        };
 
         // Data
         let data = JSON.parse(localStorage.getItem('tq_data')) || {
@@ -1246,6 +1296,15 @@
             document.getElementById('gameScreen').classList.remove('hidden');
             document.getElementById('resultScreen').style.display = 'none';
 
+            // 단어 선택 (챌린지 모드면 챌린지 단어 사용)
+            if (challengeMode && challengeWord) {
+                secretWord = challengeWord;
+            } else {
+                const words = WORD_LISTS[difficulty];
+                secretWord = words[Math.floor(Math.random() * words.length)];
+            }
+
+            maxQ = 20;
             document.getElementById('maxQ').textContent = maxQ;
             const cfg = DIFF[difficulty];
             document.getElementById('currentDiffBadge').textContent = cfg.name;
@@ -1254,31 +1313,39 @@
 
             resetGame();
             startGameTimer();
-            askFirst();
+            showGameStart();
         }
 
         function resetGame() {
-            qCount = 0; history = []; gameOver = false;
+            qCount = 0; history = []; gameOver = false; isAsking = false;
             document.getElementById('chatArea').innerHTML = '';
+            document.getElementById('questionInput').value = '';
+            document.getElementById('questionInput').disabled = false;
+            document.getElementById('askBtn').disabled = false;
+            document.getElementById('guessBtn').disabled = false;
             updateQ();
-            enableBtns();
-            resetAnswerBtns();
-            resetAnswerTimer();
         }
 
-        function resetAnswerBtns() {
-            document.getElementById('answerBtns').innerHTML = `
-                <button class="btn btn-yes" onclick="answer('예')" id="yesBtn">⭕ 예</button>
-                <button class="btn btn-no" onclick="answer('아니오')" id="noBtn">❌ 아니오</button>
-            `;
+        function showGameStart() {
+            if (challengeMode) {
+                addMsg(`📩 ${challengeFrom}님의 도전장! 이 단어를 맞춰보세요!`, 'system');
+            } else {
+                addMsg(`🤔 제가 단어를 하나 생각했어요! (${DIFF[difficulty].desc})`, 'ai');
+            }
+            addMsg('예/아니오로 답할 수 있는 질문을 해주세요!', 'system');
+            document.getElementById('questionInput').focus();
         }
 
         function updateQ() {
             document.getElementById('qCount').textContent = qCount;
             document.getElementById('progressBar').style.width = `${(qCount/maxQ)*100}%`;
+
+            // 질문 다 쓰면 게임 오버
+            if (qCount >= maxQ && !gameOver) {
+                endGame(false);
+            }
         }
 
-        
         // Timers
         function startGameTimer() {
             gameStart = Date.now();
@@ -1292,59 +1359,17 @@
         function getGameTime() { return document.getElementById('gameTimer').textContent; }
         function getGameSec() { return Math.floor((Date.now() - gameStart) / 1000); }
 
-        function startAnswerTimer() {
-            answerTime = 30;
-            answerStart = Date.now();
-            updateAnswerDisplay();
-            answerInterval = setInterval(() => {
-                answerTime = 30 - Math.floor((Date.now() - answerStart) / 1000);
-                if (answerTime <= 0) { clearInterval(answerInterval); autoAnswer(); return; }
-                updateAnswerDisplay();
-            }, 100);
-        }
-
-        function updateAnswerDisplay() {
-            const el = document.getElementById('answerTime');
-            const prog = document.getElementById('timerProgress');
-            el.textContent = Math.max(0, answerTime);
-            const offset = 132 - (answerTime / 30) * 132;
-            prog.style.strokeDashoffset = offset;
-
-            prog.classList.remove('warning', 'danger');
-            el.classList.remove('danger');
-            if (answerTime <= 5) { prog.classList.add('danger'); el.classList.add('danger'); }
-            else if (answerTime <= 10) { prog.classList.add('warning'); }
-        }
-
-        function resetAnswerTimer() {
-            if (answerInterval) clearInterval(answerInterval);
-            answerTime = 30;
-            updateAnswerDisplay();
-        }
-
-        function autoAnswer() {
-            addMsg('⏰ 시간 초과! "모르겠어요"로 처리됩니다.', 'system');
-            answer('아니오');
-        }
-
         // Messages
         function addMsg(text, type) {
             const div = document.createElement('div');
             div.className = `message ${type}`;
-            div.textContent = text;
+            if (type === 'ai' || type === 'system') {
+                div.innerHTML = text;
+            } else {
+                div.textContent = text;
+            }
             document.getElementById('chatArea').appendChild(div);
             document.getElementById('chatArea').scrollTop = 99999;
-        }
-
-        async function addTypingMsg(text, type) {
-            const div = document.createElement('div');
-            div.className = `message ${type}`;
-            document.getElementById('chatArea').appendChild(div);
-            for (let i = 0; i < text.length; i++) {
-                div.textContent += text[i];
-                document.getElementById('chatArea').scrollTop = 99999;
-                await new Promise(r => setTimeout(r, 40));
-            }
         }
 
         function showTyping() {
@@ -1357,82 +1382,108 @@
 
         function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
-        function disableBtns() {
-            const y = document.getElementById('yesBtn'), n = document.getElementById('noBtn');
-            if (y) y.disabled = true; if (n) n.disabled = true;
-            resetAnswerTimer();
+        function disableInputs() {
+            document.getElementById('questionInput').disabled = true;
+            document.getElementById('askBtn').disabled = true;
+            document.getElementById('guessBtn').disabled = true;
         }
 
-        function enableBtns() {
-            const y = document.getElementById('yesBtn'), n = document.getElementById('noBtn');
-            if (y) y.disabled = false; if (n) n.disabled = false;
-            startAnswerTimer();
+        function enableInputs() {
+            document.getElementById('questionInput').disabled = false;
+            document.getElementById('askBtn').disabled = false;
+            document.getElementById('guessBtn').disabled = false;
+            document.getElementById('questionInput').focus();
         }
 
-        // Game Flow
-        async function askFirst() {
-            addMsg('게임 시작! 단어를 생각하셨나요?', 'system');
-            showTyping(); disableBtns();
+        // Game Flow - 유저가 질문하기
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+
+            if (!question || isAsking || gameOver) return;
+            if (qCount >= maxQ) {
+                addMsg('질문 횟수를 모두 사용했습니다!', 'system');
+                return;
+            }
+
+            isAsking = true;
+            disableInputs();
+            input.value = '';
+
+            addMsg(question, 'user');
+            history.push({ role: 'user', content: question });
+            qCount++;
+            updateQ();
+
+            showTyping();
             try {
-                const res = await callAI('START');
-                hideTyping(); qCount++; updateQ();
-                history.push({ role: 'ai', content: res });
+                const res = await callAI(question);
+                hideTyping();
                 addMsg(res, 'ai');
-                enableBtns();
-                checkAnswer(res);
+                history.push({ role: 'ai', content: res });
             } catch (e) {
                 hideTyping();
-                addMsg('오류. 다시 시도하세요.', 'system');
-                document.getElementById('answerBtns').innerHTML = `<button class="btn btn-primary" onclick="askFirst()" style="grid-column:span 2">🔄 재시도</button>`;
+                addMsg('⚠️ 오류가 발생했습니다. 다시 질문해주세요.', 'system');
+                qCount--; // 질문 복구
+                updateQ();
+            }
+            isAsking = false;
+            enableInputs();
+        }
+
+        // 정답 맞추기 모달
+        function showGuessModal() {
+            document.getElementById('guessModal').classList.remove('hidden');
+            document.getElementById('guessInput').value = '';
+            document.getElementById('guessInput').focus();
+        }
+
+        function closeGuessModal() {
+            document.getElementById('guessModal').classList.add('hidden');
+        }
+
+        async function submitGuess() {
+            const guess = document.getElementById('guessInput').value.trim();
+            if (!guess) return;
+
+            closeGuessModal();
+            addMsg(`🎯 "${guess}"`, 'user');
+
+            // 정답 체크
+            const isCorrect = normalizeWord(guess) === normalizeWord(secretWord);
+
+            if (isCorrect) {
+                addMsg(`🎉 정답입니다! "<strong>${secretWord}</strong>"`, 'ai');
+                endGame(true);
+            } else {
+                qCount += 2; // 틀리면 2회 차감
+                updateQ();
+                addMsg(`❌ 틀렸습니다! (질문 2회 차감)`, 'ai');
+
+                if (qCount >= maxQ) {
+                    endGame(false);
+                } else {
+                    enableInputs();
+                }
             }
         }
 
-        async function answer(ans) {
-            if (gameOver) return;
-            resetAnswerTimer();
-            addMsg(ans, 'user');
-            history.push({ role: 'user', content: ans });
-            showTyping(); disableBtns();
-            try {
-                const res = await callAI(ans);
-                hideTyping();
-                if (!res.includes('정답:')) { qCount++; updateQ(); }
-                history.push({ role: 'ai', content: res });
-                addMsg(res, 'ai');
-                if (checkAnswer(res)) return;
-                if (qCount >= maxQ) { endGame(false); return; }
-                enableBtns();
-            } catch (e) { hideTyping(); addMsg('오류. 재시도.', 'system'); enableBtns(); }
+        function normalizeWord(word) {
+            return word.toLowerCase().replace(/\s/g, '').replace(/[^가-힣a-zA-Z0-9]/g, '');
         }
 
-        function checkAnswer(res) {
-            if (res.includes('정답:')) {
-                gameOver = true; disableBtns();
-                const div = document.createElement('div');
-                div.className = 'message system';
-                div.innerHTML = `<p>AI가 맞췄나요?</p><div class="confirm-buttons"><button class="btn btn-yes" onclick="handleResult(true)">맞음!</button><button class="btn btn-no" onclick="handleResult(false)">틀림</button></div>`;
-                document.getElementById('chatArea').appendChild(div);
-                document.getElementById('chatArea').scrollTop = 99999;
-                return true;
-            }
-            return false;
-        }
-
-        function handleResult(correct) { endGame(correct); }
 
         let pendingScore = null;
 
-        function endGame(aiWon) {
+        function endGame(userWon) {
             stopGameTimer();
-            resetAnswerTimer();
             gameOver = true;
 
             data.total++;
             data.todayGames++;
             data.consecutiveGames++;
 
-            if (aiWon) { data.aiWins++; data.streak = 0; }
-            else {
+            if (userWon) {
                 data.wins++; data.streak++;
                 data.diffClears[difficulty]++;
 
@@ -1448,16 +1499,19 @@
                     timeSeconds: sec,
                     diff: difficulty
                 };
+            } else {
+                data.aiWins++;
+                data.streak = 0;
             }
 
-            const newBadges = checkBadges(aiWon);
+            const newBadges = checkBadges(userWon);
             save();
-            setTimeout(() => showResult(aiWon, newBadges), 500);
+            setTimeout(() => showResult(userWon, newBadges), 500);
         }
 
-        function checkBadges(aiWon) {
+        function checkBadges(userWon) {
             const nb = [];
-            if (!aiWon) {
+            if (userWon) {
                 if (!data.badges.includes(difficulty)) { data.badges.push(difficulty); nb.push({ icon: DIFF[difficulty].icon, name: DIFF[difficulty].name + ' 클리어' }); }
                 if (data.streak >= 3 && !data.badges.includes('streak3')) { data.badges.push('streak3'); nb.push({ icon: '⚡', name: '3연승' }); if (!data.achievements.includes('streak3')) data.achievements.push('streak3'); }
                 if (getGameSec() < 60 && !data.badges.includes('fast')) { data.badges.push('fast'); nb.push({ icon: '⏱️', name: '1분 내 승리' }); }
@@ -1469,27 +1523,43 @@
             return nb;
         }
 
-        function showResult(aiWon, newBadges) {
+        function showResult(userWon, newBadges) {
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('resultScreen').style.display = 'flex';
 
             // 챌린지 모드 결과
-            if (challengeMode && challengeWord) {
-                if (aiWon) {
-                    document.getElementById('resultIcon').textContent = '🎯';
-                    document.getElementById('resultTitle').textContent = `${challengeFrom}님 승리!`;
-                    document.getElementById('resultSubtitle').innerHTML = `AI가 "<strong>${challengeWord}</strong>"를 맞췄습니다!`;
+            if (challengeMode) {
+                if (userWon) {
+                    let comparisonMsg = '';
+                    if (challengerScore) {
+                        if (qCount < challengerScore) {
+                            comparisonMsg = `<br>🏆 <strong>${challengeFrom}님(${challengerScore}번)을 이겼어요!</strong>`;
+                        } else if (qCount === challengerScore) {
+                            comparisonMsg = `<br>⚖️ ${challengeFrom}님과 동점!`;
+                        } else {
+                            comparisonMsg = `<br>😅 ${challengeFrom}님(${challengerScore}번)이 더 빨랐네요!`;
+                        }
+                    }
+                    document.getElementById('resultIcon').textContent = '🎉';
+                    document.getElementById('resultTitle').textContent = '정답!';
+                    document.getElementById('resultSubtitle').innerHTML = `"<strong>${secretWord}</strong>"를 ${qCount}번 만에 맞췄어요!${comparisonMsg}`;
                 } else {
-                    document.getElementById('resultIcon').textContent = '🛡️';
-                    document.getElementById('resultTitle').textContent = '방어 성공!';
-                    document.getElementById('resultSubtitle').innerHTML = `"<strong>${challengeWord}</strong>"를 지켜냈어요!`;
+                    document.getElementById('resultIcon').textContent = '😢';
+                    document.getElementById('resultTitle').textContent = '아쉬워요!';
+                    let failMsg = `정답은 "<strong>${secretWord}</strong>"이었어요!`;
+                    if (challengerScore) {
+                        failMsg += `<br>${challengeFrom}님은 ${challengerScore}번 만에 맞췄어요!`;
+                    }
+                    document.getElementById('resultSubtitle').innerHTML = failMsg;
                 }
-                document.getElementById('resultTitle').className = `result-title ${aiWon ? 'lose' : 'win'}`;
+                document.getElementById('resultTitle').className = `result-title ${userWon ? 'win' : 'lose'}`;
             } else {
-                document.getElementById('resultIcon').textContent = aiWon ? '🎉' : '🏆';
-                document.getElementById('resultTitle').textContent = aiWon ? 'AI 승리!' : '당신의 승리!';
-                document.getElementById('resultTitle').className = `result-title ${aiWon ? 'win' : 'lose'}`;
-                document.getElementById('resultSubtitle').textContent = aiWon ? 'AI가 맞췄습니다!' : 'AI를 이겼어요!';
+                document.getElementById('resultIcon').textContent = userWon ? '🎉' : '😢';
+                document.getElementById('resultTitle').textContent = userWon ? '정답!' : '아쉬워요!';
+                document.getElementById('resultTitle').className = `result-title ${userWon ? 'win' : 'lose'}`;
+                document.getElementById('resultSubtitle').innerHTML = userWon
+                    ? `"<strong>${secretWord}</strong>"를 ${qCount}번 만에 맞췄어요!`
+                    : `정답은 "<strong>${secretWord}</strong>"이었어요!`;
             }
 
             const be = document.getElementById('badgeEarned');
@@ -1503,19 +1573,57 @@
             document.getElementById('resTime').textContent = getGameTime();
             document.getElementById('resDiff').innerHTML = `<span class="difficulty-badge difficulty-${DIFF[difficulty].cls}">${DIFF[difficulty].name}</span>`;
 
-            createConfetti();
+            // 친구 도전장 버튼은 유저가 이겼을 때만 표시
+            const challengeShareSection = document.getElementById('challengeShareSection');
+            if (userWon) {
+                challengeShareSection.style.display = 'block';
+                createConfetti();
+            } else {
+                challengeShareSection.style.display = 'none';
+            }
 
             // 유저가 이겼을 때 점수 등록 모달 표시 (챌린지 모드 아닐 때만)
-            if (!aiWon && pendingScore && !challengeMode) {
+            if (userWon && pendingScore && !challengeMode) {
                 setTimeout(() => showScoreModal(), 1500);
             }
 
-            // 챌린지 모드 종료 후 초기화
+            // 챌린지 모드 종료 후 초기화 (secretWord는 공유를 위해 유지)
             if (challengeMode) {
                 challengeMode = false;
                 challengeWord = null;
                 challengeFrom = null;
             }
+        }
+
+        // 친구에게 같은 단어로 도전장 보내기
+        function challengeFriendWithSameWord() {
+            if (!secretWord) {
+                alert('먼저 게임을 플레이해주세요!');
+                return;
+            }
+
+            let nickname = localStorage.getItem('tq_nickname');
+            if (!nickname) {
+                nickname = '익명' + Math.floor(Math.random() * 1000);
+                localStorage.setItem('tq_nickname', nickname);
+            }
+
+            // 링크 생성 (Base64 인코딩)
+            const encoded = btoa(encodeURIComponent(JSON.stringify({
+                w: secretWord,
+                f: nickname,
+                d: difficulty,
+                q: qCount // 내가 맞춘 질문 수
+            })));
+            challengeLink = `${window.location.origin}${window.location.pathname}?c=${encoded}`;
+
+            // 복사 후 안내
+            navigator.clipboard.writeText(challengeLink).then(() => {
+                showSuccessToast('📋 도전장 링크가 복사되었습니다!');
+            }).catch(() => {
+                // 복사 실패 시 링크 모달 표시
+                showChallengeLinkModal();
+            });
         }
 
         function createConfetti() {
@@ -1571,17 +1679,25 @@
             renderAchievements();
         }
 
-        // AI Call
-        async function callAI(msg) {
-            const conv = history.map(h => h.role === 'ai' ? `AI: ${h.content}` : `사용자: ${h.content}`).join('\n');
-            const cfg = DIFF[difficulty];
-            let prompt;
+        // AI Call - 유저의 질문에 예/아니오로 답변
+        async function callAI(question) {
+            const conv = history.map(h => h.role === 'ai' ? `AI: ${h.content}` : `질문: ${h.content}`).join('\n');
 
-            if (msg === 'START') {
-                prompt = `당신은 스무고개 게임 질문자입니다. ${maxQ}번 안에 맞춰야 합니다. ${cfg.prompt}\n규칙: 예/아니오 질문만, 확신시 '정답: [단어]' 형식, 한국어로, 하나씩 질문.\n첫 질문을 하세요.`;
-            } else {
-                prompt = `당신은 스무고개 게임 질문자입니다. ${maxQ}번 안에 맞춰야 합니다. ${cfg.prompt}\n규칙: 예/아니오 질문만, 확신시 '정답: [단어]' 형식, 한국어로, 하나씩 질문.\n대화:\n${conv}\n질문 ${qCount}/${maxQ}\n답변: ${msg}\n다음 질문 하나만.`;
-            }
+            const prompt = `당신은 스무고개 게임의 출제자입니다.
+정답 단어: "${secretWord}"
+
+규칙:
+- 사용자의 질문에 "예" 또는 "아니오"로만 답하세요
+- 정답 단어를 절대 직접 말하지 마세요
+- 질문이 애매하면 "글쎄요, 다르게 질문해보세요"라고 답하세요
+- 답변은 한 문장으로 짧게
+
+이전 대화:
+${conv}
+
+사용자 질문: "${question}"
+
+답변:`;
 
             const res = await fetch(WORKER_URL, {
                 method: 'POST',
@@ -1629,7 +1745,9 @@
 
         // Enter 키로 닉네임 저장
         document.getElementById('nicknameInput').addEventListener('keypress', e => { if (e.key === 'Enter') saveNickname(); });
-        document.getElementById('wordInput').addEventListener('keypress', e => { if (e.key === 'Enter') submitScore(); });
+        document.getElementById('questionInput').addEventListener('keypress', e => { if (e.key === 'Enter') askQuestion(); });
+        document.getElementById('guessInput').addEventListener('keypress', e => { if (e.key === 'Enter') submitGuess(); });
+        document.getElementById('guessModal').addEventListener('click', e => { if (e.target.id === 'guessModal') closeGuessModal(); });
 
         init();
     </script>
