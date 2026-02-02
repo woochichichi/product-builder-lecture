@@ -420,13 +420,12 @@
 
             <div class="input-area">
                 <div class="question-input-row">
-                    <input type="text" id="questionInput" placeholder="예/아니오로 답할 수 있는 질문을 입력하세요" maxlength="100">
-                    <button class="btn btn-primary" onclick="askQuestion()" id="askBtn">질문</button>
+                    <input type="text" id="questionInput" placeholder="질문 또는 정답을 입력하세요" maxlength="100">
+                    <button class="btn btn-primary" onclick="askQuestion()" id="askBtn">전송</button>
                 </div>
                 <div class="action-row">
-                    <button class="btn btn-guess" onclick="showGuessModal()" id="guessBtn">🎯 맞추기</button>
                     <button class="btn btn-hint" onclick="getHint()" id="hintBtn">💡 힌트</button>
-                    <button class="btn btn-secondary" onclick="confirmNewGame()">🔄</button>
+                    <button class="btn btn-secondary" onclick="confirmNewGame()">🔄 새 게임</button>
                 </div>
             </div>
         </div>
@@ -485,20 +484,6 @@
             <div class="confirm-buttons">
                 <button class="btn btn-secondary" onclick="closeModal()">계속하기</button>
                 <button class="btn btn-primary" onclick="newGame()">처음으로</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Guess Modal -->
-    <div class="modal-overlay hidden" id="guessModal">
-        <div class="modal">
-            <h3>🎯 정답 맞추기</h3>
-            <p>AI가 생각한 단어가 무엇일까요?</p>
-            <input type="text" id="guessInput" placeholder="정답을 입력하세요" maxlength="30">
-            <div class="input-hint">틀리면 질문 2회 차감!</div>
-            <div class="confirm-buttons">
-                <button class="btn btn-secondary" onclick="closeGuessModal()">취소</button>
-                <button class="btn btn-primary" onclick="submitGuess()">맞추기!</button>
             </div>
         </div>
     </div>
@@ -1272,7 +1257,6 @@
             document.getElementById('questionInput').value = '';
             document.getElementById('questionInput').disabled = false;
             document.getElementById('askBtn').disabled = false;
-            document.getElementById('guessBtn').disabled = false;
             document.getElementById('hintBtn').disabled = false;
             updateQ();
         }
@@ -1336,24 +1320,22 @@
         function disableInputs() {
             document.getElementById('questionInput').disabled = true;
             document.getElementById('askBtn').disabled = true;
-            document.getElementById('guessBtn').disabled = true;
             document.getElementById('hintBtn').disabled = true;
         }
 
         function enableInputs() {
             document.getElementById('questionInput').disabled = false;
             document.getElementById('askBtn').disabled = false;
-            document.getElementById('guessBtn').disabled = false;
             document.getElementById('hintBtn').disabled = false;
             document.getElementById('questionInput').focus();
         }
 
-        // Game Flow - 유저가 질문하기
+        // Game Flow - 유저가 질문 또는 정답 입력
         async function askQuestion() {
             const input = document.getElementById('questionInput');
-            const question = input.value.trim();
+            const userInput = input.value.trim();
 
-            if (!question || isAsking || gameOver) return;
+            if (!userInput || isAsking || gameOver) return;
             if (qCount >= maxQ) {
                 addMsg('질문 횟수를 모두 사용했습니다!', 'system');
                 return;
@@ -1363,55 +1345,35 @@
             disableInputs();
             input.value = '';
 
-            addMsg(question, 'user');
-            history.push({ role: 'user', content: question });
-            qCount++;
-            updateQ();
-
-            showTyping();
-            try {
-                const res = await callAI(question);
-                hideTyping();
-                addMsg(res, 'ai');
-                history.push({ role: 'ai', content: res });
-            } catch (e) {
-                hideTyping();
-                addMsg('⚠️ 오류가 발생했습니다. 다시 질문해주세요.', 'system');
-                qCount--; // 질문 복구
-                updateQ();
-            }
-            isAsking = false;
-            enableInputs();
-        }
-
-        // 정답 맞추기 모달
-        function showGuessModal() {
-            document.getElementById('guessModal').classList.remove('hidden');
-            document.getElementById('guessInput').value = '';
-            document.getElementById('guessInput').focus();
-        }
-
-        function closeGuessModal() {
-            document.getElementById('guessModal').classList.add('hidden');
-        }
-
-        async function submitGuess() {
-            const guess = document.getElementById('guessInput').value.trim();
-            if (!guess) return;
-
-            closeGuessModal();
-            disableInputs();
-            addMsg(`🎯 "${guess}"`, 'user');
+            // 정답 시도인지 확인 (질문이 아닌 단어만 입력한 경우)
+            const isGuessAttempt = !userInput.includes('?') &&
+                                   !userInput.includes('야?') &&
+                                   !userInput.includes('이야') &&
+                                   !userInput.includes('인가') &&
+                                   !userInput.includes('있어') &&
+                                   !userInput.includes('할 수') &&
+                                   userInput.length <= 15;
 
             // 1차: 정확히 일치하는지 체크
-            let isCorrect = normalizeWord(guess) === normalizeWord(secretWord);
+            let isCorrect = normalizeWord(userInput) === normalizeWord(secretWord);
 
-            // 2차: 유사 단어인지 AI에게 확인 (텔레비전/텔레비젼, TV 등)
-            if (!isCorrect) {
+            if (isCorrect) {
+                addMsg(`🎯 "${userInput}"`, 'user');
+                addMsg(`🎉 정답입니다! "<strong>${secretWord}</strong>"`, 'ai');
+                endGame(true);
+                return;
+            }
+
+            // 2차: 유사 단어인지 AI에게 확인 (짧은 입력일 경우만)
+            if (isGuessAttempt && userInput.length <= 10) {
+                addMsg(`🎯 "${userInput}"`, 'user');
+                qCount++;
+                updateQ();
+
                 showTyping();
                 try {
                     const checkPrompt = `정답: "${secretWord}"
-사용자 답: "${guess}"
+사용자 답: "${userInput}"
 
 위 두 단어가 같은 것을 의미하는지 판단해주세요.
 - 철자 변형 (텔레비전/텔레비젼), 줄임말 (TV/텔레비전), 동의어는 "같음"
@@ -1430,30 +1392,47 @@
                         const d = await res.json();
                         const answer = d.response.trim();
                         if (answer.includes('같음') || answer.includes('같은') || answer.includes('정답')) {
-                            isCorrect = true;
+                            addMsg(`🎉 정답입니다! "<strong>${secretWord}</strong>"`, 'ai');
+                            endGame(true);
+                            return;
                         }
                     }
                 } catch (e) {
                     hideTyping();
-                    console.error('유사 단어 체크 실패:', e);
                 }
-            }
 
-            if (isCorrect) {
-                addMsg(`🎉 정답입니다! "<strong>${secretWord}</strong>"`, 'ai');
-                endGame(true);
-            } else {
-                qCount += 2; // 틀리면 2회 차감
-                updateQ();
-                addMsg(`❌ 틀렸습니다! (질문 2회 차감)`, 'ai');
-
+                addMsg(`❌ 틀렸습니다!`, 'ai');
                 if (qCount >= maxQ) {
                     endGame(false);
                 } else {
+                    isAsking = false;
                     enableInputs();
                 }
+                return;
             }
+
+            // 일반 질문으로 처리
+            addMsg(userInput, 'user');
+            history.push({ role: 'user', content: userInput });
+            qCount++;
+            updateQ();
+
+            showTyping();
+            try {
+                const res = await callAI(userInput);
+                hideTyping();
+                addMsg(res, 'ai');
+                history.push({ role: 'ai', content: res });
+            } catch (e) {
+                hideTyping();
+                addMsg('⚠️ 오류가 발생했습니다. 다시 질문해주세요.', 'system');
+                qCount--; // 질문 복구
+                updateQ();
+            }
+            isAsking = false;
+            enableInputs();
         }
+
 
         function normalizeWord(word) {
             return word.toLowerCase().replace(/\s/g, '').replace(/[^가-힣a-zA-Z0-9]/g, '');
@@ -1797,11 +1776,9 @@ ${conv}
         document.getElementById('startConfirmModal').addEventListener('click', e => { if (e.target.id === 'startConfirmModal') closeStartConfirmModal(); });
         document.getElementById('challengeLinkModal').addEventListener('click', e => { if (e.target.id === 'challengeLinkModal') closeChallengeLinkModal(); });
 
-        // Enter 키로 닉네임 저장
+        // Enter 키로 닉네임 저장, 질문 전송
         document.getElementById('nicknameInput').addEventListener('keypress', e => { if (e.key === 'Enter') saveNickname(); });
         document.getElementById('questionInput').addEventListener('keypress', e => { if (e.key === 'Enter') askQuestion(); });
-        document.getElementById('guessInput').addEventListener('keypress', e => { if (e.key === 'Enter') submitGuess(); });
-        document.getElementById('guessModal').addEventListener('click', e => { if (e.target.id === 'guessModal') closeGuessModal(); });
 
         init();
     </script>
