@@ -152,7 +152,7 @@
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #a855f7); transition: width 0.3s; }
 
         /* Chat Area */
-        .chat-area { flex: 1; background: var(--card-bg); border-radius: 12px; padding: 0.8rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.8rem; min-height: 220px; max-height: 280px; }
+        .chat-area { flex: 1; background: var(--card-bg); border-radius: 12px; padding: 0.8rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.8rem; min-height: 320px; max-height: 400px; }
         .message { max-width: 85%; padding: 0.7rem 1rem; border-radius: 14px; animation: slideIn 0.3s ease; line-height: 1.4; font-size: 0.9rem; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .message.ai { align-self: flex-start; background: linear-gradient(135deg, #374151, #1f2937); border-bottom-left-radius: 4px; }
@@ -189,6 +189,7 @@
         .action-row { display: flex; gap: 0.5rem; }
         .action-row .btn { flex: 1; }
         .btn-guess { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; font-weight: 700; }
+        .btn-hint { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
 
         .game-mode-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
         .btn-challenge { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
@@ -424,8 +425,9 @@
                     <button class="btn btn-primary" onclick="askQuestion()" id="askBtn">질문</button>
                 </div>
                 <div class="action-row">
-                    <button class="btn btn-guess" onclick="showGuessModal()" id="guessBtn">🎯 정답 맞추기</button>
-                    <button class="btn btn-secondary" onclick="confirmNewGame()">🔄 새 게임</button>
+                    <button class="btn btn-guess" onclick="showGuessModal()" id="guessBtn">🎯 맞추기</button>
+                    <button class="btn btn-hint" onclick="getHint()" id="hintBtn">💡 힌트</button>
+                    <button class="btn btn-secondary" onclick="confirmNewGame()">🔄</button>
                 </div>
             </div>
         </div>
@@ -1317,12 +1319,13 @@
         }
 
         function resetGame() {
-            qCount = 0; history = []; gameOver = false; isAsking = false;
+            qCount = 0; history = []; gameOver = false; isAsking = false; hintCount = 0;
             document.getElementById('chatArea').innerHTML = '';
             document.getElementById('questionInput').value = '';
             document.getElementById('questionInput').disabled = false;
             document.getElementById('askBtn').disabled = false;
             document.getElementById('guessBtn').disabled = false;
+            document.getElementById('hintBtn').disabled = false;
             updateQ();
         }
 
@@ -1386,12 +1389,14 @@
             document.getElementById('questionInput').disabled = true;
             document.getElementById('askBtn').disabled = true;
             document.getElementById('guessBtn').disabled = true;
+            document.getElementById('hintBtn').disabled = true;
         }
 
         function enableInputs() {
             document.getElementById('questionInput').disabled = false;
             document.getElementById('askBtn').disabled = false;
             document.getElementById('guessBtn').disabled = false;
+            document.getElementById('hintBtn').disabled = false;
             document.getElementById('questionInput').focus();
         }
 
@@ -1472,6 +1477,68 @@
             return word.toLowerCase().replace(/\s/g, '').replace(/[^가-힣a-zA-Z0-9]/g, '');
         }
 
+        // 힌트 기능
+        let hintCount = 0;
+        const MAX_HINTS = 3;
+
+        async function getHint() {
+            if (isAsking || gameOver) return;
+            if (hintCount >= MAX_HINTS) {
+                addMsg(`💡 힌트를 모두 사용했습니다! (${MAX_HINTS}회 제한)`, 'system');
+                return;
+            }
+            if (qCount >= maxQ - 1) {
+                addMsg('⚠️ 질문이 부족합니다!', 'system');
+                return;
+            }
+
+            isAsking = true;
+            disableInputs();
+
+            hintCount++;
+            qCount += 1; // 힌트는 질문 1회 소모
+            updateQ();
+
+            addMsg(`💡 힌트 요청 (${hintCount}/${MAX_HINTS})`, 'user');
+            showTyping();
+
+            try {
+                const hintPrompt = `당신은 스무고개 게임의 출제자입니다.
+정답 단어: "${secretWord}"
+
+사용자가 힌트를 요청했습니다.
+힌트 번호: ${hintCount}번째
+
+규칙:
+- 정답 단어를 직접 말하지 마세요
+- 힌트 1: 카테고리나 대분류 힌트 (예: "동물이에요", "먹을 수 있는 것이에요")
+- 힌트 2: 특징 힌트 (예: "노란색이에요", "다리가 4개에요")
+- 힌트 3: 연상 힌트 (예: "정글의 왕이라고 불려요", "아침에 먹으면 좋아요")
+- 한 문장으로 짧게 답하세요
+
+힌트:`;
+
+                const res = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: hintPrompt })
+                });
+                if (!res.ok) throw new Error('API Error');
+                const d = await res.json();
+
+                hideTyping();
+                addMsg(`💡 ${d.response}`, 'ai');
+            } catch (e) {
+                hideTyping();
+                addMsg('⚠️ 힌트를 가져오는데 실패했습니다.', 'system');
+                hintCount--;
+                qCount--;
+                updateQ();
+            }
+
+            isAsking = false;
+            enableInputs();
+        }
 
         let pendingScore = null;
 
