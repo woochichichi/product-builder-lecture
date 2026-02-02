@@ -455,14 +455,6 @@
                 <p>🌟 <span class="tomorrow-msg">내일 새로운 챌린지가 기다립니다!</span></p>
             </div>
 
-            <div class="challenge-share-section" id="challengeShareSection" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(217,119,6,0.1));border:2px solid var(--warning);border-radius:12px;padding:1rem;margin-bottom:0.8rem;">
-                <p style="font-size:1rem;font-weight:700;color:var(--warning);text-align:center;margin-bottom:0.3rem;" id="challengeTaunt">🔥 나는 N번 만에 맞췄다!</p>
-                <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;margin-bottom:0.8rem;">친구는 더 빨리 맞출 수 있을까? 😏</p>
-                <button class="btn btn-challenge" onclick="challengeFriendWithSameWord()" style="width:100%;">
-                    📩 도전장 보내기
-                </button>
-            </div>
-
             <div class="share-section">
                 <p>결과 공유</p>
                 <div class="share-buttons">
@@ -475,6 +467,14 @@
             <div class="action-buttons">
                 <button class="btn btn-primary btn-large" onclick="playAgain()">🎮 다시 도전</button>
                 <button class="btn btn-secondary" onclick="goToStart()">🏠 처음으로</button>
+            </div>
+
+            <div class="challenge-share-section" id="challengeShareSection" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(217,119,6,0.1));border:2px solid var(--warning);border-radius:12px;padding:1rem;margin-top:1rem;">
+                <p style="font-size:1rem;font-weight:700;color:var(--warning);text-align:center;margin-bottom:0.3rem;" id="challengeTaunt">🔥 나는 N번 만에 맞췄다!</p>
+                <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;margin-bottom:0.8rem;">친구는 더 빨리 맞출 수 있을까? 😏</p>
+                <button class="btn btn-challenge" onclick="challengeFriendWithSameWord()" style="width:100%;">
+                    📩 도전장 보내기
+                </button>
             </div>
         </div>
     </div>
