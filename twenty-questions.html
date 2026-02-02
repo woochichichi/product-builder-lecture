@@ -555,8 +555,8 @@
         const DEFAULT_API_URL = '/api/twenty-questions';
         const storedWorkerUrl = localStorage.getItem('tq_worker_url');
         const WORKER_URL = (storedWorkerUrl && storedWorkerUrl.includes('api')) ? storedWorkerUrl : DEFAULT_API_URL;
-        const SUPABASE_URL = localStorage.getItem('tq_supabase_url') || 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = localStorage.getItem('tq_supabase_key') || 'YOUR_SUPABASE_ANON_KEY';
+        const SUPABASE_URL = 'https://gbrlhfgsrksmypgubbwp.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_Og1BTPZJsrZrMxu_dps-Mw_uBaMkqkH';
         let supabaseClient = null;
         let leaderboardSubscription = null;
 
@@ -930,7 +930,6 @@
         // 점수 등록 모달
         function showScoreModal() {
             document.getElementById('scoreModal').classList.remove('hidden');
-            document.getElementById('wordInput').value = '';
             document.getElementById('saveToLeaderboard').checked = true;
         }
 
@@ -1033,6 +1032,7 @@
                     challengeFrom = decoded.f || '친구';
                     difficulty = decoded.d || 'easy';
                     challengerScore = decoded.q || null;
+                    challengeCategory = decoded.c || '도전장';
                     challengeMode = true;
 
                     // UI 업데이트
@@ -1091,14 +1091,40 @@
         let challengeWord = null;
         let challengeFrom = null;
         let challengeLink = null;
+        let challengeCategory = null;
 
         // 단어 목록 (카테고리별)
         const WORD_LISTS = {
-            easy: ['사과','바나나','고양이','강아지','자동차','비행기','피아노','기타','축구','농구','햄버거','피자','컴퓨터','휴대폰','텔레비전','냉장고','우산','가방','신발','모자','연필','책','의자','테이블','침대'],
-            normal: ['코끼리','기린','펭귄','돌고래','해파리','무지개','태양','달','별','구름','번개','화산','바다','산','강','나무','꽃','나비','벌','개미','거미','뱀','악어','상어','고래'],
-            hard: ['에펠탑','피라미드','만리장성','자유의여신상','콜로세움','빅벤','타지마할','오페라하우스','아인슈타인','뉴턴','에디슨','모차르트','피카소','셰익스피어','클레오파트라','나폴레옹','링컨','간디','마틴루터킹','스티브잡스'],
-            expert: ['양자역학','상대성이론','블랙홀','DNA','광합성','진화론','민주주의','자본주의','르네상스','산업혁명','세계대전','냉전','인터넷','인공지능','블록체인','메타버스','암호화폐','유전공학','나노기술','우주탐사']
+            easy: {
+                '일상 단어': ['사과','바나나','고양이','강아지','우산','가방','신발','모자','연필','책','의자','침대','컵','접시','숟가락','젓가락','거울','비누','수건','칫솔'],
+                '음식': ['햄버거','피자','치킨','라면','김밥','떡볶이','아이스크림','케이크','빵','우유','커피','주스','과자','사탕','초콜릿'],
+                '동물': ['토끼','햄스터','앵무새','금붕어','거북이','오리','닭','돼지','소','양','말','사슴','여우','늑대','곰'],
+                '탈것': ['자전거','오토바이','버스','택시','지하철','기차','배','비행기','헬리콥터','킥보드'],
+                '악기': ['피아노','기타','드럼','바이올린','플루트','트럼펫','하모니카','탬버린','실로폰','우쿨렐레']
+            },
+            normal: {
+                '동물': ['코끼리','기린','펭귄','돌고래','해파리','판다','캥거루','코알라','하마','치타','표범','원숭이','고릴라','오랑우탄','수달'],
+                '자연': ['무지개','태양','달','별','구름','번개','화산','바다','산','강','폭포','동굴','사막','정글','빙하'],
+                '식물': ['장미','튤립','해바라기','벚꽃','민들레','선인장','대나무','소나무','은행나무','단풍나무'],
+                '날씨': ['태풍','천둥','안개','눈보라','소나기','무더위','서리','이슬','가뭄','장마'],
+                '곤충': ['나비','벌','개미','잠자리','무당벌레','매미','반딧불이','귀뚜라미','사마귀','풍뎅이']
+            },
+            hard: {
+                '랜드마크': ['에펠탑','피라미드','만리장성','콜로세움','빅벤','타지마할','자유의여신상','앙코르와트','마추픽추','사그라다파밀리아'],
+                '역사 인물': ['아인슈타인','뉴턴','에디슨','모차르트','피카소','셰익스피어','클레오파트라','나폴레옹','링컨','간디'],
+                '국가': ['브라질','호주','캐나다','이탈리아','스페인','독일','프랑스','영국','러시아','멕시코'],
+                '도시': ['뉴욕','파리','런던','도쿄','시드니','두바이','로마','베니스','바르셀로나','암스테르담'],
+                '직업': ['우주비행사','고고학자','외교관','지휘자','조종사','수의사','건축가','요리사','사진작가','소방관']
+            },
+            expert: {
+                '과학 개념': ['양자역학','상대성이론','블랙홀','광합성','진화론','유전자','중력','핵분열','초전도체','암흑물질'],
+                '역사 사건': ['르네상스','산업혁명','프랑스혁명','명예혁명','종교개혁','대공황','베를린장벽','냉전','십자군전쟁','흑사병'],
+                '기술': ['인터넷','인공지능','블록체인','양자컴퓨터','가상현실','드론','로봇공학','나노기술','유전공학','자율주행'],
+                '예술 사조': ['인상주의','초현실주의','큐비즘','바로크','고딕양식','아르누보','팝아트','미니멀리즘','추상표현주의','다다이즘'],
+                '철학 개념': ['실존주의','공리주의','허무주의','합리주의','경험주의','변증법','윤리학','형이상학','인식론','논리학']
+            }
         };
+        let secretCategory = null; // 현재 단어의 카테고리
 
         // Data
         let data = JSON.parse(localStorage.getItem('tq_data')) || {
@@ -1234,8 +1260,12 @@
             // 단어 선택 (챌린지 모드면 챌린지 단어 사용)
             if (challengeMode && challengeWord) {
                 secretWord = challengeWord;
+                secretCategory = challengeCategory || '도전장';
             } else {
-                const words = WORD_LISTS[difficulty];
+                // 랜덤 카테고리 선택
+                const categories = Object.keys(WORD_LISTS[difficulty]);
+                secretCategory = categories[Math.floor(Math.random() * categories.length)];
+                const words = WORD_LISTS[difficulty][secretCategory];
                 secretWord = words[Math.floor(Math.random() * words.length)];
             }
 
@@ -1265,7 +1295,7 @@
             if (challengeMode) {
                 addMsg(`📩 ${challengeFrom}님의 도전장! 이 단어를 맞춰보세요!`, 'system');
             } else {
-                addMsg(`🤔 제가 단어를 하나 생각했어요! (${DIFF[difficulty].desc})`, 'ai');
+                addMsg(`🤔 제가 단어를 하나 생각했어요! (${secretCategory}) (${secretWord.length}글자)`, 'ai');
             }
             addMsg('예/아니오로 답할 수 있는 질문을 해주세요!', 'system');
             document.getElementById('questionInput').focus();
@@ -1647,7 +1677,8 @@
                 w: secretWord,
                 f: nickname,
                 d: difficulty,
-                q: qCount // 내가 맞춘 질문 수
+                q: qCount, // 내가 맞춘 질문 수
+                c: secretCategory // 카테고리
             })));
             challengeLink = `${window.location.origin}${window.location.pathname}?c=${encoded}`;
 
