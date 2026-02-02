@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 스무고개 게임</title>
+    <meta name="description" content="AI와 스무고개 게임을 즐겨보세요! 단어를 생각하면 AI가 20번의 질문으로 맞춰봅니다.">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5; --success: #22c55e;
+            --danger: #ef4444; --warning: #f59e0b; --bg: #0f172a;
+            --card-bg: #1e293b; --text: #f1f5f9; --text-muted: #94a3b8; --border: #334155;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg); color: var(--text);
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; padding: 1rem; overflow-x: hidden;
+        }
+        .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; min-height: calc(100vh - 2rem); }
+
+        /* Header & Tabs */
+        .header { text-align: center; padding: 1rem 0; }
+        .header h1 { font-size: 1.6rem; background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .tab { flex: 1; padding: 0.7rem; background: var(--card-bg); border: none; border-radius: 10px; color: var(--text-muted); font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .tab.active { background: var(--primary); color: white; }
+        .tab:hover:not(.active) { background: var(--border); }
+
+        /* Tab Content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Daily Challenge Banner */
+        .daily-banner { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); border: 1px solid rgba(245,158,11,0.4); padding: 1rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; }
+        .daily-banner h3 { color: var(--warning); margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .daily-banner .streak { font-size: 1.5rem; font-weight: 700; color: var(--warning); }
+        .daily-words { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 0.8rem; }
+        .daily-word { padding: 0.4rem 0.8rem; background: rgba(245,158,11,0.3); border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .daily-word:hover { background: var(--warning); color: #000; }
+
+        /* Difficulty Selection */
+        .difficulty-section { width: 100%; margin-bottom: 1rem; }
+        .difficulty-section h3 { color: var(--primary); margin-bottom: 0.6rem; font-size: 0.9rem; }
+        .difficulty-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }
+        .difficulty-option { padding: 0.6rem 0.4rem; background: var(--card-bg); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .difficulty-option:hover { border-color: var(--primary); }
+        .difficulty-option.selected { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+        .difficulty-option .diff-icon { font-size: 1.2rem; }
+        .difficulty-option .diff-name { font-size: 0.7rem; font-weight: 600; margin-top: 0.2rem; }
+        .diff-easy { color: #22c55e; } .diff-normal { color: #3b82f6; }
+        .diff-hard { color: #f59e0b; } .diff-expert { color: #ef4444; }
+
+        /* Stats & Badges */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+        .stat-box { background: var(--card-bg); padding: 0.8rem 0.5rem; border-radius: 10px; text-align: center; }
+        .stat-box .value { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .stat-box .label { font-size: 0.65rem; color: var(--text-muted); }
+
+        .badges-row { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
+        .badge { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: var(--card-bg); border: 2px solid var(--border); opacity: 0.3; }
+        .badge.earned { opacity: 1; border-color: var(--warning); box-shadow: 0 0 8px rgba(245,158,11,0.3); }
+
+        /* Leaderboard */
+        .leaderboard { background: var(--card-bg); border-radius: 12px; padding: 1rem; }
+        .leaderboard h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .leaderboard-tabs { display: flex; gap: 0.3rem; margin-bottom: 1rem; }
+        .lb-tab { flex: 1; padding: 0.5rem 0.3rem; background: rgba(99,102,241,0.1); border: none; border-radius: 8px; color: var(--text-muted); font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .lb-tab.active { background: var(--primary); color: white; }
+        .lb-tab:hover:not(.active) { background: rgba(99,102,241,0.2); }
+
+        /* Leaderboard Table */
+        .leaderboard-content { overflow-x: auto; }
+        .leaderboard-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .leaderboard-table thead { background: rgba(99,102,241,0.1); }
+        .leaderboard-table th { padding: 0.6rem 0.4rem; text-align: left; color: var(--text-muted); font-weight: 600; font-size: 0.7rem; white-space: nowrap; }
+        .leaderboard-table td { padding: 0.6rem 0.4rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .leaderboard-table tbody tr { transition: all 0.2s; }
+        .leaderboard-table tbody tr:hover { background: rgba(99,102,241,0.05); }
+
+        /* Rank Styles */
+        .leaderboard-table .rank-cell { font-weight: 700; text-align: center; min-width: 40px; }
+        .leaderboard-table tr.rank-gold { background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.1)); }
+        .leaderboard-table tr.rank-gold td { color: #ffd700; }
+        .leaderboard-table tr.rank-silver { background: linear-gradient(135deg, rgba(192,192,192,0.15), rgba(169,169,169,0.1)); }
+        .leaderboard-table tr.rank-silver td { color: #c0c0c0; }
+        .leaderboard-table tr.rank-bronze { background: linear-gradient(135deg, rgba(205,127,50,0.15), rgba(139,69,19,0.1)); }
+        .leaderboard-table tr.rank-bronze td { color: #cd7f32; }
+        .leaderboard-table tr.my-record { background: rgba(99,102,241,0.15); border-left: 3px solid var(--primary); }
+        .leaderboard-table tr.my-record td { color: var(--primary); font-weight: 600; }
+
+        /* Badges */
+        .diff-badge { display: inline-block; padding: 0.15rem 0.4rem; border-radius: 10px; font-size: 0.65rem; font-weight: 600; }
+        .diff-badge.easy { background: rgba(34,197,94,0.2); color: #22c55e; }
+        .diff-badge.normal { background: rgba(59,130,246,0.2); color: #3b82f6; }
+        .diff-badge.hard { background: rgba(245,158,11,0.2); color: #f59e0b; }
+        .diff-badge.expert { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+        .no-records { text-align: center; color: var(--text-muted); padding: 2rem; font-size: 0.9rem; }
+        .loading-spinner { text-align: center; padding: 2rem; color: var(--text-muted); }
+        .nickname-display { display: flex; align-items: center; justify-content: space-between; background: rgba(99,102,241,0.1); padding: 0.6rem 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .nickname-display span { font-size: 0.85rem; }
+        .nickname-display button { background: none; border: none; color: var(--primary); font-size: 0.8rem; cursor: pointer; }
+        .online-count { font-size: 0.75rem; color: var(--success); display: flex; align-items: center; gap: 0.3rem; }
+        .online-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Achievements */
+        .achievements { margin-top: 1rem; }
+        .achievements h3 { color: var(--primary); margin-bottom: 0.8rem; font-size: 1rem; }
+        .achievement { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; background: var(--card-bg); border-radius: 10px; margin-bottom: 0.5rem; opacity: 0.5; }
+        .achievement.unlocked { opacity: 1; border: 1px solid var(--success); }
+        .achievement-icon { font-size: 1.5rem; }
+        .achievement-info h4 { font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .achievement-info p { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Game Screen */
+        .session-counter { text-align: center; padding: 0.4rem; background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2)); border-radius: 20px; margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--primary); font-weight: 600; }
+        .difficulty-display { text-align: center; margin-bottom: 0.5rem; }
+        .difficulty-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+        .difficulty-easy { background: rgba(34,197,94,0.2); color: #22c55e; }
+        .difficulty-normal { background: rgba(59,130,246,0.2); color: #3b82f6; }
+        .difficulty-hard { background: rgba(245,158,11,0.2); color: #f59e0b; }
+        .difficulty-expert { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+        /* Timer Display */
+        .timer-container { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; background: var(--card-bg); border-radius: 12px; margin-bottom: 0.8rem; }
+        .timer-left { display: flex; align-items: center; gap: 0.5rem; }
+        .counter-number { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+        .counter-text { font-size: 0.8rem; color: var(--text-muted); }
+        .game-timer { font-family: monospace; font-size: 1rem; color: var(--text-muted); }
+
+        /* Circular Timer */
+        .circular-timer { position: relative; width: 50px; height: 50px; }
+        .circular-timer svg { transform: rotate(-90deg); }
+        .circular-timer circle { fill: none; stroke-width: 4; }
+        .circular-timer .bg { stroke: var(--border); }
+        .circular-timer .progress { stroke: var(--primary); stroke-linecap: round; transition: stroke-dashoffset 0.3s; }
+        .circular-timer .progress.warning { stroke: var(--warning); }
+        .circular-timer .progress.danger { stroke: var(--danger); animation: blink 0.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .circular-timer .time-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.9rem; font-weight: 700; }
+        .circular-timer .time-text.danger { color: var(--danger); }
+
+        .progress-bar { height: 5px; background: var(--border); border-radius: 3px; margin-bottom: 0.8rem; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #a855f7); transition: width 0.3s; }
+
+        /* Chat Area */
+        .chat-area { flex: 1; background: var(--card-bg); border-radius: 12px; padding: 0.8rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.8rem; min-height: 220px; max-height: 280px; }
+        .message { max-width: 85%; padding: 0.7rem 1rem; border-radius: 14px; animation: slideIn 0.3s ease; line-height: 1.4; font-size: 0.9rem; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .message.ai { align-self: flex-start; background: linear-gradient(135deg, #374151, #1f2937); border-bottom-left-radius: 4px; }
+        .message.user { align-self: flex-end; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-bottom-right-radius: 4px; }
+        .message.system { align-self: center; background: transparent; color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 0.4rem; }
+        .message.hint { align-self: center; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); border: 1px solid rgba(245,158,11,0.4); color: var(--warning); max-width: 95%; }
+
+        .typing { display: flex; gap: 4px; padding: 0.8rem; align-self: flex-start; }
+        .typing span { width: 7px; height: 7px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }
+        .typing span:nth-child(1) { animation-delay: 0s; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+
+        /* Buttons */
+        .buttons-area { display: flex; flex-direction: column; gap: 0.6rem; }
+        .answer-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .btn { padding: 0.9rem 1rem; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-yes { background: linear-gradient(135deg, var(--success), #16a34a); color: white; }
+        .btn-no { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-hint { background: linear-gradient(135deg, var(--warning), #d97706); color: white; animation: sparkle 1.5s infinite; flex: 1; }
+        @keyframes sparkle { 0%, 100% { box-shadow: 0 0 5px rgba(245,158,11,0.5); } 50% { box-shadow: 0 0 15px rgba(245,158,11,0.8); } }
+        .btn-large { padding: 1rem; font-size: 1rem; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); } 50% { box-shadow: 0 0 0 8px rgba(99,102,241,0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); }
+        .hint-row { display: flex; gap: 0.5rem; align-items: center; }
+        .hint-count { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
+
+        /* Result Screen */
+        .result-screen { display: none; flex-direction: column; align-items: center; text-align: center; padding: 1rem; animation: fadeInUp 0.5s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .result-icon { font-size: 3.5rem; margin-bottom: 0.5rem; animation: bounceIn 0.6s ease; }
+        @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .result-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .result-title.win { background: linear-gradient(135deg, #22c55e, #16a34a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .result-title.lose { background: linear-gradient(135deg, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .result-subtitle { color: var(--text-muted); margin-bottom: 1rem; font-size: 0.85rem; }
+
+        .badge-earned { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); border: 1px solid rgba(245,158,11,0.4); padding: 0.8rem; border-radius: 10px; margin-bottom: 0.8rem; width: 100%; }
+        .badge-earned .badge-icon { font-size: 1.5rem; }
+        .badge-earned .badge-text { color: var(--warning); font-weight: 600; font-size: 0.9rem; }
+
+        .result-stats { background: var(--card-bg); padding: 1rem; border-radius: 12px; width: 100%; margin-bottom: 0.8rem; }
+        .result-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+        .result-stat { text-align: center; padding: 0.6rem; background: rgba(99,102,241,0.1); border-radius: 10px; }
+        .result-stat-icon { font-size: 1.1rem; margin-bottom: 0.2rem; }
+        .result-stat-value { font-size: 1rem; font-weight: 700; }
+        .result-stat-label { font-size: 0.65rem; color: var(--text-muted); }
+
+        .tomorrow-box { background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3); padding: 0.8rem; border-radius: 10px; width: 100%; margin-bottom: 0.8rem; }
+        .tomorrow-box p { font-size: 0.85rem; color: var(--text-muted); }
+        .tomorrow-box .tomorrow-msg { color: var(--primary); font-weight: 600; }
+
+        .share-section { width: 100%; margin-bottom: 0.8rem; }
+        .share-section > p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .share-buttons { display: flex; gap: 0.4rem; }
+        .share-btn { flex: 1; padding: 0.6rem; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .share-btn.twitter { background: #1DA1F2; color: white; }
+        .share-btn.kakao { background: #FEE500; color: #000; }
+        .share-btn.copy { background: var(--border); color: var(--text); }
+
+        .action-buttons { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
+
+        /* Confetti */
+        .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; overflow: hidden; }
+        .confetti { position: absolute; width: 10px; height: 10px; animation: confetti-fall 3s ease-out forwards; }
+        @keyframes confetti-fall { 0% { transform: translateY(-100%) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
+        .modal { background: var(--card-bg); padding: 1.5rem; border-radius: 14px; width: 100%; max-width: 380px; }
+        .modal h3 { margin-bottom: 0.5rem; }
+        .modal p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+        .confirm-buttons { display: flex; gap: 0.5rem; }
+        .confirm-buttons .btn { flex: 1; padding: 0.6rem; font-size: 0.9rem; }
+        .modal input[type="text"] { width: 100%; padding: 0.8rem; border: 2px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 1rem; margin-bottom: 0.5rem; }
+        .modal input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        .modal .input-hint { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .word-input-section { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+        .word-input-section label { display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text); }
+        .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+        .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); }
+        .checkbox-row label { font-size: 0.85rem; color: var(--text-muted); }
+
+        .hidden { display: none !important; }
+        .chat-area::-webkit-scrollbar { width: 5px; }
+        .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        @media (max-width: 400px) {
+            .difficulty-options { grid-template-columns: repeat(2, 1fr); }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .leaderboard-table th, .leaderboard-table td { padding: 0.4rem 0.2rem; font-size: 0.7rem; }
+            .lb-tab { font-size: 0.6rem; padding: 0.4rem 0.2rem; }
+            .diff-badge { font-size: 0.55rem; padding: 0.1rem 0.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header"><h1>AI 스무고개</h1></div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="mainTabs">
+            <button class="tab active" onclick="showTab('game')">🎮 게임</button>
+            <button class="tab" onclick="showTab('leaderboard')">🏆 기록</button>
+            <button class="tab" onclick="showTab('achievements')">⭐ 업적</button>
+        </div>
+
+        <!-- Game Tab -->
+        <div class="tab-content active" id="gameTab">
+            <!-- Daily Banner -->
+            <div class="daily-banner">
+                <h3>🔥 오늘의 챌린지</h3>
+                <div>연속 접속 <span class="streak" id="dailyStreak">1</span>일째!</div>
+                <div class="daily-words" id="dailyWords"></div>
+            </div>
+
+            <!-- Difficulty -->
+            <div class="difficulty-section">
+                <h3>🎯 난이도</h3>
+                <div class="difficulty-options">
+                    <div class="difficulty-option selected" data-difficulty="easy" onclick="selectDifficulty('easy')">
+                        <div class="diff-icon">🌱</div><div class="diff-name diff-easy">쉬움</div>
+                    </div>
+                    <div class="difficulty-option" data-difficulty="normal" onclick="selectDifficulty('normal')">
+                        <div class="diff-icon">🎯</div><div class="diff-name diff-normal">보통</div>
+                    </div>
+                    <div class="difficulty-option" data-difficulty="hard" onclick="selectDifficulty('hard')">
+                        <div class="diff-icon">🔥</div><div class="diff-name diff-hard">어려움</div>
+                    </div>
+                    <div class="difficulty-option" data-difficulty="expert" onclick="selectDifficulty('expert')">
+                        <div class="diff-icon">💀</div><div class="diff-name diff-expert">전문가</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-box"><div class="value" id="statTotal">0</div><div class="label">총 게임</div></div>
+                <div class="stat-box"><div class="value" id="statWins">0</div><div class="label">내 승리</div></div>
+                <div class="stat-box"><div class="value" id="statBest">-</div><div class="label">최고기록</div></div>
+                <div class="stat-box"><div class="value" id="statToday">0</div><div class="label">오늘</div></div>
+            </div>
+
+            <!-- Badges -->
+            <div class="badges-row" id="badgesRow">
+                <div class="badge" data-badge="easy" title="쉬움">🌱</div>
+                <div class="badge" data-badge="normal" title="보통">🎯</div>
+                <div class="badge" data-badge="hard" title="어려움">🔥</div>
+                <div class="badge" data-badge="expert" title="전문가">💀</div>
+                <div class="badge" data-badge="streak3" title="3연승">⚡</div>
+                <div class="badge" data-badge="streak7" title="7일 연속">📅</div>
+                <div class="badge" data-badge="fast" title="1분 내">⏱️</div>
+                <div class="badge" data-badge="perfect" title="5게임 연속">🎯</div>
+            </div>
+
+            <button class="btn btn-primary btn-large" onclick="startGame()" style="width: 100%;">🎮 게임 시작</button>
+        </div>
+
+        <!-- Leaderboard Tab -->
+        <div class="tab-content" id="leaderboardTab">
+            <div class="nickname-display" id="nicknameDisplay">
+                <span>👤 <strong id="currentNickname">익명</strong></span>
+                <button onclick="showNicknameModal()">변경</button>
+            </div>
+            <div class="leaderboard">
+                <h3>🏆 글로벌 리더보드 <span class="online-count" id="onlineCount"><span class="online-dot"></span>실시간</span></h3>
+                <div class="leaderboard-tabs">
+                    <button class="lb-tab active" data-tab="global" onclick="switchLeaderboardTab('global')">🌍 전체</button>
+                    <button class="lb-tab" data-tab="today" onclick="switchLeaderboardTab('today')">📅 오늘</button>
+                    <button class="lb-tab" data-tab="week" onclick="switchLeaderboardTab('week')">📊 주간</button>
+                    <button class="lb-tab" data-tab="mine" onclick="switchLeaderboardTab('mine')">👤 내 기록</button>
+                </div>
+                <div class="leaderboard-content" id="leaderboardList">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>순위</th>
+                                <th>닉네임</th>
+                                <th>단어</th>
+                                <th>질문</th>
+                                <th>시간</th>
+                                <th>난이도</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <tr><td colspan="6" class="loading-spinner">로딩 중...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Tab -->
+        <div class="tab-content" id="achievementsTab">
+            <div class="achievements">
+                <h3>⭐ 도전 과제</h3>
+                <div id="achievementsList"></div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="hidden" id="gameScreen">
+            <div class="session-counter" id="sessionCounter">🎯 1번째 게임</div>
+            <div class="difficulty-display"><span class="difficulty-badge" id="currentDiffBadge">쉬움</span></div>
+
+            <div class="timer-container">
+                <div class="timer-left">
+                    <span class="counter-text">질문</span>
+                    <span class="counter-number" id="qCount">0</span>
+                    <span class="counter-text">/ <span id="maxQ">10</span></span>
+                </div>
+                <div class="circular-timer">
+                    <svg width="50" height="50"><circle class="bg" cx="25" cy="25" r="21"/><circle class="progress" id="timerProgress" cx="25" cy="25" r="21" stroke-dasharray="132" stroke-dashoffset="0"/></svg>
+                    <div class="time-text" id="answerTime">30</div>
+                </div>
+                <div class="game-timer" id="gameTimer">00:00</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+
+            <div class="chat-area" id="chatArea"></div>
+
+            <div class="buttons-area">
+                <div class="answer-buttons" id="answerBtns">
+                    <button class="btn btn-yes" onclick="answer('예')" id="yesBtn">⭕ 예</button>
+                    <button class="btn btn-no" onclick="answer('아니오')" id="noBtn">❌ 아니오</button>
+                </div>
+                <div class="hint-row">
+                    <button class="btn btn-hint" onclick="requestHint()" id="hintBtn" disabled>💡 힌트</button>
+                    <span class="hint-count" id="hintCount">2/2</span>
+                    <button class="btn btn-secondary" onclick="confirmNewGame()" style="flex:1;">🔄 새 게임</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="result-screen" id="resultScreen">
+            <div class="result-icon" id="resultIcon">🎉</div>
+            <div class="result-title" id="resultTitle">AI 승리!</div>
+            <div class="result-subtitle" id="resultSubtitle">AI가 맞췄습니다!</div>
+
+            <div class="badge-earned hidden" id="badgeEarned">
+                <span class="badge-icon" id="badgeIcon">🏆</span>
+                <span class="badge-text" id="badgeText">새 배지!</span>
+            </div>
+
+            <div class="result-stats">
+                <div class="result-stats-grid">
+                    <div class="result-stat"><div class="result-stat-icon">❓</div><div class="result-stat-value" id="resQ">0</div><div class="result-stat-label">질문</div></div>
+                    <div class="result-stat"><div class="result-stat-icon">⏱️</div><div class="result-stat-value" id="resTime">00:00</div><div class="result-stat-label">시간</div></div>
+                    <div class="result-stat"><div class="result-stat-icon">📈</div><div class="result-stat-value" id="resDiff"><span class="difficulty-badge">-</span></div><div class="result-stat-label">난이도</div></div>
+                </div>
+            </div>
+
+            <div class="tomorrow-box">
+                <p>🌟 <span class="tomorrow-msg">내일 새로운 챌린지가 기다립니다!</span></p>
+            </div>
+
+            <div class="share-section">
+                <p>친구에게 공유</p>
+                <div class="share-buttons">
+                    <button class="share-btn twitter" onclick="shareTwitter()">𝕏</button>
+                    <button class="share-btn kakao" onclick="shareKakao()">💬</button>
+                    <button class="share-btn copy" onclick="copyResult()">📋</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary btn-large" onclick="playAgain()">🎮 다시 도전</button>
+                <button class="btn btn-secondary" onclick="goToStart()">🏠 처음으로</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="confetti-container" id="confetti"></div>
+    <div class="modal-overlay hidden" id="confirmModal">
+        <div class="modal">
+            <h3>🔄 새 게임</h3><p>현재 게임을 종료할까요?</p>
+            <div class="confirm-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+                <button class="btn btn-primary" onclick="newGame()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nickname Modal -->
+    <div class="modal-overlay hidden" id="nicknameModal">
+        <div class="modal">
+            <h3>👤 닉네임 설정</h3>
+            <p>리더보드에 표시될 닉네임을 입력하세요.</p>
+            <input type="text" id="nicknameInput" placeholder="닉네임 (2-10자)" maxlength="10">
+            <div class="input-hint">한글, 영문, 숫자만 사용 가능</div>
+            <div class="confirm-buttons">
+                <button class="btn btn-secondary" onclick="closeNicknameModal()">취소</button>
+                <button class="btn btn-primary" onclick="saveNickname()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Registration Modal -->
+    <div class="modal-overlay hidden" id="scoreModal">
+        <div class="modal">
+            <h3>🏆 기록 등록</h3>
+            <p>축하합니다! 기록을 리더보드에 등록하시겠습니까?</p>
+            <div class="word-input-section">
+                <label>생각했던 단어를 입력하세요 (선택)</label>
+                <input type="text" id="wordInput" placeholder="예: 피아노, 코끼리..." maxlength="30">
+                <div class="checkbox-row">
+                    <input type="checkbox" id="saveToLeaderboard" checked>
+                    <label for="saveToLeaderboard">리더보드에 공개</label>
+                </div>
+            </div>
+            <div class="confirm-buttons">
+                <button class="btn btn-secondary" onclick="closeScoreModal()">건너뛰기</button>
+                <button class="btn btn-primary" onclick="submitScore()">등록하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WORKER_URL = 'https://twenty-questions.YOUR_SUBDOMAIN.workers.dev';
+
+        // ====== Supabase 설정 ======
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        let supabaseClient = null;
+        let leaderboardSubscription = null;
+
+        // ====== 캐시 설정 ======
+        const CACHE_DURATION = 5 * 60 * 1000; // 5분
+        const CACHE_KEYS = {
+            global: 'lb_cache_global',
+            today: 'lb_cache_today',
+            week: 'lb_cache_week',
+            time: 'lb_cache_time'
+        };
+
+        function getCache(type) {
+            const cached = localStorage.getItem(CACHE_KEYS[type]);
+            const cacheTime = localStorage.getItem(CACHE_KEYS.time + '_' + type);
+
+            if (cached && cacheTime) {
+                const age = Date.now() - parseInt(cacheTime);
+                if (age < CACHE_DURATION) {
+                    console.log('📦 캐시 사용:', type);
+                    return JSON.parse(cached);
+                }
+            }
+            return null;
+        }
+
+        function setCache(type, data) {
+            localStorage.setItem(CACHE_KEYS[type], JSON.stringify(data));
+            localStorage.setItem(CACHE_KEYS.time + '_' + type, Date.now().toString());
+            console.log('💾 캐시 저장:', type);
+        }
+
+        function clearAllCache() {
+            Object.values(CACHE_KEYS).forEach(key => {
+                localStorage.removeItem(key);
+                localStorage.removeItem(key + '_global');
+                localStorage.removeItem(key + '_today');
+                localStorage.removeItem(key + '_week');
+            });
+            console.log('🗑️ 캐시 삭제');
+        }
+
+        // Supabase 초기화
+        function initSupabase() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+                console.warn('⚠️ Supabase 설정이 필요합니다. 로컬 리더보드만 사용합니다.');
+                return false;
+            }
+            try {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase 연결 완료');
+                return true;
+            } catch (e) {
+                console.error('❌ Supabase 초기화 실패:', e);
+                return false;
+            }
+        }
+
+        // 리더보드에 기록 저장
+        async function saveToSupabase(score) {
+            if (!supabaseClient) return false;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leaderboard')
+                    .insert([{
+                        nickname: score.nickname,
+                        word: score.word || '비공개',
+                        questions: score.questions,
+                        time_seconds: score.time,
+                        difficulty: score.difficulty
+                    }])
+                    .select();
+
+                if (error) throw error;
+
+                // 캐시 무효화
+                clearAllCache();
+
+                console.log('✅ 기록 저장 완료:', data);
+                return true;
+            } catch (error) {
+                console.error('❌ 저장 실패:', error);
+                return false;
+            }
+        }
+
+        // 전체 리더보드 조회 (캐시 적용)
+        async function loadGlobalLeaderboard() {
+            if (!supabaseClient) {
+                renderLocalLeaderboard();
+                return;
+            }
+
+            // 캐시 확인
+            const cached = getCache('global');
+            if (cached) {
+                displaySupabaseLeaderboard(cached);
+                return;
+            }
+
+            showLeaderboardLoading();
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leaderboard')
+                    .select('*')
+                    .order('questions', { ascending: true })
+                    .order('time_seconds', { ascending: true })
+                    .limit(100);
+
+                if (error) throw error;
+                setCache('global', data);
+                displaySupabaseLeaderboard(data);
+            } catch (error) {
+                console.error('❌ 불러오기 실패:', error);
+                renderLocalLeaderboard();
+            }
+        }
+
+        // 오늘의 리더보드 (캐시 적용)
+        async function loadTodayLeaderboard() {
+            if (!supabaseClient) {
+                renderLocalLeaderboard();
+                return;
+            }
+
+            // 캐시 확인
+            const cached = getCache('today');
+            if (cached) {
+                displaySupabaseLeaderboard(cached);
+                return;
+            }
+
+            showLeaderboardLoading();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leaderboard')
+                    .select('*')
+                    .gte('created_at', today.toISOString())
+                    .order('questions', { ascending: true })
+                    .order('time_seconds', { ascending: true })
+                    .limit(50);
+
+                if (error) throw error;
+                setCache('today', data);
+                displaySupabaseLeaderboard(data);
+            } catch (error) {
+                console.error('❌ 불러오기 실패:', error);
+                renderLocalLeaderboard();
+            }
+        }
+
+        // 주간 리더보드 (캐시 적용)
+        async function loadWeeklyLeaderboard() {
+            if (!supabaseClient) {
+                renderLocalLeaderboard();
+                return;
+            }
+
+            // 캐시 확인
+            const cached = getCache('week');
+            if (cached) {
+                displaySupabaseLeaderboard(cached);
+                return;
+            }
+
+            showLeaderboardLoading();
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leaderboard')
+                    .select('*')
+                    .gte('created_at', weekAgo.toISOString())
+                    .order('questions', { ascending: true })
+                    .order('time_seconds', { ascending: true })
+                    .limit(50);
+
+                if (error) throw error;
+                setCache('week', data);
+                displaySupabaseLeaderboard(data);
+            } catch (error) {
+                console.error('❌ 불러오기 실패:', error);
+                renderLocalLeaderboard();
+            }
+        }
+
+        // 내 기록만 조회
+        async function loadMyRecords() {
+            const myNickname = localStorage.getItem('tq_nickname');
+            if (!myNickname) {
+                showNicknameModal();
+                return;
+            }
+            if (!supabaseClient) {
+                renderLocalLeaderboard();
+                return;
+            }
+            showLeaderboardLoading();
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leaderboard')
+                    .select('*')
+                    .eq('nickname', myNickname)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+
+                if (error) throw error;
+                displaySupabaseLeaderboard(data, true);
+            } catch (error) {
+                console.error('❌ 불러오기 실패:', error);
+                renderLocalLeaderboard();
+            }
+        }
+
+        // 실시간 구독
+        function subscribeToLeaderboard() {
+            if (!supabaseClient) return;
+
+            leaderboardSubscription = supabaseClient
+                .channel('leaderboard-changes')
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'leaderboard'
+                }, (payload) => {
+                    console.log('🔄 새 기록 추가됨!', payload.new);
+
+                    // 캐시 무효화
+                    clearAllCache();
+
+                    // 현재 활성 탭에 따라 새로고침
+                    const activeTab = document.querySelector('.sub-tab.active');
+                    if (activeTab) {
+                        switchLeaderboardTab(activeTab.dataset.tab);
+                    }
+                })
+                .subscribe();
+        }
+
+        // 리더보드 표시 (테이블 형식)
+        function displaySupabaseLeaderboard(scores, isMyRecords = false) {
+            const tbody = document.getElementById('leaderboard-body');
+            const myNickname = localStorage.getItem('tq_nickname');
+
+            if (!scores || scores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-records">아직 기록이 없습니다. 첫 번째 기록을 남겨보세요!</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = scores.map((score, i) => {
+                const rank = i + 1;
+                const isMine = score.nickname === myNickname;
+
+                let rowClass = '';
+                if (rank === 1) rowClass = 'rank-gold';
+                else if (rank === 2) rowClass = 'rank-silver';
+                else if (rank === 3) rowClass = 'rank-bronze';
+                if (isMine) rowClass += ' my-record';
+
+                return `<tr class="${rowClass}">
+                    <td class="rank-cell">${getRankIcon(rank)}</td>
+                    <td>${escapeHtml(score.nickname)}${isMine ? ' 👈' : ''}</td>
+                    <td>${escapeHtml(score.word)}</td>
+                    <td><strong>${score.questions}</strong>번</td>
+                    <td>${formatTimeFromSeconds(score.time_seconds)}</td>
+                    <td>${getDifficultyBadge(score.difficulty)}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function getDifficultyBadge(difficulty) {
+            const badges = {
+                'easy': '<span class="diff-badge easy">쉬움</span>',
+                'normal': '<span class="diff-badge normal">보통</span>',
+                'hard': '<span class="diff-badge hard">어려움</span>',
+                'expert': '<span class="diff-badge expert">전문가</span>'
+            };
+            return badges[difficulty] || difficulty;
+        }
+
+        function showLeaderboardLoading() {
+            const tbody = document.getElementById('leaderboard-body');
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="6" class="loading-spinner">로딩 중...</td></tr>';
+            }
+        }
+
+        function getRankIcon(rank) {
+            if (rank === 1) return '👑';
+            if (rank === 2) return '🥈';
+            if (rank === 3) return '🥉';
+            return rank;
+        }
+
+        function formatTimeFromSeconds(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function formatRelativeTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+
+            if (diffMins < 1) return '방금 전';
+            if (diffMins < 60) return `${diffMins}분 전`;
+            if (diffMins < 1440) return `${Math.floor(diffMins / 60)}시간 전`;
+            if (diffMins < 10080) return `${Math.floor(diffMins / 1440)}일 전`;
+
+            return date.toLocaleDateString('ko-KR');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 탭 전환
+        function switchLeaderboardTab(tabType) {
+            document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.lb-tab[data-tab="${tabType}"]`).classList.add('active');
+
+            switch(tabType) {
+                case 'global': loadGlobalLeaderboard(); break;
+                case 'today': loadTodayLeaderboard(); break;
+                case 'week': loadWeeklyLeaderboard(); break;
+                case 'mine': loadMyRecords(); break;
+            }
+        }
+
+        // 닉네임 관련
+        function showNicknameModal() {
+            document.getElementById('nicknameModal').classList.remove('hidden');
+            document.getElementById('nicknameInput').value = localStorage.getItem('tq_nickname') || '';
+            document.getElementById('nicknameInput').focus();
+        }
+
+        function closeNicknameModal() {
+            document.getElementById('nicknameModal').classList.add('hidden');
+        }
+
+        function saveNickname() {
+            const nickname = document.getElementById('nicknameInput').value.trim();
+            if (!nickname || nickname.length < 2 || nickname.length > 10) {
+                alert('닉네임은 2-10자로 입력해주세요.');
+                return;
+            }
+            if (!/^[가-힣a-zA-Z0-9]+$/.test(nickname)) {
+                alert('한글, 영문, 숫자만 사용 가능합니다.');
+                return;
+            }
+            localStorage.setItem('tq_nickname', nickname);
+            updateNicknameDisplay();
+            closeNicknameModal();
+        }
+
+        function updateNicknameDisplay() {
+            const nickname = localStorage.getItem('tq_nickname') || '익명';
+            document.getElementById('currentNickname').textContent = nickname;
+        }
+
+        // 점수 등록 모달
+        function showScoreModal() {
+            document.getElementById('scoreModal').classList.remove('hidden');
+            document.getElementById('wordInput').value = '';
+            document.getElementById('saveToLeaderboard').checked = true;
+        }
+
+        function closeScoreModal() {
+            document.getElementById('scoreModal').classList.add('hidden');
+        }
+
+        async function submitScore() {
+            const word = document.getElementById('wordInput').value.trim() || '비공개';
+            const savePublic = document.getElementById('saveToLeaderboard').checked;
+
+            let nickname = localStorage.getItem('tq_nickname');
+            if (!nickname) {
+                nickname = '익명' + Math.floor(Math.random() * 10000);
+                localStorage.setItem('tq_nickname', nickname);
+                updateNicknameDisplay();
+            }
+
+            const score = {
+                nickname: nickname,
+                word: word,
+                questions: qCount,
+                time: getGameSec(),
+                difficulty: difficulty
+            };
+
+            // 로컬 저장
+            data.leaderboard.push({
+                ...score,
+                date: new Date().toLocaleDateString(),
+                time: getGameTime(),
+                mine: true
+            });
+            data.leaderboard.sort((a, b) => a.questions - b.questions);
+            data.leaderboard = data.leaderboard.slice(0, 20);
+            save();
+
+            // Supabase에 저장 (공개 선택 시)
+            if (savePublic && supabaseClient) {
+                const success = await saveToSupabase(score);
+                if (success) {
+                    showSuccessToast('🏆 리더보드에 등록되었습니다!');
+                }
+            }
+
+            closeScoreModal();
+            renderLeaderboard();
+        }
+
+        function showSuccessToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background: var(--success); color: white; padding: 0.8rem 1.5rem;
+                border-radius: 10px; font-weight: 600; z-index: 1000; animation: slideUp 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        const DIFF = {
+            easy: { max: 10, name: '쉬움', cls: 'easy', icon: '🌱', prompt: '빠르고 직접적으로 질문하세요.' },
+            normal: { max: 15, name: '보통', cls: 'normal', icon: '🎯', prompt: '논리적으로 질문하세요.' },
+            hard: { max: 20, name: '어려움', cls: 'hard', icon: '🔥', prompt: '신중하게 질문하세요.' },
+            expert: { max: 25, name: '전문가', cls: 'expert', icon: '💀', prompt: '극도로 신중하게 질문하세요.' }
+        };
+
+        const ACHIEVEMENTS = [
+            { id: 'first', name: '첫 승리', desc: '처음으로 AI를 이기세요', icon: '🎯' },
+            { id: 'fast10', name: '스피드러너', desc: '10번 안에 AI 막기', icon: '⚡' },
+            { id: 'streak3', name: '3연승', desc: '연속 3번 승리', icon: '🔥' },
+            { id: 'streak7day', name: '7일 연속', desc: '7일 연속 접속', icon: '📅' },
+            { id: 'play5', name: '열정 게이머', desc: '5게임 연속 플레이', icon: '🎮' },
+            { id: 'allDiff', name: '마스터', desc: '모든 난이도 클리어', icon: '👑' }
+        ];
+
+        const DAILY_WORDS = ['양자역학','블랙홀','피라미드','오로라','카멜레온','무지개','현미경','알고리즘','홀로그램','엔트로피','모나리자','콜로세움','만리장성','해파리','민들레','프리즘','드론','나침반','블록체인','메타버스'];
+
+        // State
+        let qCount = 0, history = [], gameOver = false, difficulty = 'easy', maxQ = 10;
+        let hints = 2, hintCD = false, sessionNum = 1;
+        let gameStart = null, gameInterval = null, answerStart = null, answerInterval = null, answerTime = 30;
+
+        // Data
+        let data = JSON.parse(localStorage.getItem('tq_data')) || {
+            total: 0, wins: 0, aiWins: 0, badges: [], streak: 0, bestQ: null, bestTime: null,
+            diffClears: {easy:0,normal:0,hard:0,expert:0}, leaderboard: [], achievements: [],
+            lastPlay: null, dailyStreak: 0, todayGames: 0, consecutiveGames: 0
+        };
+
+        // Init
+        function init() {
+            checkDaily();
+            updateUI();
+            generateDailyWords();
+            updateNicknameDisplay();
+
+            // Supabase 초기화
+            const supabaseReady = initSupabase();
+            if (supabaseReady) {
+                subscribeToLeaderboard();
+            }
+
+            renderLeaderboard();
+            renderAchievements();
+        }
+
+        function checkDaily() {
+            const today = new Date().toDateString();
+            if (data.lastPlay !== today) {
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                if (data.lastPlay === yesterday.toDateString()) {
+                    data.dailyStreak++;
+                    if (data.dailyStreak >= 7 && !data.badges.includes('streak7')) {
+                        data.badges.push('streak7');
+                        if (!data.achievements.includes('streak7day')) data.achievements.push('streak7day');
+                    }
+                } else {
+                    data.dailyStreak = 1;
+                }
+                data.todayGames = 0;
+                data.lastPlay = today;
+                save();
+            }
+        }
+
+        function generateDailyWords() {
+            const seed = new Date().toDateString();
+            const shuffled = [...DAILY_WORDS].sort(() => 0.5 - Math.random());
+            const words = shuffled.slice(0, 5);
+            const container = document.getElementById('dailyWords');
+            container.innerHTML = words.map(w => `<div class="daily-word" onclick="alert('오늘의 단어: ${w}\\n이 단어로 게임해보세요!')">${w}</div>`).join('');
+        }
+
+        function updateUI() {
+            document.getElementById('dailyStreak').textContent = data.dailyStreak;
+            document.getElementById('statTotal').textContent = data.total;
+            document.getElementById('statWins').textContent = data.wins;
+            document.getElementById('statBest').textContent = data.bestQ ? data.bestQ + '번' : '-';
+            document.getElementById('statToday').textContent = data.todayGames;
+
+            data.badges.forEach(b => {
+                const el = document.querySelector(`[data-badge="${b}"]`);
+                if (el) el.classList.add('earned');
+            });
+        }
+
+        function save() { localStorage.setItem('tq_data', JSON.stringify(data)); }
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                t.classList.toggle('active', ['game','leaderboard','achievements'][i] === tab);
+            });
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        function selectDifficulty(d) {
+            difficulty = d;
+            maxQ = DIFF[d].max;
+            document.querySelectorAll('.difficulty-option').forEach(o => o.classList.remove('selected'));
+            document.querySelector(`[data-difficulty="${d}"]`).classList.add('selected');
+        }
+
+        function renderLeaderboard() {
+            // Supabase가 연결되어 있으면 글로벌 리더보드 로드
+            if (supabaseClient) {
+                loadGlobalLeaderboard();
+                return;
+            }
+            // 로컬 리더보드 표시
+            renderLocalLeaderboard();
+        }
+
+        function renderLocalLeaderboard() {
+            const tbody = document.getElementById('leaderboard-body');
+            if (!data.leaderboard.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-records">아직 기록이 없습니다. 첫 번째 기록을 남겨보세요!</td></tr>';
+                return;
+            }
+            const myNickname = localStorage.getItem('tq_nickname');
+            tbody.innerHTML = data.leaderboard.slice(0, 10).map((r, i) => {
+                const rank = i + 1;
+                const isMine = r.mine || r.nickname === myNickname;
+                const diff = r.diff || r.difficulty;
+
+                let rowClass = '';
+                if (rank === 1) rowClass = 'rank-gold';
+                else if (rank === 2) rowClass = 'rank-silver';
+                else if (rank === 3) rowClass = 'rank-bronze';
+                if (isMine) rowClass += ' my-record';
+
+                return `<tr class="${rowClass}">
+                    <td class="rank-cell">${getRankIcon(rank)}</td>
+                    <td>${escapeHtml(r.nickname || '나')}${isMine ? ' 👈' : ''}</td>
+                    <td>${escapeHtml(r.word || '비공개')}</td>
+                    <td><strong>${r.questions}</strong>번</td>
+                    <td>${r.time || formatTimeFromSeconds(r.timeSeconds || 0)}</td>
+                    <td>${getDifficultyBadge(diff)}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderAchievements() {
+            const list = document.getElementById('achievementsList');
+            list.innerHTML = ACHIEVEMENTS.map(a => `
+                <div class="achievement${data.achievements.includes(a.id)?' unlocked':''}">
+                    <div class="achievement-icon">${a.icon}</div>
+                    <div class="achievement-info"><h4>${a.name}</h4><p>${a.desc}</p></div>
+                </div>
+            `).join('');
+        }
+
+        // Game
+        function startGame() {
+            document.getElementById('gameTab').classList.add('hidden');
+            document.getElementById('mainTabs').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            document.getElementById('resultScreen').style.display = 'none';
+
+            document.getElementById('maxQ').textContent = maxQ;
+            const cfg = DIFF[difficulty];
+            document.getElementById('currentDiffBadge').textContent = cfg.name;
+            document.getElementById('currentDiffBadge').className = `difficulty-badge difficulty-${cfg.cls}`;
+            document.getElementById('sessionCounter').textContent = `🎯 ${sessionNum}번째 게임`;
+
+            resetGame();
+            startGameTimer();
+            askFirst();
+        }
+
+        function resetGame() {
+            qCount = 0; history = []; gameOver = false; hints = 2; hintCD = false;
+            document.getElementById('chatArea').innerHTML = '';
+            updateQ();
+            updateHint();
+            enableBtns();
+            resetAnswerBtns();
+            resetAnswerTimer();
+        }
+
+        function resetAnswerBtns() {
+            document.getElementById('answerBtns').innerHTML = `
+                <button class="btn btn-yes" onclick="answer('예')" id="yesBtn">⭕ 예</button>
+                <button class="btn btn-no" onclick="answer('아니오')" id="noBtn">❌ 아니오</button>
+            `;
+        }
+
+        function updateQ() {
+            document.getElementById('qCount').textContent = qCount;
+            document.getElementById('progressBar').style.width = `${(qCount/maxQ)*100}%`;
+        }
+
+        function updateHint() {
+            document.getElementById('hintCount').textContent = `${hints}/2`;
+            document.getElementById('hintBtn').disabled = !(hints > 0 && qCount > 0 && qCount % 5 === 0 && !hintCD);
+        }
+
+        // Timers
+        function startGameTimer() {
+            gameStart = Date.now();
+            gameInterval = setInterval(() => {
+                const s = Math.floor((Date.now() - gameStart) / 1000);
+                document.getElementById('gameTimer').textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+            }, 1000);
+        }
+
+        function stopGameTimer() { if (gameInterval) { clearInterval(gameInterval); gameInterval = null; } }
+        function getGameTime() { return document.getElementById('gameTimer').textContent; }
+        function getGameSec() { return Math.floor((Date.now() - gameStart) / 1000); }
+
+        function startAnswerTimer() {
+            answerTime = 30;
+            answerStart = Date.now();
+            updateAnswerDisplay();
+            answerInterval = setInterval(() => {
+                answerTime = 30 - Math.floor((Date.now() - answerStart) / 1000);
+                if (answerTime <= 0) { clearInterval(answerInterval); autoAnswer(); return; }
+                updateAnswerDisplay();
+            }, 100);
+        }
+
+        function updateAnswerDisplay() {
+            const el = document.getElementById('answerTime');
+            const prog = document.getElementById('timerProgress');
+            el.textContent = Math.max(0, answerTime);
+            const offset = 132 - (answerTime / 30) * 132;
+            prog.style.strokeDashoffset = offset;
+
+            prog.classList.remove('warning', 'danger');
+            el.classList.remove('danger');
+            if (answerTime <= 5) { prog.classList.add('danger'); el.classList.add('danger'); }
+            else if (answerTime <= 10) { prog.classList.add('warning'); }
+        }
+
+        function resetAnswerTimer() {
+            if (answerInterval) clearInterval(answerInterval);
+            answerTime = 30;
+            updateAnswerDisplay();
+        }
+
+        function autoAnswer() {
+            addMsg('⏰ 시간 초과! "모르겠어요"로 처리됩니다.', 'system');
+            answer('아니오');
+        }
+
+        // Messages
+        function addMsg(text, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.textContent = text;
+            document.getElementById('chatArea').appendChild(div);
+            document.getElementById('chatArea').scrollTop = 99999;
+        }
+
+        async function addTypingMsg(text, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            document.getElementById('chatArea').appendChild(div);
+            for (let i = 0; i < text.length; i++) {
+                div.textContent += text[i];
+                document.getElementById('chatArea').scrollTop = 99999;
+                await new Promise(r => setTimeout(r, 40));
+            }
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'typing'; div.id = 'typing';
+            div.innerHTML = '<span></span><span></span><span></span>';
+            document.getElementById('chatArea').appendChild(div);
+            document.getElementById('chatArea').scrollTop = 99999;
+        }
+
+        function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+
+        function disableBtns() {
+            const y = document.getElementById('yesBtn'), n = document.getElementById('noBtn');
+            if (y) y.disabled = true; if (n) n.disabled = true;
+            document.getElementById('hintBtn').disabled = true;
+            resetAnswerTimer();
+        }
+
+        function enableBtns() {
+            const y = document.getElementById('yesBtn'), n = document.getElementById('noBtn');
+            if (y) y.disabled = false; if (n) n.disabled = false;
+            updateHint();
+            startAnswerTimer();
+        }
+
+        // Hint
+        async function requestHint() {
+            if (hints <= 0 || hintCD) return;
+            hints--; hintCD = true;
+            updateHint(); disableBtns(); showTyping();
+            try {
+                const res = await callAI('HINT');
+                hideTyping();
+                await addTypingMsg(`💡 ${res}`, 'hint');
+                await new Promise(r => setTimeout(r, 4000));
+                addMsg('게임 계속!', 'system');
+            } catch (e) { hideTyping(); addMsg('힌트 실패', 'system'); hints++; }
+            hintCD = false; enableBtns();
+        }
+
+        // Game Flow
+        async function askFirst() {
+            addMsg('게임 시작! 단어를 생각하셨나요?', 'system');
+            showTyping(); disableBtns();
+            try {
+                const res = await callAI('START');
+                hideTyping(); qCount++; updateQ();
+                history.push({ role: 'ai', content: res });
+                addMsg(res, 'ai');
+                enableBtns();
+                checkAnswer(res);
+            } catch (e) {
+                hideTyping();
+                addMsg('오류. 다시 시도하세요.', 'system');
+                document.getElementById('answerBtns').innerHTML = `<button class="btn btn-primary" onclick="askFirst()" style="grid-column:span 2">🔄 재시도</button>`;
+            }
+        }
+
+        async function answer(ans) {
+            if (gameOver) return;
+            resetAnswerTimer();
+            addMsg(ans, 'user');
+            history.push({ role: 'user', content: ans });
+            showTyping(); disableBtns();
+            try {
+                const res = await callAI(ans);
+                hideTyping();
+                if (!res.includes('정답:')) { qCount++; updateQ(); }
+                history.push({ role: 'ai', content: res });
+                addMsg(res, 'ai');
+                if (checkAnswer(res)) return;
+                if (qCount >= maxQ) { endGame(false); return; }
+                enableBtns();
+            } catch (e) { hideTyping(); addMsg('오류. 재시도.', 'system'); enableBtns(); }
+        }
+
+        function checkAnswer(res) {
+            if (res.includes('정답:')) {
+                gameOver = true; disableBtns();
+                const div = document.createElement('div');
+                div.className = 'message system';
+                div.innerHTML = `<p>AI가 맞췄나요?</p><div class="confirm-buttons"><button class="btn btn-yes" onclick="handleResult(true)">맞음!</button><button class="btn btn-no" onclick="handleResult(false)">틀림</button></div>`;
+                document.getElementById('chatArea').appendChild(div);
+                document.getElementById('chatArea').scrollTop = 99999;
+                return true;
+            }
+            return false;
+        }
+
+        function handleResult(correct) { endGame(correct); }
+
+        let pendingScore = null;
+
+        function endGame(aiWon) {
+            stopGameTimer();
+            resetAnswerTimer();
+            gameOver = true;
+
+            data.total++;
+            data.todayGames++;
+            data.consecutiveGames++;
+
+            if (aiWon) { data.aiWins++; data.streak = 0; }
+            else {
+                data.wins++; data.streak++;
+                data.diffClears[difficulty]++;
+
+                // Records
+                if (!data.bestQ || qCount < data.bestQ) data.bestQ = qCount;
+                const sec = getGameSec();
+                if (!data.bestTime || sec < data.bestTime) data.bestTime = sec;
+
+                // 점수 저장 대기 (나중에 단어 입력 받음)
+                pendingScore = {
+                    questions: qCount,
+                    time: getGameTime(),
+                    timeSeconds: sec,
+                    diff: difficulty
+                };
+            }
+
+            const newBadges = checkBadges(aiWon);
+            save();
+            setTimeout(() => showResult(aiWon, newBadges), 500);
+        }
+
+        function checkBadges(aiWon) {
+            const nb = [];
+            if (!aiWon) {
+                if (!data.badges.includes(difficulty)) { data.badges.push(difficulty); nb.push({ icon: DIFF[difficulty].icon, name: DIFF[difficulty].name + ' 클리어' }); }
+                if (data.streak >= 3 && !data.badges.includes('streak3')) { data.badges.push('streak3'); nb.push({ icon: '⚡', name: '3연승' }); if (!data.achievements.includes('streak3')) data.achievements.push('streak3'); }
+                if (getGameSec() < 60 && !data.badges.includes('fast')) { data.badges.push('fast'); nb.push({ icon: '⏱️', name: '1분 내 승리' }); }
+                if (!data.achievements.includes('first')) { data.achievements.push('first'); }
+                if (qCount <= 10 && !data.achievements.includes('fast10')) { data.achievements.push('fast10'); }
+                if (['easy','normal','hard','expert'].every(d => data.diffClears[d] > 0) && !data.achievements.includes('allDiff')) { data.achievements.push('allDiff'); }
+            }
+            if (data.consecutiveGames >= 5 && !data.badges.includes('perfect')) { data.badges.push('perfect'); nb.push({ icon: '🎯', name: '5게임 연속' }); if (!data.achievements.includes('play5')) data.achievements.push('play5'); }
+            return nb;
+        }
+
+        function showResult(aiWon, newBadges) {
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('resultScreen').style.display = 'flex';
+
+            document.getElementById('resultIcon').textContent = aiWon ? '🎉' : '🏆';
+            document.getElementById('resultTitle').textContent = aiWon ? 'AI 승리!' : '당신의 승리!';
+            document.getElementById('resultTitle').className = `result-title ${aiWon ? 'win' : 'lose'}`;
+            document.getElementById('resultSubtitle').textContent = aiWon ? 'AI가 맞췄습니다!' : 'AI를 이겼어요!';
+
+            const be = document.getElementById('badgeEarned');
+            if (newBadges.length) {
+                be.classList.remove('hidden');
+                document.getElementById('badgeIcon').textContent = newBadges[0].icon;
+                document.getElementById('badgeText').textContent = newBadges[0].name + ' 획득!';
+            } else { be.classList.add('hidden'); }
+
+            document.getElementById('resQ').textContent = qCount;
+            document.getElementById('resTime').textContent = getGameTime();
+            document.getElementById('resDiff').innerHTML = `<span class="difficulty-badge difficulty-${DIFF[difficulty].cls}">${DIFF[difficulty].name}</span>`;
+
+            createConfetti();
+
+            // 유저가 이겼을 때 점수 등록 모달 표시
+            if (!aiWon && pendingScore) {
+                setTimeout(() => showScoreModal(), 1500);
+            }
+        }
+
+        function createConfetti() {
+            const c = document.getElementById('confetti');
+            c.innerHTML = '';
+            const colors = ['#6366f1','#a855f7','#22c55e','#f59e0b','#ef4444','#3b82f6'];
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.className = 'confetti';
+                p.style.left = Math.random()*100 + '%';
+                p.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                p.style.animationDelay = Math.random()*2 + 's';
+                p.style.animationDuration = (Math.random()*2+2) + 's';
+                c.appendChild(p);
+            }
+            setTimeout(() => { c.innerHTML = ''; }, 4000);
+        }
+
+        function shareTwitter() {
+            const t = `AI 스무고개에서 ${qCount}번 만에 ${data.wins > data.aiWins ? '이겼어요' : '도전했어요'}! 🤔`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(t)}&url=${encodeURIComponent(location.href)}`, '_blank');
+        }
+        function shareKakao() { copyResult(); alert('복사됨! 카톡에 붙여넣기하세요.'); }
+        function copyResult() {
+            const t = `🤔 AI 스무고개\n${DIFF[difficulty].name} · ${qCount}번 · ${getGameTime()}\n${location.href}`;
+            navigator.clipboard.writeText(t).then(() => alert('복사됨!')).catch(() => alert('실패'));
+        }
+
+        function playAgain() {
+            sessionNum++;
+            document.getElementById('resultScreen').style.display = 'none';
+            startGame();
+        }
+
+        function goToStart() {
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('gameTab').classList.remove('hidden');
+            document.getElementById('mainTabs').classList.remove('hidden');
+            sessionNum = 1;
+            data.consecutiveGames = 0;
+            save();
+            updateUI();
+            renderLeaderboard();
+            renderAchievements();
+        }
+
+        // AI Call
+        async function callAI(msg) {
+            const conv = history.map(h => h.role === 'ai' ? `AI: ${h.content}` : `사용자: ${h.content}`).join('\n');
+            const cfg = DIFF[difficulty];
+            let prompt;
+
+            if (msg === 'HINT') {
+                prompt = `당신은 스무고개 게임 질문자입니다. 힌트 요청입니다.\n대화:\n${conv}\n\n지금까지 정보로 단어 범주를 좁혀주세요. 정답은 말하지 말고 방향만 제시. 1-2문장.`;
+            } else if (msg === 'START') {
+                prompt = `당신은 스무고개 게임 질문자입니다. ${maxQ}번 안에 맞춰야 합니다. ${cfg.prompt}\n규칙: 예/아니오 질문만, 확신시 '정답: [단어]' 형식, 한국어로, 하나씩 질문.\n첫 질문을 하세요.`;
+            } else {
+                prompt = `당신은 스무고개 게임 질문자입니다. ${maxQ}번 안에 맞춰야 합니다. ${cfg.prompt}\n규칙: 예/아니오 질문만, 확신시 '정답: [단어]' 형식, 한국어로, 하나씩 질문.\n대화:\n${conv}\n질문 ${qCount}/${maxQ}\n답변: ${msg}\n다음 질문 하나만.`;
+            }
+
+            const res = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt })
+            });
+            if (!res.ok) throw new Error('API Error');
+            const d = await res.json();
+            return d.response;
+        }
+
+        // Modal
+        function confirmNewGame() { if (gameOver) newGame(); else document.getElementById('confirmModal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('confirmModal').classList.add('hidden'); }
+        function newGame() {
+            closeModal(); stopGameTimer(); resetAnswerTimer();
+            sessionNum++; resetGame();
+            document.getElementById('sessionCounter').textContent = `🎯 ${sessionNum}번째 게임`;
+            startGameTimer(); askFirst();
+        }
+
+        document.getElementById('confirmModal').addEventListener('click', e => { if (e.target.id === 'confirmModal') closeModal(); });
+        document.getElementById('nicknameModal').addEventListener('click', e => { if (e.target.id === 'nicknameModal') closeNicknameModal(); });
+        document.getElementById('scoreModal').addEventListener('click', e => { if (e.target.id === 'scoreModal') closeScoreModal(); });
+
+        // Enter 키로 닉네임 저장
+        document.getElementById('nicknameInput').addEventListener('keypress', e => { if (e.key === 'Enter') saveNickname(); });
+        document.getElementById('wordInput').addEventListener('keypress', e => { if (e.key === 'Enter') submitScore(); });
+
+        init();
+    </script>
+</body>
+</html>
