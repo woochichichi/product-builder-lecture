@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 스무고개 - DEV 테스트</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a; color: #f1f5f9;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 2rem;
+        }
+        .container { width: 100%; max-width: 500px; }
+        h1 { text-align: center; margin-bottom: 0.5rem; background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { text-align: center; color: #94a3b8; margin-bottom: 2rem; font-size: 0.9rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; color: #94a3b8; font-size: 0.85rem; }
+        input { width: 100%; padding: 0.8rem; border: 2px solid #334155; border-radius: 8px; background: #1e293b; color: #f1f5f9; font-size: 0.9rem; font-family: monospace; }
+        input:focus { outline: none; border-color: #6366f1; }
+        .hint { font-size: 0.75rem; color: #64748b; margin-top: 0.3rem; }
+        .btn { width: 100%; padding: 1rem; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 0.8rem; transition: all 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary { background: #334155; color: #94a3b8; }
+        .status { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
+        .status.success { background: rgba(34,197,94,0.2); color: #22c55e; }
+        .status.error { background: rgba(239,68,68,0.2); color: #ef4444; }
+        .status.info { background: rgba(99,102,241,0.2); color: #818cf8; }
+        .divider { border-top: 1px solid #334155; margin: 1.5rem 0; }
+        .saved-keys { background: #1e293b; padding: 1rem; border-radius: 8px; margin-top: 1rem; }
+        .saved-keys h3 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .saved-keys pre { font-size: 0.7rem; color: #64748b; word-break: break-all; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI 스무고개 DEV</h1>
+        <p class="subtitle">로컬 테스트용 API 설정</p>
+
+        <div id="status" class="status info">설정을 입력하고 저장하세요.</div>
+
+        <div class="form-group">
+            <label>Cloudflare Worker URL</label>
+            <input type="text" id="workerUrl" placeholder="https://twenty-questions.xxx.workers.dev">
+            <div class="hint">AI 질문 생성 API</div>
+        </div>
+
+        <div class="form-group">
+            <label>Supabase Project URL</label>
+            <input type="text" id="supabaseUrl" placeholder="https://xxx.supabase.co">
+            <div class="hint">Supabase 대시보드 → Settings → API</div>
+        </div>
+
+        <div class="form-group">
+            <label>Supabase Anon Key</label>
+            <input type="text" id="supabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+            <div class="hint">anon / public 키 (service_role 아님!)</div>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveAndTest()">저장 & 테스트</button>
+        <button class="btn btn-secondary" onclick="goToGame()">게임 페이지로 이동 →</button>
+        <button class="btn btn-secondary" onclick="clearAll()">설정 초기화</button>
+
+        <div class="divider"></div>
+
+        <div class="saved-keys">
+            <h3>현재 저장된 설정</h3>
+            <pre id="savedDisplay">없음</pre>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 페이지 로드 시 저장된 설정 표시
+        window.onload = function() {
+            loadSavedSettings();
+        };
+
+        function loadSavedSettings() {
+            const workerUrl = localStorage.getItem('tq_worker_url');
+            const supabaseUrl = localStorage.getItem('tq_supabase_url');
+            const supabaseKey = localStorage.getItem('tq_supabase_key');
+
+            document.getElementById('workerUrl').value = workerUrl || '';
+            document.getElementById('supabaseUrl').value = supabaseUrl || '';
+            document.getElementById('supabaseKey').value = supabaseKey || '';
+
+            updateSavedDisplay();
+        }
+
+        function updateSavedDisplay() {
+            const workerUrl = localStorage.getItem('tq_worker_url');
+            const supabaseUrl = localStorage.getItem('tq_supabase_url');
+            const supabaseKey = localStorage.getItem('tq_supabase_key');
+
+            let display = '';
+            if (workerUrl) display += `Worker: ${workerUrl.substring(0, 50)}...\n`;
+            if (supabaseUrl) display += `Supabase: ${supabaseUrl}\n`;
+            if (supabaseKey) display += `Key: ${supabaseKey.substring(0, 30)}...`;
+
+            document.getElementById('savedDisplay').textContent = display || '없음';
+        }
+
+        async function saveAndTest() {
+            const workerUrl = document.getElementById('workerUrl').value.trim();
+            const supabaseUrl = document.getElementById('supabaseUrl').value.trim();
+            const supabaseKey = document.getElementById('supabaseKey').value.trim();
+
+            const status = document.getElementById('status');
+            status.className = 'status info';
+            status.textContent = '테스트 중...';
+
+            let results = [];
+
+            // Worker URL 저장 & 테스트
+            if (workerUrl) {
+                localStorage.setItem('tq_worker_url', workerUrl);
+                try {
+                    const res = await fetch(workerUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: 'test' })
+                    });
+                    if (res.ok) {
+                        results.push('Worker ✅');
+                    } else {
+                        results.push('Worker ❌ (응답 오류)');
+                    }
+                } catch (e) {
+                    results.push('Worker ❌ (연결 실패)');
+                }
+            }
+
+            // Supabase 저장 & 테스트
+            if (supabaseUrl && supabaseKey) {
+                localStorage.setItem('tq_supabase_url', supabaseUrl);
+                localStorage.setItem('tq_supabase_key', supabaseKey);
+
+                try {
+                    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+                    const { data, error } = await client.from('leaderboard').select('*').limit(1);
+
+                    if (error) {
+                        results.push('Supabase ❌ (' + error.message + ')');
+                    } else {
+                        results.push('Supabase ✅');
+                    }
+                } catch (e) {
+                    results.push('Supabase ❌ (연결 실패)');
+                }
+            }
+
+            updateSavedDisplay();
+
+            if (results.length === 0) {
+                status.className = 'status error';
+                status.textContent = '입력된 설정이 없습니다.';
+            } else if (results.some(r => r.includes('❌'))) {
+                status.className = 'status error';
+                status.textContent = results.join(' | ');
+            } else {
+                status.className = 'status success';
+                status.textContent = results.join(' | ') + ' - 설정 완료!';
+            }
+        }
+
+        function goToGame() {
+            window.location.href = '/twenty-questions.html';
+        }
+
+        function clearAll() {
+            localStorage.removeItem('tq_worker_url');
+            localStorage.removeItem('tq_supabase_url');
+            localStorage.removeItem('tq_supabase_key');
+
+            document.getElementById('workerUrl').value = '';
+            document.getElementById('supabaseUrl').value = '';
+            document.getElementById('supabaseKey').value = '';
+
+            updateSavedDisplay();
+
+            const status = document.getElementById('status');
+            status.className = 'status info';
+            status.textContent = '설정이 초기화되었습니다.';
+        }
+    </script>
+</body>
+</html>

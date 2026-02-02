@@ -474,11 +474,10 @@
     </div>
 
     <script>
-        const WORKER_URL = 'https://twenty-questions.YOUR_SUBDOMAIN.workers.dev';
-
-        // ====== Supabase 설정 ======
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        // ====== API 설정 (localStorage 우선, 없으면 기본값) ======
+        const WORKER_URL = localStorage.getItem('tq_worker_url') || 'https://twenty-questions.YOUR_SUBDOMAIN.workers.dev';
+        const SUPABASE_URL = localStorage.getItem('tq_supabase_url') || 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = localStorage.getItem('tq_supabase_key') || 'YOUR_SUPABASE_ANON_KEY';
         let supabaseClient = null;
         let leaderboardSubscription = null;
 
