@@ -179,6 +179,17 @@
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); } 50% { box-shadow: 0 0 0 8px rgba(99,102,241,0); } }
         @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
         .btn:hover:not(:disabled) { transform: translateY(-2px); }
+        .game-mode-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
+        .btn-challenge { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+
+        /* Challenge Banner */
+        .challenge-banner { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); border: 2px solid var(--warning); padding: 1.2rem; border-radius: 12px; text-align: center; margin-top: 1rem; animation: glow 2s infinite; }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(245,158,11,0.3); } 50% { box-shadow: 0 0 20px rgba(245,158,11,0.6); } }
+        .challenge-from { color: var(--warning); font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .challenge-msg { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+        .challenge-word-display { background: var(--bg); padding: 0.8rem; border-radius: 8px; margin: 1rem 0; }
+        .challenge-word-display .label { font-size: 0.75rem; color: var(--text-muted); }
+        .challenge-word-display .word { font-size: 1.5rem; font-weight: 700; color: var(--primary); letter-spacing: 2px; }
 
         /* Result Screen */
         .result-screen { display: none; flex-direction: column; align-items: center; text-align: center; padding: 1rem; animation: fadeInUp 0.5s ease; }
@@ -324,7 +335,17 @@
                 <div class="badge" data-badge="perfect" title="5게임 연속">🎯</div>
             </div>
 
-            <button class="btn btn-primary btn-large" onclick="confirmStartGame()" style="width: 100%;">🎮 게임 시작</button>
+            <div class="game-mode-buttons">
+                <button class="btn btn-primary btn-large" onclick="confirmStartGame()">🎮 혼자 하기</button>
+                <button class="btn btn-challenge btn-large" onclick="showChallengeModal()">🎯 친구에게 도전장</button>
+            </div>
+
+            <!-- Received Challenge Banner -->
+            <div class="challenge-banner hidden" id="challengeBanner">
+                <div class="challenge-from">📩 <strong id="challengeFrom">친구</strong>님의 도전장!</div>
+                <div class="challenge-msg">"이 단어 맞출 수 있어?" 🤔</div>
+                <button class="btn btn-primary" onclick="startChallengeGame()">도전 수락!</button>
+            </div>
         </div>
 
         <!-- Leaderboard Tab -->
@@ -446,6 +467,41 @@
                 <button class="btn btn-secondary" onclick="closeModal()">계속하기</button>
                 <button class="btn btn-primary" onclick="newGame()">처음으로</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Challenge Modal -->
+    <div class="modal-overlay hidden" id="challengeModal">
+        <div class="modal">
+            <h3>🎯 친구에게 도전장 보내기</h3>
+            <p>친구가 맞춰야 할 단어를 입력하세요!</p>
+            <input type="text" id="challengeWordInput" placeholder="예: 피아노, 아이폰, 강아지..." maxlength="20">
+            <div class="input-hint">AI가 이 단어를 맞추면 당신이 승리!</div>
+
+            <div class="settings-group" style="margin-top:1rem;">
+                <label>내 닉네임 (도전장에 표시)</label>
+                <input type="text" id="challengeNickInput" placeholder="닉네임" maxlength="10">
+            </div>
+
+            <div class="confirm-buttons">
+                <button class="btn btn-secondary" onclick="closeChallengeModal()">취소</button>
+                <button class="btn btn-primary" onclick="createChallenge()">링크 생성</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Challenge Link Modal -->
+    <div class="modal-overlay hidden" id="challengeLinkModal">
+        <div class="modal">
+            <h3>🔗 도전장 링크 생성 완료!</h3>
+            <p>아래 링크를 친구에게 공유하세요:</p>
+            <div style="background:var(--bg);padding:0.8rem;border-radius:8px;margin:1rem 0;word-break:break-all;font-size:0.8rem;color:var(--primary);" id="challengeLinkDisplay"></div>
+            <div class="share-buttons" style="margin-bottom:1rem;">
+                <button class="share-btn copy" onclick="copyChallengeLink()" style="flex:2;">📋 링크 복사</button>
+                <button class="share-btn kakao" onclick="shareKakaoChallenge()">💬</button>
+                <button class="share-btn twitter" onclick="shareTwitterChallenge()">𝕏</button>
+            </div>
+            <button class="btn btn-secondary" onclick="closeChallengeLinkModal()" style="width:100%;">닫기</button>
         </div>
     </div>
 
@@ -939,6 +995,99 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
+        // ====== Challenge Mode ======
+        function showChallengeModal() {
+            document.getElementById('challengeModal').classList.remove('hidden');
+            document.getElementById('challengeWordInput').value = '';
+            document.getElementById('challengeNickInput').value = localStorage.getItem('tq_nickname') || '';
+            document.getElementById('challengeWordInput').focus();
+        }
+
+        function closeChallengeModal() {
+            document.getElementById('challengeModal').classList.add('hidden');
+        }
+
+        function createChallenge() {
+            const word = document.getElementById('challengeWordInput').value.trim();
+            const nick = document.getElementById('challengeNickInput').value.trim() || '익명';
+
+            if (!word || word.length < 1) {
+                alert('단어를 입력해주세요!');
+                return;
+            }
+
+            // 닉네임 저장
+            localStorage.setItem('tq_nickname', nick);
+            updateNicknameDisplay();
+
+            // 링크 생성 (Base64 인코딩)
+            const encoded = btoa(encodeURIComponent(JSON.stringify({ w: word, f: nick, d: difficulty })));
+            challengeLink = `${window.location.origin}${window.location.pathname}?c=${encoded}`;
+
+            closeChallengeModal();
+            showChallengeLinkModal();
+        }
+
+        function showChallengeLinkModal() {
+            document.getElementById('challengeLinkModal').classList.remove('hidden');
+            document.getElementById('challengeLinkDisplay').textContent = challengeLink;
+        }
+
+        function closeChallengeLinkModal() {
+            document.getElementById('challengeLinkModal').classList.add('hidden');
+        }
+
+        function copyChallengeLink() {
+            navigator.clipboard.writeText(challengeLink).then(() => {
+                showSuccessToast('📋 링크가 복사되었습니다!');
+            }).catch(() => {
+                alert('복사 실패. 직접 복사해주세요.');
+            });
+        }
+
+        function shareKakaoChallenge() {
+            copyChallengeLink();
+            alert('링크가 복사되었습니다! 카카오톡에 붙여넣기 하세요.');
+        }
+
+        function shareTwitterChallenge() {
+            const text = `🎯 AI 스무고개 도전장이 도착했어요! 이 단어 맞출 수 있어?`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(challengeLink)}`, '_blank');
+        }
+
+        function checkChallengeUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const c = params.get('c');
+
+            if (c) {
+                try {
+                    const decoded = JSON.parse(decodeURIComponent(atob(c)));
+                    challengeWord = decoded.w;
+                    challengeFrom = decoded.f || '친구';
+                    difficulty = decoded.d || 'easy';
+                    challengeMode = true;
+
+                    // UI 업데이트
+                    document.getElementById('challengeBanner').classList.remove('hidden');
+                    document.getElementById('challengeFrom').textContent = challengeFrom;
+                    document.querySelector('.game-mode-buttons').style.display = 'none';
+
+                    // 난이도 선택 업데이트
+                    selectDifficulty(difficulty);
+
+                    // URL에서 파라미터 제거 (새로고침해도 다시 안 뜨게)
+                    window.history.replaceState({}, '', window.location.pathname);
+
+                } catch (e) {
+                    console.error('Invalid challenge link:', e);
+                }
+            }
+        }
+
+        function startChallengeGame() {
+            startGame();
+        }
+
         const DIFF = {
             easy: { max: 10, name: '쉬움', cls: 'easy', icon: '🌱', prompt: '빠르고 직접적으로 질문하세요.' },
             normal: { max: 15, name: '보통', cls: 'normal', icon: '🎯', prompt: '논리적으로 질문하세요.' },
@@ -960,6 +1109,12 @@
         let sessionNum = 1;
         let gameStart = null, gameInterval = null, answerStart = null, answerInterval = null, answerTime = 30;
 
+        // Challenge Mode State
+        let challengeMode = false;
+        let challengeWord = null;
+        let challengeFrom = null;
+        let challengeLink = null;
+
         // Data
         let data = JSON.parse(localStorage.getItem('tq_data')) || {
             total: 0, wins: 0, aiWins: 0, badges: [], streak: 0, bestQ: null, bestTime: null,
@@ -972,6 +1127,9 @@
             checkDaily();
             updateUI();
             updateNicknameDisplay();
+
+            // 도전장 URL 체크
+            checkChallengeUrl();
 
             // Supabase 초기화
             const supabaseReady = initSupabase();
@@ -1315,10 +1473,24 @@
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('resultScreen').style.display = 'flex';
 
-            document.getElementById('resultIcon').textContent = aiWon ? '🎉' : '🏆';
-            document.getElementById('resultTitle').textContent = aiWon ? 'AI 승리!' : '당신의 승리!';
-            document.getElementById('resultTitle').className = `result-title ${aiWon ? 'win' : 'lose'}`;
-            document.getElementById('resultSubtitle').textContent = aiWon ? 'AI가 맞췄습니다!' : 'AI를 이겼어요!';
+            // 챌린지 모드 결과
+            if (challengeMode && challengeWord) {
+                if (aiWon) {
+                    document.getElementById('resultIcon').textContent = '🎯';
+                    document.getElementById('resultTitle').textContent = `${challengeFrom}님 승리!`;
+                    document.getElementById('resultSubtitle').innerHTML = `AI가 "<strong>${challengeWord}</strong>"를 맞췄습니다!`;
+                } else {
+                    document.getElementById('resultIcon').textContent = '🛡️';
+                    document.getElementById('resultTitle').textContent = '방어 성공!';
+                    document.getElementById('resultSubtitle').innerHTML = `"<strong>${challengeWord}</strong>"를 지켜냈어요!`;
+                }
+                document.getElementById('resultTitle').className = `result-title ${aiWon ? 'lose' : 'win'}`;
+            } else {
+                document.getElementById('resultIcon').textContent = aiWon ? '🎉' : '🏆';
+                document.getElementById('resultTitle').textContent = aiWon ? 'AI 승리!' : '당신의 승리!';
+                document.getElementById('resultTitle').className = `result-title ${aiWon ? 'win' : 'lose'}`;
+                document.getElementById('resultSubtitle').textContent = aiWon ? 'AI가 맞췄습니다!' : 'AI를 이겼어요!';
+            }
 
             const be = document.getElementById('badgeEarned');
             if (newBadges.length) {
@@ -1333,9 +1505,16 @@
 
             createConfetti();
 
-            // 유저가 이겼을 때 점수 등록 모달 표시
-            if (!aiWon && pendingScore) {
+            // 유저가 이겼을 때 점수 등록 모달 표시 (챌린지 모드 아닐 때만)
+            if (!aiWon && pendingScore && !challengeMode) {
                 setTimeout(() => showScoreModal(), 1500);
+            }
+
+            // 챌린지 모드 종료 후 초기화
+            if (challengeMode) {
+                challengeMode = false;
+                challengeWord = null;
+                challengeFrom = null;
             }
         }
 
@@ -1376,6 +1555,14 @@
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('gameTab').classList.remove('hidden');
             document.getElementById('mainTabs').classList.remove('hidden');
+
+            // 챌린지 모드 초기화
+            document.getElementById('challengeBanner').classList.add('hidden');
+            document.querySelector('.game-mode-buttons').style.display = 'flex';
+            challengeMode = false;
+            challengeWord = null;
+            challengeFrom = null;
+
             sessionNum = 1;
             data.consecutiveGames = 0;
             save();
@@ -1436,6 +1623,9 @@
         document.getElementById('nicknameModal').addEventListener('click', e => { if (e.target.id === 'nicknameModal') closeNicknameModal(); });
         document.getElementById('scoreModal').addEventListener('click', e => { if (e.target.id === 'scoreModal') closeScoreModal(); });
         document.getElementById('startConfirmModal').addEventListener('click', e => { if (e.target.id === 'startConfirmModal') closeStartConfirmModal(); });
+        document.getElementById('challengeModal').addEventListener('click', e => { if (e.target.id === 'challengeModal') closeChallengeModal(); });
+        document.getElementById('challengeLinkModal').addEventListener('click', e => { if (e.target.id === 'challengeLinkModal') closeChallengeLinkModal(); });
+        document.getElementById('challengeWordInput').addEventListener('keypress', e => { if (e.key === 'Enter') createChallenge(); });
 
         // Enter 키로 닉네임 저장
         document.getElementById('nicknameInput').addEventListener('keypress', e => { if (e.key === 'Enter') saveNickname(); });
