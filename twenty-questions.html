@@ -348,8 +348,7 @@
             </div>
 
             <div class="game-mode-buttons">
-                <button class="btn btn-primary btn-large" onclick="confirmStartGame()">🎮 혼자 하기</button>
-                <button class="btn btn-challenge btn-large" onclick="showChallengeModal()">🎯 친구에게 도전장</button>
+                <button class="btn btn-primary btn-large" onclick="confirmStartGame()">🎮 게임 시작</button>
             </div>
 
             <!-- Received Challenge Banner -->
@@ -500,26 +499,6 @@
             <div class="confirm-buttons">
                 <button class="btn btn-secondary" onclick="closeGuessModal()">취소</button>
                 <button class="btn btn-primary" onclick="submitGuess()">맞추기!</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Challenge Modal -->
-    <div class="modal-overlay hidden" id="challengeModal">
-        <div class="modal">
-            <h3>🎯 친구에게 도전장 보내기</h3>
-            <p>친구가 맞춰야 할 단어를 입력하세요!</p>
-            <input type="text" id="challengeWordInput" placeholder="예: 피아노, 아이폰, 강아지..." maxlength="20">
-            <div class="input-hint">친구가 이 단어를 몇 번 만에 맞추는지 대결!</div>
-
-            <div class="settings-group" style="margin-top:1rem;">
-                <label>내 닉네임 (도전장에 표시)</label>
-                <input type="text" id="challengeNickInput" placeholder="닉네임" maxlength="10">
-            </div>
-
-            <div class="confirm-buttons">
-                <button class="btn btn-secondary" onclick="closeChallengeModal()">취소</button>
-                <button class="btn btn-primary" onclick="createChallenge()">링크 생성</button>
             </div>
         </div>
     </div>
@@ -1029,38 +1008,6 @@
         }
 
         // ====== Challenge Mode ======
-        function showChallengeModal() {
-            document.getElementById('challengeModal').classList.remove('hidden');
-            document.getElementById('challengeWordInput').value = '';
-            document.getElementById('challengeNickInput').value = localStorage.getItem('tq_nickname') || '';
-            document.getElementById('challengeWordInput').focus();
-        }
-
-        function closeChallengeModal() {
-            document.getElementById('challengeModal').classList.add('hidden');
-        }
-
-        function createChallenge() {
-            const word = document.getElementById('challengeWordInput').value.trim();
-            const nick = document.getElementById('challengeNickInput').value.trim() || '익명';
-
-            if (!word || word.length < 1) {
-                alert('단어를 입력해주세요!');
-                return;
-            }
-
-            // 닉네임 저장
-            localStorage.setItem('tq_nickname', nick);
-            updateNicknameDisplay();
-
-            // 링크 생성 (Base64 인코딩)
-            const encoded = btoa(encodeURIComponent(JSON.stringify({ w: word, f: nick, d: difficulty })));
-            challengeLink = `${window.location.origin}${window.location.pathname}?c=${encoded}`;
-
-            closeChallengeModal();
-            showChallengeLinkModal();
-        }
-
         function showChallengeLinkModal() {
             document.getElementById('challengeLinkModal').classList.remove('hidden');
             document.getElementById('challengeLinkDisplay').textContent = challengeLink;
@@ -1848,9 +1795,7 @@ ${conv}
         document.getElementById('nicknameModal').addEventListener('click', e => { if (e.target.id === 'nicknameModal') closeNicknameModal(); });
         document.getElementById('scoreModal').addEventListener('click', e => { if (e.target.id === 'scoreModal') closeScoreModal(); });
         document.getElementById('startConfirmModal').addEventListener('click', e => { if (e.target.id === 'startConfirmModal') closeStartConfirmModal(); });
-        document.getElementById('challengeModal').addEventListener('click', e => { if (e.target.id === 'challengeModal') closeChallengeModal(); });
         document.getElementById('challengeLinkModal').addEventListener('click', e => { if (e.target.id === 'challengeLinkModal') closeChallengeLinkModal(); });
-        document.getElementById('challengeWordInput').addEventListener('keypress', e => { if (e.key === 'Enter') createChallenge(); });
 
         // Enter 키로 닉네임 저장
         document.getElementById('nicknameInput').addEventListener('keypress', e => { if (e.key === 'Enter') saveNickname(); });
