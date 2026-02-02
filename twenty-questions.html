@@ -1453,10 +1453,44 @@
             if (!guess) return;
 
             closeGuessModal();
+            disableInputs();
             addMsg(`🎯 "${guess}"`, 'user');
 
-            // 정답 체크
-            const isCorrect = normalizeWord(guess) === normalizeWord(secretWord);
+            // 1차: 정확히 일치하는지 체크
+            let isCorrect = normalizeWord(guess) === normalizeWord(secretWord);
+
+            // 2차: 유사 단어인지 AI에게 확인 (텔레비전/텔레비젼, TV 등)
+            if (!isCorrect) {
+                showTyping();
+                try {
+                    const checkPrompt = `정답: "${secretWord}"
+사용자 답: "${guess}"
+
+위 두 단어가 같은 것을 의미하는지 판단해주세요.
+- 철자 변형 (텔레비전/텔레비젼), 줄임말 (TV/텔레비전), 동의어는 "같음"
+- 완전히 다른 단어면 "다름"
+
+한 단어로만 답하세요: 같음 또는 다름`;
+
+                    const res = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: checkPrompt })
+                    });
+                    hideTyping();
+
+                    if (res.ok) {
+                        const d = await res.json();
+                        const answer = d.response.trim();
+                        if (answer.includes('같음') || answer.includes('같은') || answer.includes('정답')) {
+                            isCorrect = true;
+                        }
+                    }
+                } catch (e) {
+                    hideTyping();
+                    console.error('유사 단어 체크 실패:', e);
+                }
+            }
 
             if (isCorrect) {
                 addMsg(`🎉 정답입니다! "<strong>${secretWord}</strong>"`, 'ai');
