@@ -475,7 +475,9 @@
 
     <script>
         // ====== API 설정 (localStorage 우선, 없으면 기본값) ======
-        const WORKER_URL = localStorage.getItem('tq_worker_url') || '/api/twenty-questions';
+        const DEFAULT_API_URL = '/api/twenty-questions';
+        const storedWorkerUrl = localStorage.getItem('tq_worker_url');
+        const WORKER_URL = (storedWorkerUrl && storedWorkerUrl.includes('api')) ? storedWorkerUrl : DEFAULT_API_URL;
         const SUPABASE_URL = localStorage.getItem('tq_supabase_url') || 'YOUR_SUPABASE_URL';
         const SUPABASE_ANON_KEY = localStorage.getItem('tq_supabase_key') || 'YOUR_SUPABASE_ANON_KEY';
         let supabaseClient = null;
